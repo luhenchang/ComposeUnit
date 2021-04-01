@@ -16,6 +16,7 @@ import pub.devrel.easypermissions.EasyPermissions
 import pub.devrel.easypermissions.EasyPermissions.PermissionCallbacks
 import java.lang.StringBuilder
 import kotlin.system.exitProcess
+
 class LoginActivity : AppCompatActivity(), PermissionCallbacks {
     val TAG=LoginActivity::class.java.name
     @InternalComposeApi
