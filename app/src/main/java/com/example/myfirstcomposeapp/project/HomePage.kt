@@ -7,13 +7,13 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.unit.*
-import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myfirstcomposeapp.confing.MainActions
 import com.example.myfirstcomposeapp.project.fragment.OneFragment
 import com.example.myfirstcomposeapp.project.fragment.TwoFragment
 import com.example.myfirstcomposeapp.project.model.home.HomeViewModel
 import  com.example.myfirstcomposeapp.composeble_ui.home.*
+
 @InternalComposeApi
 @Composable
 fun HomePage(mainActions: MainActions,homeViewModel : HomeViewModel = viewModel()) {

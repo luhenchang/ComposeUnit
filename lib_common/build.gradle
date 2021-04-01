@@ -1,6 +1,7 @@
 plugins {
     id 'com.android.library'
     id 'kotlin-android'
+    id 'kotlin-kapt'
 }
 
 android {
@@ -90,4 +91,13 @@ dependencies {
     api "dev.chrisbanes.accompanist:accompanist-coil:0.6.2"
     api "dev.chrisbanes.accompanist:accompanist-insets:0.6.2"
     api "com.google.accompanist:accompanist-flowlayout:0.7.0"
+
+
+
+
+    //权限
+    api 'pub.devrel:easypermissions:2.0.1'
+
+
+
 }

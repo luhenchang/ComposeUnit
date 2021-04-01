@@ -2,6 +2,7 @@ plugins {
     id 'com.android.application'
     id 'kotlin-android'
 }
+apply plugin: 'kotlin-kapt'
 android {
     compileSdkVersion androids.compileSdkVersion
     buildToolsVersion "30.0.3"
@@ -12,6 +13,13 @@ android {
         targetSdkVersion 30
         versionCode 1
         versionName "1.0"
+
+        javaCompileOptions {
+            annotationProcessorOptions {
+                arguments += ["room.schemaLocation":
+                                      "$projectDir/schemas".toString()]
+            }
+        }
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -46,4 +54,14 @@ android {
 
 dependencies {
     implementation project(path: ':lib_common')
+    //room数据库
+    def room_version = '2.3.0-rc01'
+    annotationProcessor "androidx.room:room-compiler:$room_version"
+    api "androidx.room:room-runtime:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    api "androidx.room:room-ktx:$room_version"
+    kapt "androidx.room:room-compiler:$room_version"
+    def arch_version = '1.1.1'
+    api "android.arch.persistence.room:runtime:$arch_version"
+    api 'com.readystatesoftware.sqliteasset:sqliteassethelper:2.0.1'
 }
