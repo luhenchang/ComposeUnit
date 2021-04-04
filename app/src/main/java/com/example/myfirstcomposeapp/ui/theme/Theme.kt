@@ -1,5 +1,6 @@
 package com.example.myfirstcomposeapp.ui.theme
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.darkColors
@@ -7,11 +8,12 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-val blue = Color(0xFF2772F3)
+val blue =  Color(0xFF108888)
 val blueDark = Color(0xFF0B182E)
 
 val Purple300 = Color(0xFFCD52FC)
 
+@SuppressLint("ConflictingOnColor")
 private val PlayThemeLight = lightColors(
     primary = blue,
     onPrimary = Color.White,
@@ -19,6 +21,7 @@ private val PlayThemeLight = lightColors(
     secondary = blue
 )
 
+@SuppressLint("ConflictingOnColor")
 private val PlayThemeDark = darkColors(
     primary = blueDark,
     onPrimary = Color.White,

@@ -9,6 +9,7 @@ import androidx.compose.runtime.InternalComposeApi
 import androidx.core.view.WindowCompat
 import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.ToastUtils
+import com.example.lib_common.utils.AndroidShare
 import com.example.myfirstcomposeapp.confing.NavGraph
 import com.example.myfirstcomposeapp.ui.theme.PlayTheme
 import dev.chrisbanes.accompanist.insets.ProvideWindowInsets
@@ -25,6 +26,7 @@ class LoginActivity : AppCompatActivity(), PermissionCallbacks {
         BarUtils.setNavBarVisibility(window, true)
         BarUtils.transparentStatusBar(this)
         requireSomePermission()
+        AndroidShare.mcontext= applicationContext
         val db: AppDatabase = RoomAsset.databaseBuilder(applicationContext, AppDatabase::class.java, "chinook.db").build()
         val list1= db.chinookDao().users
         Log.e(TAG, "onCreate: "+list1[0].name)
@@ -77,9 +79,9 @@ class LoginActivity : AppCompatActivity(), PermissionCallbacks {
                 .setMessage("此功能需要" + stringBuilder + "权限，否则无法正常使用，是否打开设置")
                 .setPositiveButton(
                     "是"
-                ) { dialog, which -> }.setNegativeButton(
+                ) { _, _ -> }.setNegativeButton(
                     "否"
-                ) { dialog, which -> exitProcess(-1) }.show()
+                ) { _, _ -> exitProcess(-1) }.show()
         }
     }
 

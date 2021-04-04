@@ -7,8 +7,10 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import kotlinx.coroutines.launch
 
+/**
+ * 根据density来将px转换为dp
+ */
 @Composable
 fun Number.pxToDp(): Dp {
-
     return (this.toFloat() / Density(LocalContext.current).density).dp
 }

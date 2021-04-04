@@ -29,15 +29,12 @@ fun OneFragment(modifier: Modifier) {
     val scrollLazyState = rememberLazyListState()
     LazyColumn(state = scrollLazyState) {
         //遍历循环内部Item部件
-        items(100) {
-            Row(
+        items(20) {
+            Box(
                 modifier = Modifier
                     .padding(10.dp)
                     .fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
             ) {
-                StudyLayoutViews()
-                Spacer(modifier = Modifier.padding(horizontal = 5.dp))
                 StudyLayoutViews()
             }
         }
@@ -79,21 +76,15 @@ fun StudyLayoutViews() {
                         )
                         .shadow(elevation = 150.dp, clip = true)
                 )
-                Column(modifier = Modifier.padding(start = 10.dp)) {
+                Column(modifier = Modifier.padding(start = 10.dp).weight(1f)) {
                     Text(
                         "Container",
-                        fontSize = 14.sp,
+                        fontSize = 18.sp,
                         color = Color.Black,
                     )
                     Text(
-                        "容器组件",
-                        modifier = Modifier.padding(top = 3.dp, bottom = 3.dp),
-                        fontSize = 12.sp,
-                        color = Color.Gray,
-                    )
-                    Text(
                         "123万阅读量",
-                        fontSize = 8.sp,
+                        fontSize = 15.sp,
                         color = Color.White,
                         modifier = Modifier.padding(bottom = 10.dp)
                     )
