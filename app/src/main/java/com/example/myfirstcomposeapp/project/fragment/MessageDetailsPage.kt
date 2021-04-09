@@ -1,5 +1,4 @@
 package com.example.myfirstcomposeapp.project.fragment
-
 import android.graphics.PointF
 import android.util.Log
 import androidx.compose.foundation.*
@@ -44,7 +43,6 @@ import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.random.Random
-
 @Composable
 fun MessageDetailsPage(mainActions: MainActions) {
     val tapX = remember { mutableStateOf(0f) }
@@ -107,6 +105,9 @@ fun MessageDetailsPage(mainActions: MainActions) {
 ////    }
 //
 ////endregion
+    /**
+     * 下拉菜单
+     */
     DropdownMenu(
         expanded = expanded.value,
         onDismissRequest = { expanded.value = false },
@@ -222,7 +223,12 @@ fun CodeCompose() {
                     .width(23.dp)
                     .height(20.dp)
                     .clickable {
-                     AndroidShare.shareWeChatFriend("这是标题", textContentString, AndroidShare.TEXT, null)
+                        AndroidShare.shareWeChatFriend(
+                            "这是标题",
+                            textContentString,
+                            AndroidShare.TEXT,
+                            null
+                        )
                     },
                 contentScale = ContentScale.FillBounds,
 

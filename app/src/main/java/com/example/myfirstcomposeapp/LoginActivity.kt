@@ -5,11 +5,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.InternalComposeApi
 import androidx.core.view.WindowCompat
 import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.example.lib_common.utils.AndroidShare
+import com.example.myfirstcomposeapp.canvas_ui.InkColorCanvas
 import com.example.myfirstcomposeapp.confing.NavGraph
 import com.example.myfirstcomposeapp.ui.theme.PlayTheme
 import dev.chrisbanes.accompanist.insets.ProvideWindowInsets
