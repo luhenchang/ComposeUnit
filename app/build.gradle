@@ -54,6 +54,7 @@ android {
 
 dependencies {
     implementation project(path: ':lib_common')
+    testImplementation 'junit:junit:4.12'
     //room数据库
     def room_version = '2.3.0-rc01'
     annotationProcessor "androidx.room:room-compiler:$room_version"

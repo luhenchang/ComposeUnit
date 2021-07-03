@@ -58,7 +58,6 @@ fun InkColorCanvas() {
     val imageBitmap = getBitmap(R.drawable.csmr)
     val imageBitmap_default = getBitmap(R.drawable.hbmr)
     val scrrenOffset = remember { mutableStateOf(Offset(0f, 0f)) }
-
     val animalState = remember { mutableStateOf(false) }
 
     val animal: Float by animateFloatAsState(

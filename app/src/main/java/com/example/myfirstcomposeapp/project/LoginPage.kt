@@ -42,7 +42,6 @@ fun LoginPage(mainActions: MainActions) {
                         while (true) {
                             val offset = awaitPointerEventScope {
                                 awaitFirstDown().position
-
                             }
                             // Launch a new coroutine for animation so the touch detection thread is not
                             // blocked.
