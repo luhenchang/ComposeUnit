@@ -48,13 +48,13 @@ android {
     }
     composeOptions {
         kotlinCompilerExtensionVersion compose_version
-        kotlinCompilerVersion '1.4.31'
+        kotlinCompilerVersion '1.5.10'
     }
 }
 
 dependencies {
     implementation project(path: ':lib_common')
-    testImplementation 'junit:junit:4.12'
+    testImplementation 'junit:junit:4.13.2'
     //room数据库
     def room_version = '2.3.0-rc01'
     annotationProcessor "androidx.room:room-compiler:$room_version"

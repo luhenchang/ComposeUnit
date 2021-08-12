@@ -11,14 +11,19 @@ import com.example.myfirstcomposeapp.confing.MainActions
 import kotlinx.coroutines.launch
 import androidx.compose.animation.core.*
 import androidx.compose.animation.core.Spring.StiffnessLow
+import androidx.compose.foundation.background
 import kotlinx.coroutines.coroutineScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.Text
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.dp
 import com.example.myfirstcomposeapp.composeble_ui.login.*
 import com.example.myfirstcomposeapp.project.fragment.twofragments.TextPage
+
 @InternalComposeApi
 @Composable
 fun LoginPage(mainActions: MainActions) {
@@ -108,7 +113,12 @@ fun LoginPage(mainActions: MainActions) {
                     LoginPageTopRotaAndScaleImage(animatedColor, animatedScales, animatedOffset)
                 }
                 LoginPageTopTextBox(animatedOffset, animatedScales)
-                LoginPageInput(inputUserName, animatedColor, animatedRound, inputPassworld)
+                LoginPageInput(
+                    inputUserName,
+                    animatedColor,
+                    animatedRound,
+                    inputPassworld
+                )
                 LoginPageCheckBox(animatedCheckBox, animatedOffset, animatedRound)
                 LoginPageBootomButton(animatedScales, animatedColor, mainActions)
 
@@ -118,13 +128,14 @@ fun LoginPage(mainActions: MainActions) {
 }
 
 
-
-@Preview
 @Composable
 fun TextStudy1() {
     Text(
         text = "hello world",
-        modifier = Modifier.fillMaxWidth(),
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(100.dp)
+            .background(Color.Blue),
         style = TextStyle(
             color = Color.Red,
             shadow = Shadow(

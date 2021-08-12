@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.myfirstcomposeapp.R
 import com.example.myfirstcomposeapp.project.model.home.HomeViewModel
@@ -57,102 +58,93 @@ fun BottomNavigation(homeViewModel: HomeViewModel) {
             .fillMaxWidth(),
         contentAlignment = Alignment.BottomEnd,
     ) {
-        Canvas(modifier = Modifier
-            .fillMaxWidth()
-            .height(70.dp), onDraw = {
-            drawIntoCanvas { canvas ->
-                val paint = Paint()
-                paint.color = Color(0xFF108888)//Color(0XFF0DBEBF)
-                paint.style = PaintingStyle.Fill
-                val path = Path()
-                //先固定分为三等分
-                val widthOfOne = size.width / 3
-                //每一个弧度的中心控制点
-                val centerWidthOfOneX = widthOfOne / 2
-                //弧度端口到两遍ONewidth距离
-                val marginLeftAndRigth = centerWidthOfOneX / 1.6f
-
-                val controllerX = centerWidthOfOneX / 6f
-
-                val keyAnimal = widthOfOne * indexValue
-                canvas.save()
-                paint.asFrameworkPaint().setShadowLayer(
-                    15f,
-                    5f,
-                    -6f,
-                    Color(0xFF108888).toArgb()
-                )
-                canvas.drawCircle(Offset(centerWidthOfOneX + keyAnimal, 0f), 60f, paint)
-
-                path.moveTo(0f, 0f)
-                path.lineTo(marginLeftAndRigth / 2 + keyAnimal, 0f)
-                path.cubicTo(
-                    marginLeftAndRigth + keyAnimal,
-                    0f,
-                    centerWidthOfOneX - (centerWidthOfOneX - controllerX) / 2f + keyAnimal,
-                    size.height / 3f,
-                    centerWidthOfOneX + keyAnimal,
-                    size.height / 2.6f
-                )
-                path.cubicTo(
-                    centerWidthOfOneX + (centerWidthOfOneX - controllerX) / 2f + keyAnimal,
-                    size.height / 2.6f,
-                    widthOfOne - (marginLeftAndRigth) + keyAnimal,
-                    0f,
-                    widthOfOne - marginLeftAndRigth / 2 + keyAnimal,
-                    0f
-                )
-                path.lineTo(size.width, 0f)
-                path.lineTo(size.width, size.height)
-                path.lineTo(0f, size.height)
-                path.close()
-                //canvas.clipPath(path)
-                canvas.drawPath(path, paint)
-                //canvas.nativeCanvas.drawColor(Color(0xFF108888).toArgb())
-            }
-        })
+        BootomBarAnimalBgView(indexValue)
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.Top
         ) {
-            Image(
-                bitmap = getBitmap(resource = R.drawable.home),
-                contentDescription = "1",
-                modifier = Modifier
-                    .modifier(homeViewModel.position.value, 0, animalBooleanState)
-                    .clickable {
-                        homeViewModel.animalBoolean.value = !homeViewModel.animalBoolean.value
-                        homeViewModel.positionChanged(0)
-                    }
-            )
-
-            Image(
-                bitmap = getBitmap(resource = R.drawable.center),
-                contentDescription = "1",
-                modifier = Modifier
-                    .modifier(homeViewModel.position.value, 1, animalBooleanState)
-                    .clickable {
-                        homeViewModel.animalBoolean.value = !homeViewModel.animalBoolean.value
-                        homeViewModel.positionChanged(1)
-                    }
-            )
-            Image(
-                bitmap = getBitmap(resource = R.drawable.min),
-                contentDescription = "1",
-                modifier = Modifier
-                    .modifier(homeViewModel.position.value, 2, animalBooleanState)
-                    .clickable {
-                        homeViewModel.animalBoolean.value = !homeViewModel.animalBoolean.value
-                        homeViewModel.positionChanged(2)
-                    }
-            )
-
+            BottomView(homeViewModel, 0, R.drawable.center, animalBooleanState)
+            BottomView(homeViewModel, 1, R.drawable.home, animalBooleanState)
+            BottomView(homeViewModel, 2, R.drawable.min, animalBooleanState)
         }
     }
 
 }
 
+//背景动画
+@Composable
+private fun BootomBarAnimalBgView(indexValue: Float) {
+    Canvas(modifier = Modifier
+        .fillMaxWidth()
+        .height(70.dp), onDraw = {
+        drawIntoCanvas { canvas ->
+            val paint = Paint()
+            paint.color = Color(0xFF108888)//Color(0XFF0DBEBF)
+            paint.style = PaintingStyle.Fill
+            val path = Path()
+            //先固定分为三等分
+            val widthOfOne = size.width / 3
+            //每一个弧度的中心控制点
+            val centerWidthOfOneX = widthOfOne / 2
+            //弧度端口到两遍ONewidth距离
+            val marginLeftAndRigth = centerWidthOfOneX / 1.6f
+
+            val controllerX = centerWidthOfOneX / 6f
+
+            val keyAnimal = widthOfOne * indexValue
+            canvas.save()
+            paint.asFrameworkPaint().setShadowLayer(
+                15f,
+                5f,
+                -6f,
+                Color(0xFF108888).toArgb()
+            )
+            canvas.drawCircle(Offset(centerWidthOfOneX + keyAnimal, 0f), 60f, paint)
+
+            path.moveTo(0f, 0f)
+            path.lineTo(marginLeftAndRigth / 2 + keyAnimal, 0f)
+            path.cubicTo(
+                marginLeftAndRigth + keyAnimal,
+                0f,
+                centerWidthOfOneX - (centerWidthOfOneX - controllerX) / 2f + keyAnimal,
+                size.height / 3f,
+                centerWidthOfOneX + keyAnimal,
+                size.height / 2.6f
+            )
+            path.cubicTo(
+                centerWidthOfOneX + (centerWidthOfOneX - controllerX) / 2f + keyAnimal,
+                size.height / 2.6f,
+                widthOfOne - (marginLeftAndRigth) + keyAnimal,
+                0f,
+                widthOfOne - marginLeftAndRigth / 2 + keyAnimal,
+                0f
+            )
+            path.lineTo(size.width, 0f)
+            path.lineTo(size.width, size.height)
+            path.lineTo(0f, size.height)
+            path.close()
+            //canvas.clipPath(path)
+            canvas.drawPath(path, paint)
+            //canvas.nativeCanvas.drawColor(Color(0xFF108888).toArgb())
+        }
+    })
+}
+
+@Preview
+@Composable
+fun BottomView(homeViewModel: HomeViewModel, index: Int, icon: Int, animalBooleanState: Float) {
+    Image(
+        bitmap = getBitmap(resource = icon),
+        contentDescription = "1",
+        modifier = Modifier
+            .modifier(homeViewModel.position.value, index, animalBooleanState)
+            .clickable {
+                homeViewModel.animalBoolean.value = !homeViewModel.animalBoolean.value
+                homeViewModel.positionChanged(index)
+            }
+    )
+}
 
 /**
  * 样式二

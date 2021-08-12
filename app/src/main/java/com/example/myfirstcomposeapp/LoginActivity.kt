@@ -37,7 +37,7 @@ class LoginActivity : AppCompatActivity(), PermissionCallbacks {
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
             //设置路由导航
-            ProvideWindowInsets {
+            ProvideWindowInsets(){
                 PlayTheme {
                     NavGraph()
                 }

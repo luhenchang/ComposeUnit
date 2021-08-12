@@ -31,7 +31,7 @@ import com.example.myfirstcomposeapp.canvas_ui.BoxClipShapes
 import com.example.myfirstcomposeapp.utils.getBitmap
 
 @Composable
-fun OneFragment(modifier: Modifier) {
+fun OneFragment(modifier: Modifier?) {
     //设置滑动
     val scrollLazyState = rememberLazyListState()
     var currenNumber = remember { mutableStateOf(1) }
