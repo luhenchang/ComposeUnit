@@ -18,6 +18,7 @@ import  com.example.myfirstcomposeapp.composeble_ui.home.*
 @Composable
 fun HomePage(mainActions: MainActions,homeViewModel : HomeViewModel = viewModel()) {
     //开始观察此[LiveData]，并通过[State]表示其值。每次将新值发布到[LiveData]中时，返回的[State]将被更新，
+    //更新你好呀？
     val position by homeViewModel.position.observeAsState()
     Scaffold(
         topBar = { AppBar(position) },
