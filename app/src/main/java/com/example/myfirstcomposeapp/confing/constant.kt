@@ -1,27 +1,17 @@
 package com.example.myfirstcomposeapp.confing
 import HomePage
 import LoginPage
-import androidx.compose.foundation.layout.width
-import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.InternalComposeApi
 import androidx.compose.runtime.remember
-import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
-import androidx.navigation.compose.navigate
 import androidx.navigation.compose.rememberNavController
-import com.example.myfirstcomposeapp.composeble_ui.home.modifier
 import com.example.myfirstcomposeapp.confing.Constant.HOME_PAGE_ROUTE
 import com.example.myfirstcomposeapp.confing.Constant.LOGIN_PAGE_ROUTE
 import com.example.myfirstcomposeapp.confing.Constant.MESSAGE_DETAILS_PAGE_ROUTE
 import com.example.myfirstcomposeapp.project.fragment.MessageDetailPage
-import com.example.myfirstcomposeapp.project.fragment.MessageDetailsPage
-
 object Constant {
     const val LOGIN_PAGE_ROUTE = "loginPage"
     const val HOME_PAGE_ROUTE = "homePage"
@@ -29,7 +19,6 @@ object Constant {
 
 }
 
-@InternalComposeApi
 @Composable
 fun NavGraph(startDestination: String = LOGIN_PAGE_ROUTE) {
     val navController = rememberNavController()
@@ -38,21 +27,18 @@ fun NavGraph(startDestination: String = LOGIN_PAGE_ROUTE) {
     NavHost(
         navController = navController,
         startDestination = startDestination,
-
-    ) {
-        composable(LOGIN_PAGE_ROUTE) {
-            LoginPage(mainActions = actions)
+        builder = {
+            composable(LOGIN_PAGE_ROUTE) {
+                LoginPage(actions)
+            }
+            composable(HOME_PAGE_ROUTE) {
+                HomePage(actions)
+            }
+            composable(MESSAGE_DETAILS_PAGE_ROUTE) {
+                MessageDetailPage(actions)
+            }
         }
-
-        composable(HOME_PAGE_ROUTE) {
-            HomePage(actions)
-        }
-        composable(MESSAGE_DETAILS_PAGE_ROUTE) {
-            MessageDetailPage(actions)
-        }
-
-
-    }
+    )
 }
 
 class MainActions(navController: NavController) {

@@ -24,7 +24,6 @@ import androidx.compose.ui.unit.dp
 import com.example.myfirstcomposeapp.composeble_ui.login.*
 import com.example.myfirstcomposeapp.project.fragment.twofragments.TextPage
 
-@InternalComposeApi
 @Composable
 fun LoginPage(mainActions: MainActions) {
     val animatedOffset = remember { Animatable(0f) }

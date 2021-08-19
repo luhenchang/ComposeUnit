@@ -58,39 +58,42 @@ dependencies {
     api "androidx.compose.material:material:$compose_version"
     api "androidx.compose.ui:ui-tooling:$compose_version"
     api 'androidx.lifecycle:lifecycle-runtime-ktx:2.3.1'
-    api 'androidx.activity:activity-compose:1.3.0'
+    api 'androidx.activity:activity-compose:1.3.1'
     testApi 'junit:junit:4.13.2'
     androidTestApi 'androidx.test.ext:junit:1.1.2'
     androidTestApi 'androidx.test.espresso:espresso-core:3.3.0'
     androidTestApi "androidx.compose.ui:ui-test-junit4:$compose_version"
+    
     // compose
     api "androidx.compose.ui:ui:$compose_version"
     api "androidx.compose.runtime:runtime-livedata:$compose_version"
     api "androidx.compose.material:material:$compose_version"
     api "androidx.compose.ui:ui-tooling:$compose_version"
-    api "androidx.activity:activity-compose:1.3.0"
-    api "androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha04"
+    // https://mvnrepository.com/artifact/androidx.constraintlayout/constraintlayout-compose
+    api "androidx.constraintlayout:constraintlayout-compose:1.0.0-beta02"
+    api "androidx.activity:activity-compose:1.3.1"
+    api "androidx.lifecycle:lifecycle-viewmodel-compose:1.0.0-alpha07"
     api "androidx.lifecycle:lifecycle-viewmodel-ktx:$compose_version"
     api "androidx.compose.foundation:foundation:$compose_version"
     api "androidx.compose.foundation:foundation-layout:$compose_version"
     api "androidx.compose.material:material-icons-extended:$compose_version"
-    api "androidx.constraintlayout:constraintlayout-compose:1.0.0-alpha05"
     api 'androidx.appcompat:appcompat:1.3.0'
+
     // 安卓Utils
     api 'com.blankj:utilcode:1.30.0'
     androidTestApi "androidx.compose.ui:ui-test:$compose_version"
     androidTestApi "androidx.compose.ui:ui-test-junit4:$compose_version"
+
     // navigation
-    api "androidx.navigation:navigation-compose:1.0.0-alpha10"
-    api "dev.chrisbanes.accompanist:accompanist-coil:0.6.2"
-    api "dev.chrisbanes.accompanist:accompanist-insets:0.6.2"
-    api "dev.chrisbanes.accompanist:accompanist-picasso:0.5.0"
-    api "dev.chrisbanes.accompanist:accompanist-glide:0.6.2"
+    api "androidx.navigation:navigation-compose:2.4.0-alpha05"
+    api 'com.google.accompanist:accompanist-insets:0.16.1'
+    api 'com.google.accompanist:accompanist-coil:0.15.0'
+    api 'com.google.accompanist:accompanist-pager:0.16.1'
+    api "com.google.accompanist:accompanist-glide:0.6.2"
+
     //flow布局
-    api "com.google.accompanist:accompanist-flowlayout:0.7.0"
-
-
-
+    // https://mvnrepository.com/artifact/com.google.accompanist/accompanist-flowlayout
+    api 'com.google.accompanist:accompanist-flowlayout:0.16.1'
 
     //权限
     api 'pub.devrel:easypermissions:2.0.1'

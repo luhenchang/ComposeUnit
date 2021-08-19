@@ -36,8 +36,9 @@ import com.example.myfirstcomposeapp.ui.theme.blue
 import com.example.myfirstcomposeapp.utils.getBitmap
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
-import dev.chrisbanes.accompanist.glide.GlideImage
-import dev.chrisbanes.accompanist.glide.LocalRequestManager
+import com.google.accompanist.glide.GlideImage
+import com.google.accompanist.glide.LocalRequestManager
+import kotlinx.coroutines.NonDisposableHandle.parent
 import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sin

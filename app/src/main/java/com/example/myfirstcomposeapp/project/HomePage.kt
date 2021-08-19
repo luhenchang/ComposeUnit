@@ -13,12 +13,11 @@ import com.example.myfirstcomposeapp.project.fragment.OneFragment
 import com.example.myfirstcomposeapp.project.fragment.TwoFragment
 import com.example.myfirstcomposeapp.project.model.home.HomeViewModel
 import  com.example.myfirstcomposeapp.composeble_ui.home.*
+import com.example.myfirstcomposeapp.project.fragment.OneFragment1
 
-@InternalComposeApi
 @Composable
 fun HomePage(mainActions: MainActions,homeViewModel : HomeViewModel = viewModel()) {
     //开始观察此[LiveData]，并通过[State]表示其值。每次将新值发布到[LiveData]中时，返回的[State]将被更新，
-    //更新你好呀？
     val position by homeViewModel.position.observeAsState()
     Scaffold(
         topBar = { AppBar(position) },
@@ -27,7 +26,7 @@ fun HomePage(mainActions: MainActions,homeViewModel : HomeViewModel = viewModel(
         }) { innerPadding ->
         val modifier = Modifier.padding(innerPadding)
         when (position) {
-            0 -> OneFragment(modifier)
+            0 -> OneFragment1(modifier)
             1 -> TwoFragment(mainActions)
             else -> TwoFragment(mainActions)
         }
@@ -47,14 +46,13 @@ fun HomePage(mainActions: MainActions,homeViewModel : HomeViewModel = viewModel(
 @Composable
 fun AppBar(indexPageState: Int?) {
     if (indexPageState==0) {
-        Row(
+        Box(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(70.dp)
                 .background(Color(0xFF108888)),
-            horizontalArrangement = Arrangement.Center,
-            verticalAlignment = Alignment.CenterVertically
         ) {
+            OneFragment(modifier = null)
             Text(
                 modifier = Modifier.padding(top = 20.dp),
                 text = "Hello World", color = Color.White

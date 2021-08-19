@@ -5,16 +5,13 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
 import androidx.activity.compose.setContent
-import androidx.annotation.RequiresApi
-import androidx.compose.runtime.InternalComposeApi
 import androidx.core.view.WindowCompat
 import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.example.lib_common.utils.AndroidShare
-import com.example.myfirstcomposeapp.canvas_ui.InkColorCanvas
 import com.example.myfirstcomposeapp.confing.NavGraph
 import com.example.myfirstcomposeapp.ui.theme.PlayTheme
-import dev.chrisbanes.accompanist.insets.ProvideWindowInsets
+import com.google.accompanist.insets.ProvideWindowInsets
 import pub.devrel.easypermissions.EasyPermissions
 import pub.devrel.easypermissions.EasyPermissions.PermissionCallbacks
 import java.lang.StringBuilder
@@ -22,7 +19,7 @@ import kotlin.system.exitProcess
 
 class LoginActivity : AppCompatActivity(), PermissionCallbacks {
     val TAG=LoginActivity::class.java.name
-    @InternalComposeApi
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         BarUtils.setNavBarVisibility(window, true)
@@ -36,8 +33,7 @@ class LoginActivity : AppCompatActivity(), PermissionCallbacks {
         Log.e(TAG, "onCreate: "+list2[0].item_content)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         setContent {
-            //设置路由导航
-            ProvideWindowInsets(){
+            ProvideWindowInsets {
                 PlayTheme {
                     NavGraph()
                 }
