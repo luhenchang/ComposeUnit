@@ -171,7 +171,7 @@ fun GlideApp() {
 @Composable
 fun MessageDetailPage(mainActions: MainActions) {
     Scaffold(
-        topBar = { MyTopAppBar(mainActions) }, backgroundColor = Color(238, 239, 247, 255)
+        topBar = { MyTopAppBar(mainActions,0) }, backgroundColor = Color(238, 239, 247, 255)
     ) {
         Column(
             modifier = Modifier.verticalScroll(rememberScrollState())

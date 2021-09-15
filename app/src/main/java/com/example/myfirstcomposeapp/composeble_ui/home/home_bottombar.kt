@@ -30,7 +30,7 @@ import kotlinx.coroutines.launch
  *
  */
 @Composable
-fun BottomNavigation(homeViewModel: HomeViewModel) {
+fun BottomNavigation(homeViewModel: HomeViewModel){
     val animalBooleanState: Float by animateFloatAsState(
         if (homeViewModel.animalBoolean.value) {
             0f

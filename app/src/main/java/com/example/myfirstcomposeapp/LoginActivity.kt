@@ -1,14 +1,25 @@
 package com.example.myfirstcomposeapp
+
 import android.Manifest
 import android.app.AlertDialog
+import android.content.BroadcastReceiver
+import android.content.Context
+import android.content.Intent
+import android.content.IntentFilter
+import android.net.ConnectivityManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Log
+import android.view.WindowManager
 import androidx.activity.compose.setContent
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.Dp
 import androidx.core.view.WindowCompat
 import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.example.lib_common.utils.AndroidShare
+import com.example.lib_common.utils.pxToDp
 import com.example.myfirstcomposeapp.confing.NavGraph
 import com.example.myfirstcomposeapp.ui.theme.PlayTheme
 import com.google.accompanist.insets.ProvideWindowInsets
@@ -18,20 +29,28 @@ import java.lang.StringBuilder
 import kotlin.system.exitProcess
 
 class LoginActivity : AppCompatActivity(), PermissionCallbacks {
-    val TAG=LoginActivity::class.java.name
+    val TAG: String = LoginActivity::class.java.name
+    private val netWorkChangeReceiver = object : BroadcastReceiver() {
+        override fun onReceive(context: Context?, intent: Intent?) {
+           ToastUtils.showLong("网络变化了")
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        BarUtils.setNavBarVisibility(window, true)
         BarUtils.transparentStatusBar(this)
         requireSomePermission()
-        AndroidShare.mcontext= applicationContext
-        val db: AppDatabase = RoomAsset.databaseBuilder(applicationContext, AppDatabase::class.java, "chinook.db").build()
-        val list1= db.chinookDao().users
-        Log.e(TAG, "onCreate: "+list1[0].name)
-        val list2= db.chinookDao().composeDatas
-        Log.e(TAG, "onCreate: "+list2[0].item_content)
+        AndroidShare.mcontext = applicationContext
+        val db: AppDatabase =
+            RoomAsset.databaseBuilder(applicationContext, AppDatabase::class.java, "chinook.db")
+                .build()
+        val list1 = db.chinookDao().users
+        Log.e(TAG, "onCreate: " + list1[0].name)
+        val list2 = db.chinookDao().composeDatas
+        Log.e(TAG, "onCreate: " + list2[0].item_content)
         WindowCompat.setDecorFitsSystemWindows(window, false)
+        val netWorkIntent= IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
+        registerReceiver(netWorkChangeReceiver,netWorkIntent)
         setContent {
             ProvideWindowInsets {
                 PlayTheme {
@@ -87,4 +106,20 @@ class LoginActivity : AppCompatActivity(), PermissionCallbacks {
     override fun onPermissionsGranted(requestCode: Int, perms: List<String?>) {
 
     }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        this.unregisterReceiver(netWorkChangeReceiver)
+    }
+
+    @Composable
+    fun getNavigationBarHeight(): Dp {
+        var result = 0f
+        val resourceId = resources.getIdentifier("navigation_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            result = resources.getDimension(resourceId)
+        }
+        return result.pxToDp()
+    } //返回值就是导航栏的高度,得到的值是像素
+
 }

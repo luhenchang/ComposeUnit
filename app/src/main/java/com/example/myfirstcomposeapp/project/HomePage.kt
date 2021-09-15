@@ -6,6 +6,7 @@ import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.myfirstcomposeapp.confing.MainActions
@@ -13,16 +14,23 @@ import com.example.myfirstcomposeapp.project.fragment.OneFragment
 import com.example.myfirstcomposeapp.project.fragment.TwoFragment
 import com.example.myfirstcomposeapp.project.model.home.HomeViewModel
 import  com.example.myfirstcomposeapp.composeble_ui.home.*
+import com.example.myfirstcomposeapp.confing.MyTopAppBar
 import com.example.myfirstcomposeapp.project.fragment.OneFragment1
+import com.google.accompanist.insets.navigationBarsHeight
+import com.google.accompanist.insets.navigationBarsPadding
 
 @Composable
-fun HomePage(mainActions: MainActions,homeViewModel : HomeViewModel = viewModel()) {
+fun HomePage(mainActions: MainActions, homeViewModel: HomeViewModel = viewModel()) {
     //开始观察此[LiveData]，并通过[State]表示其值。每次将新值发布到[LiveData]中时，返回的[State]将被更新，
     val position by homeViewModel.position.observeAsState()
     Scaffold(
-        topBar = { AppBar(position) },
+        Modifier.navigationBarsPadding(false),
+        topBar = {MyTopAppBar(mainActions,position)},
         bottomBar = {
-           BottomNavigation(homeViewModel)
+          Column {
+              BottomNavigation(homeViewModel)
+              Spacer(modifier = Modifier.navigationBarsHeight())
+          }
         }) { innerPadding ->
         val modifier = Modifier.padding(innerPadding)
         when (position) {
@@ -36,8 +44,6 @@ fun HomePage(mainActions: MainActions,homeViewModel : HomeViewModel = viewModel(
 }
 
 
-
-
 /**
  * @param
  * 顶部appBar
@@ -45,7 +51,7 @@ fun HomePage(mainActions: MainActions,homeViewModel : HomeViewModel = viewModel(
  */
 @Composable
 fun AppBar(indexPageState: Int?) {
-    if (indexPageState==0) {
+    if (indexPageState == 0) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
