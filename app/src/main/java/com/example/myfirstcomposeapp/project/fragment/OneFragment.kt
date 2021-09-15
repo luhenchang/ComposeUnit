@@ -57,7 +57,7 @@ fun OneFragment(modifier: Modifier?) {
     Canvas(
         modifier = Modifier
             .fillMaxWidth()
-            .height(250.dp)
+            .fillMaxHeight()
             .pointerInput(Unit) {
                 coroutineScope {
                     while (true) {

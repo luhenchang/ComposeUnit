@@ -1,4 +1,5 @@
 package com.example.myfirstcomposeapp.confing
+
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.Divider
@@ -13,17 +14,21 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.myfirstcomposeapp.R
 import com.example.myfirstcomposeapp.utils.getBitmap
+
 @Composable
-fun MyTopAppBar(mainActions: MainActions) {
-    TopAppBar(Modifier.height(70.dp)) {
+fun MyTopAppBar(mainActions: MainActions, position: Int?) {
+    if (position == 0) TopAppBar(Modifier.height(70.dp)) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(top = 20.dp)
         ) {
             Text(
-                text = "Text", Modifier.padding(start = 15.dp).clickable {
-                    mainActions.popCurrenPage()
-                }
+                text = "Text",
+                Modifier
+                    .padding(start = 15.dp)
+                    .clickable {
+                        mainActions.popCurrenPage()
+                    }
             )
             Spacer(modifier = Modifier.weight(1f))
             Icon(
@@ -49,7 +54,7 @@ fun MyTopAppBar(mainActions: MainActions) {
  * 画分割线
  */
 @Composable
-fun AppDivider(top: Dp =30.dp){
+fun AppDivider(top: Dp = 30.dp) {
     Divider(
         Modifier.padding(top = top),
         color = Color(11, 11, 11, 11)
