@@ -17,3 +17,4 @@ class App:Application() {
         Log.e("study_01", "main: $positives")
     }
 }
+///提交错误内容
