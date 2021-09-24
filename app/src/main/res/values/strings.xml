@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">MyFirstComposeApp</string>
+    <string name="app_name">composeUnit</string>
     <string name="login_other_login">第三方登陆</string>
     <string name="login_user_rigest">用户注册</string>
 
