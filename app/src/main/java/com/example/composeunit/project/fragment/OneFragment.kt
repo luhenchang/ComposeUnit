@@ -16,6 +16,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
@@ -27,13 +28,16 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.lib_common.utils.pxToDp
+import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composeunit.R
 import com.example.composeunit.canvas_ui.BoxBorderClipShape
 import com.example.composeunit.canvas_ui.BoxClipShapes
+import com.example.composeunit.project.bean.Information
+import com.example.composeunit.project.view_model.home.HomeViewModel
 import com.example.composeunit.utils.getBitmap
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
@@ -74,7 +78,7 @@ fun OneFragment(modifier: Modifier?) {
             }
     ) {
         drawIntoCanvas { canva ->
-            Log.e("canvase", "OneFragment:${size.height} " )
+            Log.e("canvase", "OneFragment:${size.height} ")
             val multiColorBitmpa = Bitmap.createScaledBitmap(
                 imageBitmap.asAndroidBitmap(),
                 size.width.toInt(),
@@ -142,121 +146,30 @@ fun OneFragment(modifier: Modifier?) {
 @Composable
 fun OneFragment1(modifier: Modifier?) {
     //设置滑动
-      val scrollLazyState = rememberLazyListState()
-//    var currentNumber = remember { mutableStateOf(0f) }
-//    var offset = remember { mutableStateOf(Offset.Zero) }
-//    val imageBitmap = getBitmap(resource = R.drawable.dmax)
-//    Box {
-//        androidx.compose.foundation.Canvas(
-//            modifier = Modifier
-//                .width(600.pxToDp())
-//                .height(600.pxToDp())
-//                .background(Color.Black)
-//                .pointerInput(Unit) {
-//                    detectHorizontalDragGestures(
-//                        onDragStart = {
-//
-//                        },
-//                        onHorizontalDrag = { change, dragAmount ->
-//                            Log.e(
-//                                "onHorizontalDrag",
-//                                "OneFragment: dragAmount=$dragAmount;change=$change"
-//                            )
-//                            currentNumber.value = dragAmount
-//                        },
-//                        onDragCancel = {
-//
-//                        },
-//                        onDragEnd = {
-//
-//                        }
-//                    )
-//                }
-//                .draggable(
-//                    orientation = Orientation.Horizontal,
-//                    state = rememberDraggableState { delta ->
-//                        if (delta > 0) {
-//                            offset.value++
-//                            if (currentNumber.value > 5) {
-//                                currentNumber.value = 1
-//                            }
-//                            if (offset.value > 10) {
-//                                currentNumber.value++
-//                                offset.value = 0
-//                            }
-//
-//                        }
-//                        if (delta < 0) {
-//                            offset.value++
-//                            if (currentNumber.value < 0) {
-//                                currentNumber.value = 5
-//                            }
-//                            if (offset.value > 10) {
-//                                currentNumber.value--
-//                                offset.value = 0
-//                            }
-//                        }
-//                        Log.e("滑动水平距离delta=", delta.toString())
-//                    }
-//                )
-//                .scrollable(
-//                    orientation = Orientation.Horizontal,
-//                    reverseDirection=true,
-//                    state = rememberScrollableState { delta ->
-//                        if (delta > 0) {
-//                            offset.value++
-//                            if (currenNumber.value > 5) {
-//                                currenNumber.value = 1
-//                            }
-//                            if (offset.value > 10) {
-//                                currenNumber.value++
-//                                offset.value = 0
-//                            }
-//
-//                        }
-//                        if (delta < 0) {
-//                            offset.value++
-//                            if (currenNumber.value < 0) {
-//                                currenNumber.value = 5
-//                            }
-//                            if (offset.value > 10) {
-//                                currenNumber.value--
-//                                offset.value = 0
-//                            }
-//                        }
-//                        Log.e("滑动水平距离delta=", delta.toString())
-//                        delta
-//                    }
-//                ),
-//        ) {
-//            drawIntoCanvas {
-//                val mMatrix = android.graphics.Matrix()
-//                mMatrix.run {
-//                    reset()
-//                    val slidingDistance = -(600 * (5.0 - (currentNumber.value - 1.0))).toFloat()
-//                    this.postTranslate(slidingDistance, 0f)
-//                    it.nativeCanvas.drawBitmap(imageBitmap.asAndroidBitmap(), this, null)
-//                }
-//            }
-//        }
-//    }
-    LazyColumn(state = scrollLazyState) {
-        //遍历循环内部Item部件
-        items(20) {
-            Box(
-                modifier = Modifier
-                    .padding(10.dp)
-                    .fillMaxWidth(),
-            ) {
-                StudyLayoutViews()
-
+    val scrollLazyState = rememberLazyListState()
+    val homeViewModel:HomeViewModel = viewModel()
+    val state = homeViewModel.information.observeAsState()
+    if (state.value.isNullOrEmpty()){
+        Text(text = "数据加载失败")
+    }else{
+        LazyColumn(state = scrollLazyState) {
+            //遍历循环内部Item部件
+            items(state.value!!.size) { index ->
+                Box(
+                    modifier = Modifier
+                        .padding(10.dp)
+                        .fillMaxWidth(),
+                ) {
+                    StudyLayoutViews(homeViewModel.information.value!![index])
+                }
             }
         }
     }
+
 }
 
 @Composable
-fun StudyLayoutViews() {
+fun StudyLayoutViews(information: Information) {
     val imageBitmap: ImageBitmap = ImageBitmap.imageResource(R.drawable.hean_lhc)
     val delectedIcon: ImageBitmap = ImageBitmap.imageResource(R.drawable.delected_icon)
     Box(
@@ -326,4 +239,12 @@ fun StudyLayoutViews() {
         }
     }
 
+}
+
+fun String?.removeNull() : String {
+    return if (this.isNullOrEmpty()){
+        ""
+    }else{
+        this
+    }
 }

@@ -16,11 +16,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.Dp
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.ViewModelProviders
 import com.blankj.utilcode.util.BarUtils
 import com.blankj.utilcode.util.ToastUtils
 import com.example.lib_common.utils.AndroidShare
 import com.example.lib_common.utils.pxToDp
 import com.example.composeunit.confing.NavGraph
+import com.example.composeunit.project.view_model.home.HomeViewModel
 import com.example.composeunit.ui.theme.PlayTheme
 import com.google.accompanist.insets.ProvideWindowInsets
 import pub.devrel.easypermissions.EasyPermissions
@@ -38,6 +41,7 @@ class LoginActivity : AppCompatActivity(), PermissionCallbacks {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        Log.e(TAG,"onCreate")
         BarUtils.transparentStatusBar(this)
         requireSomePermission()
         AndroidShare.mcontext = applicationContext
@@ -100,7 +104,47 @@ class LoginActivity : AppCompatActivity(), PermissionCallbacks {
 
     }
 
+    override fun onResume() {
+        Log.e(TAG,"onResume")
+        super.onResume()
+    }
+
+    override fun onRestart() {
+        Log.e(TAG,"onRestart")
+        super.onRestart()
+    }
+
+    override fun onStart() {
+        Log.e(TAG,"onRestart")
+        super.onStart()
+    }
+
+    override fun onPause() {
+        Log.e(TAG,"onPause")
+        super.onPause()
+    }
+
+    override fun onStop() {
+        Log.e(TAG,"onStop")
+        super.onStop()
+    }
+
+    override fun onNewIntent(intent: Intent?) {
+        Log.e(TAG,"onNewIntent")
+        super.onNewIntent(intent)
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        Log.e(TAG,"onSaveInstanceState")
+        super.onSaveInstanceState(outState)
+    }
+
+    override fun onRestoreInstanceState(savedInstanceState: Bundle) {
+        Log.e(TAG,"onRestoreInstanceState")
+        super.onRestoreInstanceState(savedInstanceState)
+    }
     override fun onDestroy() {
+        Log.e(TAG,"onDestroy")
         super.onDestroy()
         this.unregisterReceiver(netWorkChangeReceiver)
     }

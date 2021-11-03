@@ -2,6 +2,7 @@ package com.example.composeunit.project.fragment
 
 import android.graphics.Paint
 import android.graphics.Path
+import android.util.Log
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.gestures.awaitDragOrCancellation
@@ -14,6 +15,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -36,6 +38,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composeunit.R
 import com.example.composeunit.confing.CicleImageShape
 import com.example.composeunit.confing.MainActions
+import com.example.composeunit.project.view_model.home.HomeViewModel
 import com.example.composeunit.project.view_model.message.MessageViewModel
 import com.example.composeunit.utils.getBitmap
 import kotlinx.coroutines.coroutineScope
@@ -54,6 +57,11 @@ fun MessagePageCanvasQueryBox(
     mainActions: MainActions,
     viewModel: MessageViewModel
 ) {
+    val homeViewModel: HomeViewModel = viewModel()
+    val listName = homeViewModel.information.observeAsState(arrayListOf())
+    if (!listName.value.isNullOrEmpty()) {
+        Log.e("HomePage2", "listName: ${listName.value[0].title}")
+    }
     val uiData = ArrayList<Int>()
     uiData.add(R.drawable.android_icon)
     uiData.add(R.drawable.android_5g)

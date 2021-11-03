@@ -35,7 +35,7 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun BottomNavigation(homeViewModel: HomeViewModel){
-    val name:List<Information> = homeViewModel.informationList.value as List<Information>
+    //val name:List<Information> = homeViewModel.informationList.value as List<Information>
     val animalBooleanState: Float by animateFloatAsState(
         if (homeViewModel.animalBoolean.value) {
             0f
@@ -68,7 +68,7 @@ fun BottomNavigation(homeViewModel: HomeViewModel){
             horizontalArrangement = Arrangement.SpaceAround,
             verticalAlignment = Alignment.Top
         ) {
-            Text(text =name[0].title!!)
+            //Text(text =name[0].title!!)
             BottomView(homeViewModel, 0, R.drawable.center, animalBooleanState)
             BottomView(homeViewModel, 1, R.drawable.home, animalBooleanState)
             BottomView(homeViewModel, 2, R.drawable.min, animalBooleanState)

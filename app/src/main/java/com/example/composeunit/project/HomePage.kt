@@ -1,3 +1,4 @@
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -5,6 +6,7 @@ import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composeunit.confing.MainActions
@@ -21,15 +23,15 @@ import com.google.accompanist.insets.navigationBarsPadding
 fun HomePage(mainActions: MainActions, homeViewModel: HomeViewModel = viewModel()) {
     //开始观察此[LiveData]，并通过[State]表示其值。每次将新值发布到[LiveData]中时，返回的[State]将被更新，
     val position by homeViewModel.position.observeAsState()
-    homeViewModel.getInformation()
+    homeViewModel.getInformation(LocalContext.current)
     Scaffold(
         Modifier.navigationBarsPadding(false),
-        topBar = {MyTopAppBar(mainActions,position)},
+        topBar = { MyTopAppBar(mainActions, position) },
         bottomBar = {
-          Column {
-              BottomNavigation(homeViewModel)
-              Spacer(modifier = Modifier.navigationBarsHeight())
-          }
+            Column {
+                BottomNavigation(homeViewModel)
+                Spacer(modifier = Modifier.navigationBarsHeight())
+            }
         }) { innerPadding ->
         val modifier = Modifier.padding(innerPadding)
         when (position) {
