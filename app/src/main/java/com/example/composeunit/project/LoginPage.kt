@@ -16,16 +16,13 @@ import kotlinx.coroutines.coroutineScope
 import androidx.compose.foundation.layout.Box
 import androidx.compose.material.Text
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavHostController
 import com.example.composeunit.composeble_ui.login.*
-import com.example.composeunit.project.fragment.twofragments.TextPage
 
 @Composable
-fun LoginPage(mainActions: MainActions) {
+fun LoginPage(mainActions: MainActions, navController: NavHostController) {
     val animatedOffset = remember { Animatable(0f) }
     val animatedScales = remember { Animatable(1f) }
     val animatedRound = remember { Animatable(30f) }

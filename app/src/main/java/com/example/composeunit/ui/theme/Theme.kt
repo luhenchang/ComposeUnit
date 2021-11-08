@@ -11,6 +11,7 @@ import androidx.compose.ui.graphics.Color
 val blue =  Color(0xFF108888)
 val blueDark = Color(0xFF0B182E)
 
+val backgroundDark = Color.White
 val Purple300 = Color(0xFFCD52FC)
 
 @SuppressLint("ConflictingOnColor")
@@ -26,7 +27,8 @@ private val PlayThemeDark = darkColors(
     primary = blueDark,
     onPrimary = Color.White,
     secondary = blueDark,
-    surface = blueDark
+    surface = blueDark,
+    background = backgroundDark
 )
 @Composable
 fun PlayTheme(
