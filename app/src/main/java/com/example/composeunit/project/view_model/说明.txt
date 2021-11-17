@@ -1,0 +1,22 @@
+
+
+Jetpack Compose动画
+
+一 、默认初始化就开启动画
+1.可控制动画
+val currentState = remember { MutableTransitionState(true) }
+currentState.targetState = false
+val transition = updateTransition(currentState, label = "splashCompass")
+
+2.无限循环动画
+val infiniteTransition = rememberInfiniteTransition()
+val animal by infiniteTransition.animateFloat(
+    initialValue = 0f,
+    targetValue = 1f,
+    animationSpec = infiniteRepeatable(
+        animation = tween(1000, easing = LinearEasing),
+        repeatMode = RepeatMode.Restart
+    )
+)
+
+

@@ -5,4 +5,7 @@
 
 
     <string name="home_name">首页</string>
+    <string name="notification_channel_name">ComposeUnit</string>
+    <string name="notification_recording">正在录制声音</string>
+    <string name="notification_playback">录音机播放</string>
 </resources>

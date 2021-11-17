@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="splash_icon">80dp</dimen>
+    <dimen name="splash_head_icon">50dp</dimen>
+</resources>

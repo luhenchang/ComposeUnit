@@ -28,8 +28,6 @@ abstract class BaseActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         requireSomePermission()
-        AndroidShare.mcontext = applicationContext
-        WindowCompat.setDecorFitsSystemWindows(window, false)
         Log.e(tagName, "onCreate")
         val netWorkIntent = IntentFilter(ConnectivityManager.CONNECTIVITY_ACTION)
         registerReceiver(netWorkChangeReceiver, netWorkIntent)
