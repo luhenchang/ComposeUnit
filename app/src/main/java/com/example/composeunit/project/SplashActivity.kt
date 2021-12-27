@@ -140,7 +140,7 @@ fun showRecordingNotification(context: Context, show: Boolean) {
     val intent = Intent(context, RecorderService::class.java)
     intent.putExtra(RecorderService.ACTION_NAME, RecorderService.ACTION_RECORD_NOTIFICATION)
     intent.putExtra(RecorderService.PARAM_SHOW_NOTIFICATION, show)
-    ContextCompat.startForegroundService(context, intent)
+    context.startService(intent)
 }
 
 @Composable
