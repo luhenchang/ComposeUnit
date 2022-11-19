@@ -11,6 +11,8 @@ import androidx.compose.foundation.gestures.awaitTouchSlopOrCancellation
 import androidx.compose.foundation.gestures.forEachGesture
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.*
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
@@ -137,7 +139,7 @@ fun MessagePageCanvasQueryBox(
                         modifier = Modifier.padding(start = 20.dp, bottom = 0.dp, top = 15.dp)
                     )
                     LazyVerticalGrid(
-                        cells = GridCells.Fixed(2),
+                        columns = GridCells.Fixed(2),
                         modifier = Modifier.padding(vertical = 20.dp, horizontal = 5.dp),
                         contentPadding = PaddingValues(0.dp),
                     ) {

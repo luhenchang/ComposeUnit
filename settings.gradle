@@ -3,11 +3,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
-        jcenter() // Warning: this repository is going to shut down soon
     }
 }
 rootProject.name = "ComposeUnit"
 include ':app'
-include ':kotlin_library'
 include ':lib_common'
 include ':base'

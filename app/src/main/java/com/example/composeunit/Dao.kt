@@ -1,6 +1,7 @@
 package com.example.composeunit
-import android.service.autofill.UserData
 import androidx.room.*
+import kotlinx.coroutines.flow.Flow
+
 /**
  * User: YourPc
  * Date: 7/20/2017
@@ -15,7 +16,7 @@ interface ChinookDao {
     val employees: List<Employees>
 
     @get:Query("SELECT * FROM user")
-    val users:List<User>
+    val users: Flow<List<User>>
 
     @get:Query("SELECT * FROM compose_data")
     val composeDatas:List<ComposeData>

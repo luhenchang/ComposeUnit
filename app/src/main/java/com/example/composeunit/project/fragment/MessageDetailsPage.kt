@@ -1,4 +1,5 @@
 package com.example.composeunit.project.fragment
+import android.annotation.SuppressLint
 import android.graphics.PointF
 import android.util.Log
 import androidx.compose.foundation.*
@@ -36,7 +37,6 @@ import com.example.composeunit.ui.theme.blue
 import com.example.composeunit.utils.getBitmap
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
-import com.google.accompanist.glide.GlideImage
 import com.google.accompanist.glide.LocalRequestManager
 import kotlinx.coroutines.NonDisposableHandle.parent
 import kotlin.math.cos
@@ -155,11 +155,11 @@ fun MessageDetailsPage(mainActions: MainActions) {
 fun GlideApp() {
     val glide = Glide.with(LocalContext.current)
     CompositionLocalProvider(LocalRequestManager provides glide) {
-        GlideImage(
-            data = R.drawable.animal_gif,
-            contentDescription = "My content description",
-            contentScale = ContentScale.Fit
-        )
+//        GlideImage(
+//            data = R.drawable.animal_gif,
+//            contentDescription = "My content description",
+//            contentScale = ContentScale.Fit
+//        )
     }
 }
 
@@ -168,11 +168,13 @@ fun GlideApp() {
  * 详情页面
  *
  */
+@SuppressLint("UnusedMaterialScaffoldPaddingParameter")
 @Composable
 fun MessageDetailPage(mainActions: MainActions) {
     Scaffold(
-        topBar = { MyTopAppBar(mainActions,0) }, backgroundColor = Color(238, 239, 247, 255)
-    ) {
+        topBar = { MyTopAppBar(mainActions,0) }, backgroundColor = Color(238, 239, 247, 255),
+    ){innerPadding ->
+        val modifier = Modifier.padding(innerPadding)
         Column(
             modifier = Modifier.verticalScroll(rememberScrollState())
         ) {
@@ -181,7 +183,6 @@ fun MessageDetailPage(mainActions: MainActions) {
             LinkCompose()
             AppDivider(10.dp)
             CodeCompose()
-
         }
     }
 }

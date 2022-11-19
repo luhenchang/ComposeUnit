@@ -31,7 +31,9 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import com.blankj.utilcode.util.ToastUtils
 import com.example.base.ui.PermissionActivity
+import com.example.composeunit.AppDatabase
 import com.example.composeunit.R
+import com.example.composeunit.RoomAsset
 import com.example.composeunit.confing.MainActions
 import com.example.composeunit.confing.NavGraph
 import com.example.composeunit.project.SplashActivity.Companion.TAG
@@ -77,7 +79,7 @@ class SplashActivity : PermissionActivity() {
     override fun onResume() {
         super.onResume()
         Log.i(TAG, "onResume :: showRecordingNotification show::false")
-        showRecordingNotification(this, false)
+        //showRecordingNotification(this, false)
     }
 
     override fun onDestroy() {
@@ -113,7 +115,7 @@ fun SplashCompass(actions: MainActions, viewModel: SplashViewModel = SplashViewM
                         Toast
                             .makeText(context, "通知服务显示通知栏", Toast.LENGTH_LONG)
                             .show()
-                        showRecordingNotification(context, true)
+                        //showRecordingNotification(context, true)
                     },
                 painter = painterResource(R.mipmap.jetpack_icon),
                 contentDescription = ""

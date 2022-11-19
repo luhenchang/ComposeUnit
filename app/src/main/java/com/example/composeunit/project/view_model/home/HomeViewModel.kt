@@ -13,7 +13,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
-class HomeViewModel: BaseViewModel() {
+class HomeViewModel(): BaseViewModel() {
     //首页选中项的索引
     private val _position = MutableLiveData(0)
     //动画状态

@@ -6,13 +6,12 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
-import com.readystatesoftware.sqliteasset.SQLiteAssetHelper
 
 /**
  * User: YourPc
  * Date: 7/20/2017
  */
-class RoomAsset {
+abstract class RoomAsset : RoomDatabase() {
     companion object {
         val TAG = RoomAsset::class.java.simpleName
         /**
@@ -39,13 +38,10 @@ class RoomAsset {
                 factory: SQLiteDatabase.CursorFactory? = null)
                 : RoomDatabase.Builder<T> {
 
-            openDb(context, name, storageDirectory, factory)
+            //openDb(context, name, storageDirectory, factory)
             return Room.databaseBuilder(context, klass, name)
-                    .addMigrations(object : Migration(1, 2) {
-                        override fun migrate(database: SupportSQLiteDatabase) {
-                            Log.w(TAG, "migrate from version 1 to 2 ")
-                        }
-                    }).allowMainThreadQueries()
+                .createFromAsset("database/chinook.db")
+                    .fallbackToDestructiveMigration().allowMainThreadQueries()
         }
 
         /**
@@ -55,7 +51,7 @@ class RoomAsset {
             val instantiated = "instantiated_${name}"
             val sharedPref = context.defaultSharedPreferences
             if (!sharedPref.getBoolean(instantiated, false)) {
-                SQLiteAssetHelper(context, name, storageDirectory, factory, 1).writableDatabase.close()
+                //SQLiteAssetHelper(context, name, storageDirectory, factory, 1).writableDatabase.close()
                 sharedPref.edit().putBoolean(instantiated, true).apply()
                 Log.w(TAG, "RoomAsset is ready ")
             }
