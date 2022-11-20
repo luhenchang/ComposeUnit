@@ -53,6 +53,7 @@ android {
 dependencies {
     implementation project(path: ':lib_common')
     implementation project(path: ':base')
+    implementation project(path: ':highlight')
     //room 数据库
     def room_version = "2.4.3"
     kapt "androidx.room:room-compiler:$room_version"

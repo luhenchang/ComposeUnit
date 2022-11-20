@@ -8,38 +8,53 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.*
 import androidx.lifecycle.viewmodel.compose.viewModel
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
 import com.example.composeunit.confing.MainActions
 import com.example.composeunit.project.fragment.OneFragment
 import com.example.composeunit.project.fragment.TwoFragment
 import com.example.composeunit.project.view_model.home.HomeViewModel
 import  com.example.composeunit.composeble_ui.home.*
 import com.example.composeunit.confing.MyTopAppBar
+import com.example.composeunit.navigation.NavigationRoute
+import com.example.composeunit.navigation.navigatorTo
 import com.example.composeunit.project.fragment.OneFragment1
-import com.google.accompanist.insets.navigationBarsHeight
-import com.google.accompanist.insets.navigationBarsPadding
+import com.example.composeunit.project.fragment.ThreeFragment
+import com.example.composeunit.project.view_model.message.MessageViewModel
 
 @Composable
-fun HomePage(mainActions: MainActions, homeViewModel: HomeViewModel = viewModel()) {
-    //开始观察此[LiveData]，并通过[State]表示其值。每次将新值发布到[LiveData]中时，返回的[State]将被更新，
+fun HomePage(
+    mainActions: MainActions,
+    homeViewModel: HomeViewModel = viewModel(),
+) {
+    val navCtrl = rememberNavController()
     val position by homeViewModel.position.observeAsState()
     homeViewModel.getInformation(LocalContext.current)
     Scaffold(
-        Modifier.navigationBarsPadding(false),
+        Modifier.navigationBarsPadding(),
         topBar = { MyTopAppBar(mainActions, position) },
         bottomBar = {
-            Column {
-                BottomNavigation(homeViewModel)
-                Spacer(modifier = Modifier.navigationBarsHeight())
-            }
+            BottomNavigation(homeViewModel, onTapBottom = {
+                navigatorTo(navCtrl, it)
+            })
         }) { innerPadding ->
-        val modifier = Modifier.padding(innerPadding)
-        when (position) {
-            0 -> OneFragment1(modifier)
-            1 -> TwoFragment(mainActions)
-            else -> TwoFragment(mainActions)
+        NavHost(
+            navCtrl,
+            startDestination = NavigationRoute.homeRoute,
+            Modifier.padding(innerPadding)
+        ) {
+            composable(NavigationRoute.homeRoute) {
+                OneFragment1()
+            }
+            composable(NavigationRoute.widgetRoute) {
+                val vieModel: MessageViewModel = viewModel()
+                TwoFragment(mainActions, vieModel)
+            }
+            composable(NavigationRoute.settingRoute) {
+                ThreeFragment(mainActions)
+            }
         }
-
-
     }
 }
 

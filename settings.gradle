@@ -9,3 +9,4 @@ rootProject.name = "ComposeUnit"
 include ':app'
 include ':lib_common'
 include ':base'
+include ':highlight'

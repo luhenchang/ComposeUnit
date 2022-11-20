@@ -9,4 +9,10 @@
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
     <color name="notification_btn">#36F498</color>
+    <color name="keyword">#2196F3</color>
+    <color name="num">#9C27B0</color>
+    <color name="clazz">#CDDC39</color>
+    <color name="function">#009688</color>
+    <color name="annotation">#2196F3</color>
+    <color name="string">#F44336</color>
 </resources>

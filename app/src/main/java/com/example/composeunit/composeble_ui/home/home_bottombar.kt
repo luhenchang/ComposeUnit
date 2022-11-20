@@ -23,6 +23,7 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.composeunit.R
+import com.example.composeunit.navigation.NavigationRoute
 import com.example.composeunit.project.bean.Information
 import com.example.composeunit.project.view_model.home.HomeViewModel
 import com.example.composeunit.utils.getBitmap
@@ -34,8 +35,10 @@ import kotlinx.coroutines.launch
  *
  */
 @Composable
-fun BottomNavigation(homeViewModel: HomeViewModel){
-    //val name:List<Information> = homeViewModel.informationList.value as List<Information>
+fun BottomNavigation(
+    homeViewModel: HomeViewModel,
+    onTapBottom: (String) -> Unit
+) {
     val animalBooleanState: Float by animateFloatAsState(
         if (homeViewModel.animalBoolean.value) {
             0f
@@ -69,9 +72,9 @@ fun BottomNavigation(homeViewModel: HomeViewModel){
             verticalAlignment = Alignment.Top
         ) {
             //Text(text =name[0].title!!)
-            BottomView(homeViewModel, 0, R.drawable.center, animalBooleanState)
-            BottomView(homeViewModel, 1, R.drawable.home, animalBooleanState)
-            BottomView(homeViewModel, 2, R.drawable.min, animalBooleanState)
+            BottomView(homeViewModel, 0, R.drawable.center, animalBooleanState,onTapBottom)
+            BottomView(homeViewModel, 1, R.drawable.home, animalBooleanState,onTapBottom)
+            BottomView(homeViewModel, 2, R.drawable.min, animalBooleanState,onTapBottom)
         }
     }
 
@@ -138,7 +141,13 @@ private fun BootomBarAnimalBgView(indexValue: Float) {
 
 @Preview
 @Composable
-fun BottomView(homeViewModel: HomeViewModel, index: Int, icon: Int, animalBooleanState: Float) {
+fun BottomView(
+    homeViewModel: HomeViewModel,
+    index: Int,
+    icon: Int,
+    animalBooleanState: Float,
+    onTapBottom: (String) -> Unit
+) {
     Image(
         bitmap = getBitmap(resource = icon),
         contentDescription = "1",
@@ -147,6 +156,17 @@ fun BottomView(homeViewModel: HomeViewModel, index: Int, icon: Int, animalBoolea
             .clickable {
                 homeViewModel.animalBoolean.value = !homeViewModel.animalBoolean.value
                 homeViewModel.positionChanged(index)
+                when(index){
+                    0->{
+                        onTapBottom(NavigationRoute.homeRoute)
+                    }
+                    1->{
+                        onTapBottom(NavigationRoute.widgetRoute)
+                    }
+                    2->{
+                        onTapBottom(NavigationRoute.settingRoute)
+                    }
+                }
             }
     )
 }
@@ -458,7 +478,7 @@ fun Modifier.modifiers(
             .width(25.dp)
             .height(25.dp)
     } else {
-         Modifier
+        Modifier
             .padding(bottom = 35.dp - (animalBooleanState * 10).dp)
             .width(25.dp)
             .height(25.dp)
@@ -469,7 +489,7 @@ fun Modifier.modifier(
     animalCenterIndex: Int?,
     i: Int,
     animalBooleanState: Float
-)= this.then(
+) = this.then(
     if (animalCenterIndex == i) {
         Modifier
             .padding(bottom = 57.dp)

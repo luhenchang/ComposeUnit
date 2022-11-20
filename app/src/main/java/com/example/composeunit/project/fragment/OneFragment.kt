@@ -14,11 +14,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.livedata.observeAsState
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -28,15 +24,14 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composeunit.R
+import com.example.composeunit.User
 import com.example.composeunit.canvas_ui.BoxBorderClipShape
 import com.example.composeunit.canvas_ui.BoxClipShapes
-import com.example.composeunit.project.bean.Information
 import com.example.composeunit.project.view_model.home.HomeViewModel
 import com.example.composeunit.utils.getBitmap
 import kotlinx.coroutines.coroutineScope
@@ -144,23 +139,23 @@ fun OneFragment(modifier: Modifier?) {
 }
 
 @Composable
-fun OneFragment1(modifier: Modifier?) {
+fun OneFragment1() {
     //设置滑动
     val scrollLazyState = rememberLazyListState()
     val homeViewModel:HomeViewModel = viewModel()
-    val state = homeViewModel.information.observeAsState()
-    if (state.value.isNullOrEmpty()){
+    val state = homeViewModel.itemUIState.collectAsState().value
+    if (state.isNullOrEmpty()){
         Text(text = "数据加载失败")
     }else{
         LazyColumn(state = scrollLazyState) {
             //遍历循环内部Item部件
-            items(state.value!!.size) { index ->
+            items(state.size) { index ->
                 Box(
                     modifier = Modifier
                         .padding(10.dp)
                         .fillMaxWidth(),
                 ) {
-                    StudyLayoutViews(homeViewModel.information.value!![index])
+                    StudyLayoutViews(state[index])
                 }
             }
         }
@@ -169,7 +164,7 @@ fun OneFragment1(modifier: Modifier?) {
 }
 
 @Composable
-fun StudyLayoutViews(information: Information) {
+fun StudyLayoutViews(information: User) {
     val imageBitmap: ImageBitmap = ImageBitmap.imageResource(R.drawable.hean_lhc)
     val delectedIcon: ImageBitmap = ImageBitmap.imageResource(R.drawable.delected_icon)
     Box(

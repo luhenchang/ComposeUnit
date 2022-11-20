@@ -7,19 +7,15 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.composeunit.confing.Constant.HOME_PAGE_ROUTE
-import com.example.composeunit.confing.Constant.LOGIN_PAGE_ROUTE
-import com.example.composeunit.confing.Constant.MESSAGE_DETAILS_PAGE_ROUTE
-import com.example.composeunit.confing.Constant.SPLASH_PAGE_ROUTE
+import com.example.composeunit.navigation.*
+import com.example.composeunit.navigation.NavigationRoute.HOME_PAGE_ROUTE
+import com.example.composeunit.navigation.NavigationRoute.LOGIN_PAGE_ROUTE
+import com.example.composeunit.navigation.NavigationRoute.MESSAGE_DETAILS_PAGE_ROUTE
+import com.example.composeunit.navigation.NavigationRoute.SETTING_PAGE_ROUTE
+import com.example.composeunit.navigation.NavigationRoute.SPLASH_PAGE_ROUTE
 import com.example.composeunit.project.SplashCompass
 import com.example.composeunit.project.fragment.MessageDetailPage
-object Constant {
-    const val SPLASH_PAGE_ROUTE = "splashPage"
-    const val LOGIN_PAGE_ROUTE = "loginPage"
-    const val HOME_PAGE_ROUTE = "homePage"
-    const val MESSAGE_DETAILS_PAGE_ROUTE = "message_details"
-
-}
+import com.example.composeunit.project.fragment.ThreeFragment
 
 @Composable
 fun NavGraph(startDestination: String = SPLASH_PAGE_ROUTE) {
@@ -38,6 +34,9 @@ fun NavGraph(startDestination: String = SPLASH_PAGE_ROUTE) {
             }
             composable(HOME_PAGE_ROUTE) {
                 HomePage(actions)
+            }
+            composable(SETTING_PAGE_ROUTE){
+                ThreeFragment(actions)
             }
             composable(MESSAGE_DETAILS_PAGE_ROUTE) {
                 MessageDetailPage(actions)

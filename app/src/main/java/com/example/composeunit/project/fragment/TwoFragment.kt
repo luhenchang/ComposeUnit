@@ -17,7 +17,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.composed
@@ -46,23 +45,20 @@ import com.example.composeunit.utils.getBitmap
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
-
-@OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun TwoFragment(mainActions: MainActions, viewModel: MessageViewModel = viewModel()) {
+fun TwoFragment(mainActions: MainActions, viewModel: MessageViewModel) {
     MessagePageCanvasQueryBox(mainActions, viewModel)
 }
 
-@ExperimentalFoundationApi
 @Composable
 fun MessagePageCanvasQueryBox(
     mainActions: MainActions,
     viewModel: MessageViewModel
 ) {
     val homeViewModel: HomeViewModel = viewModel()
-    val listName = homeViewModel.information.observeAsState(arrayListOf())
+    val listName = homeViewModel.itemUIState.collectAsState(arrayListOf())
     if (!listName.value.isNullOrEmpty()) {
-        Log.e("HomePage2", "listName: ${listName.value[0].title}")
+        Log.e("HomePage2", "listName: ${listName.value[0].name}")
     }
     val uiData = ArrayList<Int>()
     uiData.add(R.drawable.android_icon)
