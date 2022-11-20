@@ -35,9 +35,10 @@ fun HomePage(
         Modifier.navigationBarsPadding(),
         topBar = { MyTopAppBar(mainActions, position) },
         bottomBar = {
-            BottomNavigation(homeViewModel, onTapBottom = {
-                navigatorTo(navCtrl, it)
-            })
+            BottomNavigation(homeViewModel,
+                onTapBottom = {
+                    navigatorTo(navCtrl, it)
+                })
         }) { innerPadding ->
         NavHost(
             navCtrl,

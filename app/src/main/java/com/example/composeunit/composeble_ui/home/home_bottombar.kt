@@ -1,6 +1,5 @@
 package com.example.composeunit.composeble_ui.home
 
-import android.annotation.SuppressLint
 import kotlinx.coroutines.*
 import android.util.Log
 import androidx.compose.animation.core.Animatable
@@ -9,10 +8,8 @@ import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -24,7 +21,6 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.composeunit.R
 import com.example.composeunit.navigation.NavigationRoute
-import com.example.composeunit.project.bean.Information
 import com.example.composeunit.project.view_model.home.HomeViewModel
 import com.example.composeunit.utils.getBitmap
 import kotlinx.coroutines.launch
@@ -96,7 +92,7 @@ private fun BootomBarAnimalBgView(indexValue: Float) {
             //每一个弧度的中心控制点
             val centerWidthOfOneX = widthOfOne / 2
             //弧度端口到两遍ONewidth距离
-            val marginLeftAndRigth = centerWidthOfOneX / 1.6f
+            val marginLeftAndRight = centerWidthOfOneX / 1.6f
 
             val controllerX = centerWidthOfOneX / 6f
 
@@ -111,9 +107,9 @@ private fun BootomBarAnimalBgView(indexValue: Float) {
             canvas.drawCircle(Offset(centerWidthOfOneX + keyAnimal, 0f), 60f, paint)
 
             path.moveTo(0f, 0f)
-            path.lineTo(marginLeftAndRigth / 2 + keyAnimal, 0f)
+            path.lineTo(marginLeftAndRight / 2 + keyAnimal, 0f)
             path.cubicTo(
-                marginLeftAndRigth + keyAnimal,
+                marginLeftAndRight + keyAnimal,
                 0f,
                 centerWidthOfOneX - (centerWidthOfOneX - controllerX) / 2f + keyAnimal,
                 size.height / 3f,
@@ -123,9 +119,9 @@ private fun BootomBarAnimalBgView(indexValue: Float) {
             path.cubicTo(
                 centerWidthOfOneX + (centerWidthOfOneX - controllerX) / 2f + keyAnimal,
                 size.height / 2.6f,
-                widthOfOne - (marginLeftAndRigth) + keyAnimal,
+                widthOfOne - (marginLeftAndRight) + keyAnimal,
                 0f,
-                widthOfOne - marginLeftAndRigth / 2 + keyAnimal,
+                widthOfOne - marginLeftAndRight / 2 + keyAnimal,
                 0f
             )
             path.lineTo(size.width, 0f)
@@ -290,32 +286,32 @@ fun BottomNavigationTwo(homeViewModel: HomeViewModel) {
                     paint.color = Color(245, 215, 254, 255)
 
                     val height = 276f
-                    val cicleHeight = height / 3
+                    val circleHeight = height / 3
                     //控制脖子左边,一直在变化
                     val path = Path()
                     path.moveTo(0f + animalScaleCanvasWidthValue, 0f)
                     path.lineTo(
                         0f + animalScaleCanvasWidthValue,
-                        height - cicleHeight + animalScaleCanvasHeightValue
+                        height - circleHeight + animalScaleCanvasHeightValue
                     )
                     path.quadraticBezierTo(
                         0f + animalScaleCanvasWidthValue,
                         height + animalScaleCanvasHeightValue,
-                        cicleHeight,
+                        circleHeight,
                         height + animalScaleCanvasHeightValue
                     )
 
 
                     //第一个左弧度
                     path.lineTo(
-                        size.width - cicleHeight - animalScaleCanvasWidthValue,
+                        size.width - circleHeight - animalScaleCanvasWidthValue,
                         height + animalScaleCanvasHeightValue
                     )
                     path.quadraticBezierTo(
                         size.width - animalScaleCanvasWidthValue,
                         height + animalScaleCanvasHeightValue,
                         size.width - animalScaleCanvasWidthValue,
-                        height - cicleHeight + animalScaleCanvasHeightValue
+                        height - circleHeight + animalScaleCanvasHeightValue
                     )
                     path.lineTo(size.width - animalScaleCanvasWidthValue, 0f)
                     path.close()
@@ -384,10 +380,10 @@ fun BottomNavigationTwo(homeViewModel: HomeViewModel) {
                     val P11 = Offset(-r / 2, -r + moveTopHeight + animalScaleCanvasHeightValue)
 
                     val heightController = 180f
-                    val pathReult = Path()
-                    pathReult.moveTo(P0.x, P0.y - heightController * mCurAnimValue)
+                    val pathResult = Path()
+                    pathResult.moveTo(P0.x, P0.y - heightController * mCurAnimValue)
                     //p1->p2->p3
-                    pathReult.cubicTo(
+                    pathResult.cubicTo(
                         P1.x,
                         P1.y - 30 * mCurAnimValue,
                         P2.x,
@@ -396,11 +392,11 @@ fun BottomNavigationTwo(homeViewModel: HomeViewModel) {
                         P3.y
                     )
                     //p4->p5->p6
-                    pathReult.cubicTo(P4.x, P4.y, P5.x, P5.y, P6.x, P6.y)
+                    pathResult.cubicTo(P4.x, P4.y, P5.x, P5.y, P6.x, P6.y)
                     //p7->p8->p9
-                    pathReult.cubicTo(P7.x, P7.y, P8.x, P8.y, P9.x, P9.y)
+                    pathResult.cubicTo(P7.x, P7.y, P8.x, P8.y, P9.x, P9.y)
                     //p10->p11->p0
-                    pathReult.cubicTo(
+                    pathResult.cubicTo(
                         P10.x,
                         P10.y - 30 * mCurAnimValue,
                         P11.x,
@@ -408,10 +404,10 @@ fun BottomNavigationTwo(homeViewModel: HomeViewModel) {
                         P0.x,
                         P0.y - heightController * mCurAnimValue
                     )
-                    pathReult.close()
+                    pathResult.close()
                     //
                     paint.color = Color(245, 215, 254, mCurAnimValueColor.value.toInt() * 255)
-                    canvas.drawPath(pathReult, paint)
+                    canvas.drawPath(pathResult, paint)
                 }
 
             }
