@@ -57,7 +57,7 @@ data class Employees(
     @ColumnInfo(name = "LastName") var lastName: String = "",
     @ColumnInfo(name = "FirstName") var firstName: String = "",
     @ColumnInfo(name = "Title") var title: String? = "",
-    @ColumnInfo(name = "ReportsTo") var reportsTo: String? = "",
+    @ColumnInfo(name = "ReportsTo", index = true) var reportsTo: String? = "",
     @ColumnInfo(name = "BirthDate") var birthDate: String? = "",
     @ColumnInfo(name = "HireDate") var hireDate: String? = "",
     @ColumnInfo(name = "Address") var address: String? = "",
@@ -88,5 +88,5 @@ data class Customers(
         @ColumnInfo(name = "Phone") var Phone: String? = "",
         @ColumnInfo(name = "Fax") var Fax: String? = "",
         @ColumnInfo(name = "Email") var Email: String = "",
-        @ColumnInfo(name = "SupportRepId") var SupportRepId: Int? = 0
+        @ColumnInfo(name = "SupportRepId",index = true) var SupportRepId: Int? = 0
 )

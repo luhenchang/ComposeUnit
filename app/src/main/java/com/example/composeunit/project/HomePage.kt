@@ -1,3 +1,4 @@
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
@@ -22,6 +23,7 @@ import com.example.composeunit.navigation.navigatorTo
 import com.example.composeunit.project.fragment.OneFragment1
 import com.example.composeunit.project.fragment.ThreeFragment
 import com.example.composeunit.project.view_model.message.MessageViewModel
+import com.google.android.material.navigation.NavigationBarView
 
 @Composable
 fun HomePage(
@@ -30,7 +32,6 @@ fun HomePage(
 ) {
     val navCtrl = rememberNavController()
     val position by homeViewModel.position.observeAsState()
-    homeViewModel.getInformation(LocalContext.current)
     Scaffold(
         Modifier.navigationBarsPadding(),
         topBar = { MyTopAppBar(mainActions, position) },
@@ -46,7 +47,8 @@ fun HomePage(
             Modifier.padding(innerPadding)
         ) {
             composable(NavigationRoute.homeRoute) {
-                OneFragment1()
+                homeViewModel.getInformation(LocalContext.current)
+                OneFragment1(homeViewModel)
             }
             composable(NavigationRoute.widgetRoute) {
                 val vieModel: MessageViewModel = viewModel()

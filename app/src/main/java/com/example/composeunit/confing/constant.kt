@@ -7,7 +7,6 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.composeunit.navigation.*
 import com.example.composeunit.navigation.NavigationRoute.HOME_PAGE_ROUTE
 import com.example.composeunit.navigation.NavigationRoute.LOGIN_PAGE_ROUTE
 import com.example.composeunit.navigation.NavigationRoute.MESSAGE_DETAILS_PAGE_ROUTE
@@ -16,6 +15,7 @@ import com.example.composeunit.navigation.NavigationRoute.SPLASH_PAGE_ROUTE
 import com.example.composeunit.project.SplashCompass
 import com.example.composeunit.project.fragment.MessageDetailPage
 import com.example.composeunit.project.fragment.ThreeFragment
+import com.example.composeunit.project.view_model.home.HomeViewModel
 
 @Composable
 fun NavGraph(startDestination: String = SPLASH_PAGE_ROUTE) {

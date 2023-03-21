@@ -39,7 +39,7 @@ abstract class BaseActivity : AppCompatActivity() {
     /**
      * 通过第三方插件easyPermissions来管理权限问题
      */
-    abstract fun requireSomePermission();
+    abstract fun requireSomePermission()
     override fun onResume() {
         Log.e(tagName, "onResume")
         super.onResume()

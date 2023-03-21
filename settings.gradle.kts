@@ -1,3 +1,4 @@
+@Suppress("UnstableApiUsage")
 dependencyResolutionManagement {
     repositoriesMode.set(RepositoriesMode.FAIL_ON_PROJECT_REPOS)
     repositories {
@@ -6,7 +7,7 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "ComposeUnit"
-include ':app'
-include ':lib_common'
-include ':base'
-include ':highlight'
+include(":app")
+include(":lib_common")
+include(":base")
+include(":highlight")

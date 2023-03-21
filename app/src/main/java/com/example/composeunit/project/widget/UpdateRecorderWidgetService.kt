@@ -20,7 +20,7 @@ import android.util.Log
  * Created by wangfei44 on 2021/12/28.
  */
 class UpdateRecorderWidgetService : Service() {
-    var TAG =UpdateRecorderWidgetService.javaClass.name
+    var TAG =UpdateRecorderWidgetService::class.java
     companion object {
         const val NOTIFICATION_ID = Int.MAX_VALUE - 1
         const val ACTION_NAME = "action_type"
@@ -31,7 +31,7 @@ class UpdateRecorderWidgetService : Service() {
 
     override fun onCreate() {
         super.onCreate()
-        Log.i(TAG,"onCreate")
+        Log.i(TAG.name,"onCreate")
         if (SystemUtils.isOOrLater()) {
             startForeground(
                 NOTIFICATION_ID,

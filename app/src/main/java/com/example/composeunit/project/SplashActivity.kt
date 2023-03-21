@@ -27,28 +27,23 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
-import com.blankj.utilcode.util.ToastUtils
 import com.example.base.ui.PermissionActivity
-import com.example.composeunit.AppDatabase
 import com.example.composeunit.R
-import com.example.composeunit.RoomAsset
 import com.example.composeunit.confing.MainActions
 import com.example.composeunit.confing.NavGraph
 import com.example.composeunit.project.SplashActivity.Companion.TAG
 import com.example.composeunit.project.service.RecorderService
 import com.example.composeunit.project.view_model.splash.SplashViewModel
 import com.example.composeunit.ui.theme.PlayTheme
-import com.google.accompanist.insets.ProvideWindowInsets
 
 class SplashActivity : PermissionActivity() {
     companion object {
-        var TAG = this.javaClass.name.toString()
+        var TAG = this::class.java.name.toString()
     }
 
     val viewModel: SplashViewModel = SplashViewModel()
-    val serveConnect = object : ServiceConnection {
+    private val serveConnect = object : ServiceConnection {
         override fun onServiceConnected(name: ComponentName?, service: IBinder?) {
             Log.i(TAG, "serveConnect :: onServiceConnected")
             viewModel.mService = (service as RecorderService.RecorderBind).service
@@ -68,10 +63,8 @@ class SplashActivity : PermissionActivity() {
             BIND_AUTO_CREATE
         )
         setContent {
-            ProvideWindowInsets {
-                PlayTheme {
-                    NavGraph()
-                }
+            PlayTheme {
+                NavGraph()
             }
         }
     }
@@ -91,6 +84,8 @@ class SplashActivity : PermissionActivity() {
 @Composable
 fun SplashCompass(actions: MainActions, viewModel: SplashViewModel = SplashViewModel()) {
     val animalValue: Float? = viewModel.animalValue.observeAsState().value
+
+    Log.e("SplashCompass::","结果::animalValue=$animalValue")
     initAnimal(viewModel, actions)
     val context = LocalContext.current
     Box(
@@ -156,6 +151,7 @@ fun initAnimal(viewModel: SplashViewModel, actions: MainActions) {
             0f
         }, animationSpec = TweenSpec(durationMillis = 2000),
         finishedListener = {
+            Log.e("SplashViewModel","updateAnimalValue listener::animalValue = $it")
             actions.loginPage()
         }
     )

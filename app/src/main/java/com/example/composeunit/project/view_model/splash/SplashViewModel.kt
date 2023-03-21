@@ -1,6 +1,7 @@
 package com.example.composeunit.project.view_model.splash
 
 import android.app.Service
+import android.nfc.Tag
 import android.util.Log
 import androidx.compose.animation.core.MutableTransitionState
 import androidx.lifecycle.LiveData
@@ -22,6 +23,7 @@ class SplashViewModel : BaseViewModel() {
         _currentState.targetState = false
     }
     fun updateAnimalValue(animalValue: Float){
+        Log.e(this.javaClass.name,"updateAnimalValue::animalValue = $animalValue")
         _animalValue.value =  animalValue
     }
 }

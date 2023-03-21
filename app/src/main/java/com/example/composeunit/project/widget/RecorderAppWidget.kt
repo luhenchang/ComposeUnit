@@ -32,7 +32,7 @@ class RecorderAppWidget : AppWidgetProvider() {
     override fun onEnabled(context: Context) {
         super.onEnabled(context)
         Log.i(TAG,"onEnabled")
-        val startIntent = Intent(context, UpdateRecorderWidgetService.javaClass)
+        val startIntent = Intent(context, UpdateRecorderWidgetService::class.java)
         context.startService(startIntent)
     }
 
@@ -40,7 +40,7 @@ class RecorderAppWidget : AppWidgetProvider() {
     override fun onDisabled(context: Context) {
         super.onDisabled(context)
         Log.i(TAG,"onDisabled")
-        val stopUpdateIntent = Intent(context, UpdateRecorderWidgetService.javaClass)
+        val stopUpdateIntent = Intent(context, UpdateRecorderWidgetService::class.java)
         context.stopService(stopUpdateIntent);
     }
 

@@ -1,0 +1,14 @@
+package com.example.composeunit.retrofit
+
+/**
+ * Created by wangfei44 on 2023/3/20.
+ */
+class HttpConst {
+    companion object {
+        private const val CHAT_GTP_KEY = "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"
+        const val CHAT_AUTHORIZATION = "Bearer $CHAT_GTP_KEY"
+        const val CHAT_GTP_CONTENT_TYPE = "application/json"
+        const val CHAT_GTP_ROLE = "user"
+        const val CHAT_GTP_MODEL = "gpt-3.5-turbo"
+    }
+}

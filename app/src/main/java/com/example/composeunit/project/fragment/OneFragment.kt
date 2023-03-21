@@ -24,6 +24,7 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -139,14 +140,16 @@ fun OneFragment(modifier: Modifier?) {
 }
 
 @Composable
-fun OneFragment1() {
+fun OneFragment1(homeViewModel: HomeViewModel) {
     //设置滑动
     val scrollLazyState = rememberLazyListState()
-    val homeViewModel:HomeViewModel = viewModel()
     val state = homeViewModel.itemUIState.collectAsState().value
-    if (state.isNullOrEmpty()){
+    Log.e("getInformation::end", state.toString())
+    if (state.isNullOrEmpty()) {
+        Log.e("getInformation::pro", state.toString())
         Text(text = "数据加载失败")
-    }else{
+    } else {
+        Log.e("getInformation::UI重置？","yes")
         LazyColumn(state = scrollLazyState) {
             //遍历循环内部Item部件
             items(state.size) { index ->
@@ -236,10 +239,10 @@ fun StudyLayoutViews(information: User) {
 
 }
 
-fun String?.removeNull() : String {
-    return if (this.isNullOrEmpty()){
+fun String?.removeNull(): String {
+    return if (this.isNullOrEmpty()) {
         ""
-    }else{
+    } else {
         this
     }
 }
