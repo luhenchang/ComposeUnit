@@ -4,6 +4,11 @@
 /.idea/
 .idea/misc.xml
 /.idea/misc.xml
+/.idea/gradle.properties
+/.idea/gradle.xml
+/.idea/vcs.xml
+/.idea/.gitignore
+/.idea/codeStyles
 /.idea/caches
 /.idea/libraries
 /.idea/modules.xml
