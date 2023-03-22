@@ -13,6 +13,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -23,18 +24,24 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.imageResource
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontStyle
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.composeunit.ComposeData
 import com.example.composeunit.R
-import com.example.composeunit.User
 import com.example.composeunit.canvas_ui.BoxBorderClipShape
 import com.example.composeunit.canvas_ui.BoxClipShapes
 import com.example.composeunit.project.view_model.home.HomeViewModel
 import com.example.composeunit.utils.getBitmap
+import com.example.lib_common.utils.notNull
+import com.example.lib_common.utils.splitEndContent
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.pow
@@ -140,25 +147,25 @@ fun OneFragment(modifier: Modifier?) {
 }
 
 @Composable
-fun OneFragment1(homeViewModel: HomeViewModel) {
+fun OneFragment1(homeViewModel: HomeViewModel = viewModel()) {
+    homeViewModel.getInformation(LocalContext.current)
     //设置滑动
     val scrollLazyState = rememberLazyListState()
     val state = homeViewModel.itemUIState.collectAsState().value
-    Log.e("getInformation::end", state.toString())
     if (state.isNullOrEmpty()) {
-        Log.e("getInformation::pro", state.toString())
         Text(text = "数据加载失败")
     } else {
-        Log.e("getInformation::UI重置？","yes")
-        LazyColumn(state = scrollLazyState) {
+        LazyColumn(
+            state = scrollLazyState
+        ) {
             //遍历循环内部Item部件
             items(state.size) { index ->
                 Box(
                     modifier = Modifier
                         .padding(10.dp)
-                        .fillMaxWidth(),
+                        .fillMaxWidth()
                 ) {
-                    StudyLayoutViews(state[index])
+                    StudyLayoutViews(state[index], homeViewModel)
                 }
             }
         }
@@ -167,14 +174,16 @@ fun OneFragment1(homeViewModel: HomeViewModel) {
 }
 
 @Composable
-fun StudyLayoutViews(information: User) {
-    val imageBitmap: ImageBitmap = ImageBitmap.imageResource(R.drawable.hean_lhc)
-    val delectedIcon: ImageBitmap = ImageBitmap.imageResource(R.drawable.delected_icon)
+fun StudyLayoutViews(composeData: ComposeData, viewModel: HomeViewModel) {
+    val current = LocalContext.current
     Box(
         modifier = Modifier
             .clip(BoxBorderClipShape)
             .background(Color(0XFF0DBEBF))
-            .clickable(onClick = {})
+            .shadow(elevation = 33.dp, spotColor = Color.Red, ambientColor = Color.Yellow)
+            .clickable(onClick = {
+                viewModel.insertComposeData(current)
+            })
     ) {
         Box(
             modifier = Modifier
@@ -185,52 +194,76 @@ fun StudyLayoutViews(information: User) {
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.padding(3.dp)
+                modifier = Modifier.padding(6.dp)
             ) {
-                Image(
-                    bitmap = imageBitmap,
-                    contentDescription = "w",
-                    contentScale = ContentScale.FillBounds,
+                Box(
                     modifier = Modifier
                         .height(55.dp)
                         .width(55.dp)
-                        .background(Color.White, shape = CircleShape)
-                        .padding(3.dp)
-                        .clip(
-                            CircleShape
+                        .align(Alignment.CenterVertically)
+                        .border(2.dp, color = Color(238, 204, 203, 255), shape = CircleShape)
+                        .shadow(
+                            elevation = 4.dp,
+                            shape = CircleShape
                         )
-                        .shadow(elevation = 150.dp, clip = true)
-                )
+                        .background(
+                            Color(13, 189, 190, 193), shape = CircleShape
+                        )
+                ) {
+                    Text(
+                        composeData.item_title.notNull().splitEndContent(),
+                        fontSize = 18.sp,
+                        color = Color.White,
+                        modifier = Modifier
+                            .padding(bottom = 10.dp)
+                            .align(Alignment.Center),
+                        style = TextStyle(
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 15.sp,
+                            shadow = Shadow(
+                                color = Color(32, 3, 37, 100),
+                                offset = Offset(2f, 3f),
+                                blurRadius = 3f
+                            )
+                        )
+                    )
+                }
                 Column(
                     modifier = Modifier
                         .padding(start = 10.dp)
                         .weight(1f)
                 ) {
                     Text(
-                        "Container",
+                        composeData.item_title.notNull(),
                         fontSize = 18.sp,
                         color = Color.Black,
+                        modifier = Modifier.padding(bottom = 10.dp),
+                        style = TextStyle(
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 15.sp,
+                            shadow = Shadow(
+                                color = Color(42, 7, 48, 100),
+                                offset = Offset(2f, 3f),
+                                blurRadius = 3f
+                            )
+                        )
                     )
                     Text(
-                        "123万阅读量",
-                        fontSize = 15.sp,
-                        color = Color.White,
-                        modifier = Modifier.padding(bottom = 10.dp)
-                    )
-                }
-                Box(
-                    modifier = Modifier
-                        .height(60.dp)
-                        .padding(start = 3.dp, end = 2.dp),
-                    contentAlignment = Alignment.BottomCenter
-                ) {
-                    Image(
-                        bitmap = delectedIcon,
-                        contentDescription = "w",
+                        composeData.item_content.notNull(),
+                        color = Color(42, 7, 48, 255),
+                        overflow = TextOverflow.Ellipsis,
+                        maxLines = 2,
                         modifier = Modifier
-                            .height(16.dp)
-                            .shadow(elevation = 150.dp, clip = true)
-
+                            .padding(bottom = 20.dp, end = 20.dp),
+                        fontStyle = FontStyle.Italic,
+                        style = TextStyle(
+                            fontSize = 15.sp,
+                            shadow = Shadow(
+                                color = Color(42, 7, 48, 100),
+                                offset = Offset(2f, 3f),
+                                blurRadius = 3f
+                            )
+                        )
                     )
                 }
             }

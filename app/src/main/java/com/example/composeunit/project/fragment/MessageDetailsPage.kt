@@ -1,4 +1,5 @@
 package com.example.composeunit.project.fragment
+
 import android.annotation.SuppressLint
 import android.graphics.PointF
 import android.util.Log
@@ -44,6 +45,7 @@ import kotlin.math.pow
 import kotlin.math.sin
 import kotlin.math.sqrt
 import kotlin.random.Random
+
 @Composable
 fun MessageDetailsPage(mainActions: MainActions) {
     val tapX = remember { mutableStateOf(0f) }
@@ -425,5 +427,13 @@ fun fivePoints(xA: Float, yA: Float, rFive: Int): ArrayList<PointF> {
 }
 
 
+@Preview
+@Composable
+fun InputMessageLayout() {
+  Column {
+      Text(text = "消息内容")
 
+  }
+
+}
 

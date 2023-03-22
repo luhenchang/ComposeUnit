@@ -35,6 +35,7 @@ fun HomePage(
     Scaffold(
         Modifier.navigationBarsPadding(),
         topBar = { MyTopAppBar(mainActions, position) },
+        backgroundColor = Color(236, 238, 240, 255),
         bottomBar = {
             BottomNavigation(homeViewModel,
                 onTapBottom = {
@@ -47,14 +48,16 @@ fun HomePage(
             Modifier.padding(innerPadding)
         ) {
             composable(NavigationRoute.homeRoute) {
-                homeViewModel.getInformation(LocalContext.current)
-                OneFragment1(homeViewModel)
+                Log.e("OneFragment1 update", "update is more and more")
+                OneFragment1()
             }
             composable(NavigationRoute.widgetRoute) {
+                Log.e("TwoFragment  update", "update is more and more")
                 val vieModel: MessageViewModel = viewModel()
                 TwoFragment(mainActions, vieModel)
             }
             composable(NavigationRoute.settingRoute) {
+                Log.e("ThreeFragment  update", "update is more and more")
                 ThreeFragment(mainActions)
             }
         }

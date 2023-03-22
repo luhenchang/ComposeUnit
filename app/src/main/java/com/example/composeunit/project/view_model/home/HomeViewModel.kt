@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.base.model.BaseViewModel
+import com.example.composeunit.ComposeData
 import com.example.composeunit.User
 import com.example.composeunit.models.chatgtp.*
 import com.example.composeunit.project.model.local.HomeRepository
@@ -31,9 +32,9 @@ class HomeViewModel(
     var position: LiveData<Int> = _position
 
     //首页数据列表
-    private val _itemsUIState = MutableStateFlow<List<User>>(emptyList())
+    private val _itemsUIState = MutableStateFlow<List<ComposeData>>(emptyList())
 
-    val itemUIState: StateFlow<List<User>> = _itemsUIState
+    val itemUIState: StateFlow<List<ComposeData>> = _itemsUIState
 
     fun positionChanged(selectedIndex: Int) {
         _position.value = selectedIndex
@@ -69,11 +70,17 @@ class HomeViewModel(
             repository.queryHomeLists(current).catch { ex ->
                 Log.e("queryHomeLists::error=", ex.message.toString())
             }.collect { data ->
-                Log.e("getInformation", "getInformation:${data[0].name}")
+                Log.e("getInformation", "getInformation:${data[0].item_title}")
                 Log.e("getInformation", "index = $index")
                 index++
                 _itemsUIState.emit(data)
             }
+        }
+    }
+
+    fun insertComposeData(current: Context){
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.insertComposeData(current,ComposeData(2,"Column","垂直容器布局","Compose 提供了一系列现成可用的布局来帮助您排列界面元素，并可让您轻松定义自己的更专业布局，使用 Column 可将多个项垂直地放置在屏幕上",5))
         }
     }
 

@@ -19,7 +19,13 @@ interface ChinookDao {
     val users: Flow<List<User>>
 
     @get:Query("SELECT * FROM compose_data")
-    val composeDatas:List<ComposeData>
+    val composeData:Flow<List<ComposeData>>
+    @Insert
+    suspend fun insertComposeData(composeData:ComposeData)
+    //关联多表查询-写给郭上兰
+//    @Transaction
+//    @Query("SELECT * FROM customers INNER JOIN compose_data ON customers.CustomerId = compose_data.id  WHERE customers.CustomerId =:id LIMIT :limit OFFSET :offset")
+//    fun paperList(id:Int,  limit:Int,  offset:Int):List<Customers>
 
 }
 

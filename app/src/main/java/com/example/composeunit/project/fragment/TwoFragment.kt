@@ -58,7 +58,7 @@ fun MessagePageCanvasQueryBox(
     val homeViewModel: HomeViewModel = viewModel()
     val listName = homeViewModel.itemUIState.collectAsState(arrayListOf())
     if (!listName.value.isNullOrEmpty()) {
-        Log.e("HomePage2", "listName: ${listName.value[0].name}")
+        Log.e("HomePage2", "listName: ${listName.value[0].item_title}")
     }
     val uiData = ArrayList<Int>()
     uiData.add(R.drawable.android_icon)
