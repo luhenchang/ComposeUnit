@@ -2,22 +2,23 @@ package com.example.composeunit.composeble_ui.home
 
 import kotlinx.coroutines.*
 import android.util.Log
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.SpringSpec
-import androidx.compose.animation.core.TweenSpec
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.clickable
+import androidx.compose.animation.core.*
+import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.example.composeunit.R
 import com.example.composeunit.navigation.NavigationRoute
@@ -61,7 +62,7 @@ fun BottomNavigation(
             .fillMaxWidth(),
         contentAlignment = Alignment.BottomEnd,
     ) {
-        BootomBarAnimalBgView(indexValue)
+        BottomBarAnimalBgView(indexValue)
         Row(
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.SpaceAround,
@@ -78,7 +79,7 @@ fun BottomNavigation(
 
 //背景动画
 @Composable
-private fun BootomBarAnimalBgView(indexValue: Float) {
+private fun BottomBarAnimalBgView(indexValue: Float) {
     Canvas(modifier = Modifier
         .fillMaxWidth()
         .height(70.dp), onDraw = {
@@ -94,17 +95,17 @@ private fun BootomBarAnimalBgView(indexValue: Float) {
             //弧度端口到两遍ONewidth距离
             val marginLeftAndRight = centerWidthOfOneX / 1.6f
 
-            val controllerX = centerWidthOfOneX / 6f
+                val controllerX = centerWidthOfOneX / 6f
 
-            val keyAnimal = widthOfOne * indexValue
-            canvas.save()
-            paint.asFrameworkPaint().setShadowLayer(
-                15f,
-                5f,
-                -6f,
-                Color(0xFF108888).toArgb()
-            )
-            canvas.drawCircle(Offset(centerWidthOfOneX + keyAnimal, 0f), 60f, paint)
+                val keyAnimal = widthOfOne * indexValue
+                canvas.save()
+                paint.asFrameworkPaint().setShadowLayer(
+                    15f,
+                    5f,
+                    -6f,
+                    Color(0xFF108888).toArgb()
+                )
+                canvas.drawCircle(Offset(centerWidthOfOneX + keyAnimal, 0f), 60f, paint)
 
             path.moveTo(0f, 0f)
             path.lineTo(marginLeftAndRight / 2 + keyAnimal, 0f)
@@ -133,6 +134,50 @@ private fun BootomBarAnimalBgView(indexValue: Float) {
             //canvas.nativeCanvas.drawColor(Color(0xFF108888).toArgb())
         }
     })
+}
+
+class BottomShape(indexValue: Float) : Shape {
+    private val indexValue = indexValue
+    override fun createOutline(
+        size: Size,
+        layoutDirection: LayoutDirection,
+        density: Density
+    ): Outline {
+        val path = Path()
+        //先固定分为三等分
+        val widthOfOne = size.width / 3
+        //每一个弧度的中心控制点
+        val centerWidthOfOneX = widthOfOne / 2
+        //弧度端口到两遍ONewidth距离
+        val marginLeftAndRight = centerWidthOfOneX / 1.6f
+
+        val controllerX = centerWidthOfOneX / 6f
+        val keyAnimal = widthOfOne * indexValue
+
+        val clipPath = Path()
+        clipPath.moveTo(0f, 0f)
+        clipPath.lineTo(marginLeftAndRight / 2 + keyAnimal, 0f)
+        clipPath.cubicTo(
+            marginLeftAndRight + keyAnimal,
+            0f,
+            centerWidthOfOneX - (centerWidthOfOneX - controllerX) / 2f + keyAnimal,
+            size.height / 3f,
+            centerWidthOfOneX + keyAnimal,
+            size.height / 2.6f
+        )
+        clipPath.cubicTo(
+            centerWidthOfOneX + (centerWidthOfOneX - controllerX) / 2f + keyAnimal,
+            size.height / 2.6f,
+            widthOfOne - (marginLeftAndRight) + keyAnimal,
+            0f,
+            widthOfOne - marginLeftAndRight / 2 + keyAnimal,
+            0f
+        )
+        clipPath.lineTo(size.width, 0f)
+        clipPath.close()
+        return Outline.Generic(clipPath)
+    }
+
 }
 
 @Preview
@@ -173,6 +218,7 @@ fun BottomView(
  * 自定义底部导航栏切换
  */
 
+@OptIn(DelicateCoroutinesApi::class)
 @Composable
 fun BottomNavigationTwo(homeViewModel: HomeViewModel) {
     val clickTrue = remember { mutableStateOf(false) }
@@ -223,18 +269,15 @@ fun BottomNavigationTwo(homeViewModel: HomeViewModel) {
         }, animationSpec = SpringSpec(stiffness = stiffness),
         finishedListener = {
             if (it >= 0.9f && clickTrue.value) {
-                GlobalScope.launch {
-                    mCurAnimValueColor.animateTo(
-                        0f,
-                        animationSpec = SpringSpec(stiffness = stiffness)
-                    )
+                coroutineScope.launch() {
+
                 }
 //                coroutineScope.launch {
 //
 //                }
             }
             if (it <= 0.01f && !clickTrue.value) {
-                GlobalScope.launch {
+                coroutineScope.launch() {
                     mCurAnimValueColor.animateTo(
                         1f,
                         animationSpec = SpringSpec(stiffness = stiffness)
