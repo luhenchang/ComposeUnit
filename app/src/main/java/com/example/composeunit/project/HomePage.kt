@@ -2,6 +2,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.*
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -17,6 +18,7 @@ import com.example.composeunit.navigation.navigatorTo
 import com.example.composeunit.project.fragment.OneFragment
 import com.example.composeunit.project.fragment.ThreeFragment
 import com.example.composeunit.project.view_model.message.MessageViewModel
+import com.google.accompanist.insets.navigationBarsHeight
 
 @Composable
 fun HomePage(
@@ -24,19 +26,12 @@ fun HomePage(
     homeViewModel: HomeViewModel = viewModel(),
 ) {
     val navCtrl = rememberNavController()
-    Scaffold(
-        Modifier.navigationBarsPadding(),
-        backgroundColor = Color(236, 238, 240, 255),
-        bottomBar = {
-            BottomNavigation(homeViewModel,
-                onTapBottom = {
-                    navigatorTo(navCtrl, it)
-                })
-        }) { innerPadding ->
+    Box(
+        Modifier.fillMaxSize()
+    ) {
         NavHost(
             navCtrl,
             startDestination = NavigationRoute.homeRoute,
-            Modifier.padding(innerPadding)
         ) {
             composable(NavigationRoute.homeRoute) {
                 OneFragment()
@@ -49,6 +44,12 @@ fun HomePage(
                 ThreeFragment(mainActions)
             }
         }
+        BottomNavigation(
+            homeViewModel,
+            onTapBottom = {
+                navigatorTo(navCtrl, it)
+            }, Modifier.align(Alignment.BottomCenter)
+        )
     }
 }
 

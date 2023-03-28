@@ -5,6 +5,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
@@ -79,43 +80,46 @@ fun OneFragment(homeViewModel: HomeViewModel = viewModel()) {
     if (state.isNullOrEmpty()) {
         Text(text = "数据加载中")
     } else {
-        ConstraintLayout {
-            val (bottomListView, topTab) = createRefs()
-            LazyColumn(
-                state = scrollLazyState,
-                contentPadding = PaddingValues(top = 125.dp),
-                modifier = Modifier
-                    .constrainAs(bottomListView) {
-                        top.linkTo(parent.top)  // 顶部约束为父布局的顶部
-                        start.linkTo(parent.start)  // 左侧约束为父布局的左侧
-                        end.linkTo(parent.end)  // 右侧约束为父布局的右侧
-                    }
-                    .nestedScroll(nestedScrollConnection, nestedScrollDispatcher)
-                    .background(Color(238, 239, 247, 255))) {
-                //遍历循环内部Item部件
-                items(30) { index ->
-                    Box(
-                        modifier = Modifier
-                            .padding(5.dp)
-                            .fillMaxWidth()
-                    ) {
-                        HomeItemView(state[0], index, homeViewModel)
+        Scaffold { innerPadding ->
+            ConstraintLayout {
+                val (bottomListView, topTab) = createRefs()
+                LazyColumn(
+                    state = scrollLazyState,
+                    contentPadding = PaddingValues(top = 125.dp),
+                    modifier = Modifier
+                        .padding(innerPadding)
+                        .constrainAs(bottomListView) {
+                            top.linkTo(parent.top)  // 顶部约束为父布局的顶部
+                            start.linkTo(parent.start)  // 左侧约束为父布局的左侧
+                            end.linkTo(parent.end)  // 右侧约束为父布局的右侧
+                        }
+                        .nestedScroll(nestedScrollConnection, nestedScrollDispatcher)
+                        .background(Color(238, 239, 247, 255))) {
+                    //遍历循环内部Item部件
+                    items(30) { index ->
+                        Box(
+                            modifier = Modifier
+                                .padding(5.dp)
+                                .fillMaxWidth()
+                        ) {
+                            HomeItemView(state[0], index, homeViewModel)
+                        }
                     }
                 }
-            }
-            Row(
-                Modifier
-                    .fillMaxWidth()
-                    .background(Color.Transparent)
-                    .constrainAs(topTab) {}
-            ) {
-                for (index in 0..6) {
-                    ComposeTabView(
-                        modifier = Modifier.weight(1f),
-                        index = index,
-                        tabSelectedState = tabSelectedState,
-                        scaleH = animalTabHeightScale
-                    )
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .background(Color.Transparent)
+                        .constrainAs(topTab) {}
+                ) {
+                    for (index in 0..6) {
+                        ComposeTabView(
+                            modifier = Modifier.weight(1f),
+                            index = index,
+                            tabSelectedState = tabSelectedState,
+                            scaleH = animalTabHeightScale
+                        )
+                    }
                 }
             }
         }
