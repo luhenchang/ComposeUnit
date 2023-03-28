@@ -18,11 +18,13 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
+        android:screenOrientation="portrait"
         android:theme="@style/Theme.MyFirstComposeApp">
         <activity
             android:name=".project.SplashActivity"
             android:exported="true"
             android:launchMode="standard"
+            android:screenOrientation="portrait"
             android:theme="@style/Theme.MyFirstComposeApp.NoActionBarFull">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

@@ -83,83 +83,85 @@ fun BottomNavigation(
 private fun BottomBarAnimalBgView(indexValue: Float) {
     Canvas(modifier = Modifier
         .fillMaxWidth()
-        .height(70.dp), onDraw = {
-        drawIntoCanvas { canvas ->
-            val paint = Paint()
-            paint.color = Color(0xFF108888)//Color(0XFF0DBEBF)
-            paint.style = PaintingStyle.Fill
-            //先固定分为三等分
-            val widthOfOne = size.width / 3
-            //每一个弧度的中心控制点
-            val centerWidthOfOneX = widthOfOne / 2
-            //弧度端口到两遍ONewidth距离
-            val marginLeftAndRight = centerWidthOfOneX / 1.6f
+        .height(70.dp)
+        .clickable(enabled = false) {},
+        onDraw = {
+            drawIntoCanvas { canvas ->
+                val paint = Paint()
+                paint.color = Color(0xFF108888)//Color(0XFF0DBEBF)
+                paint.style = PaintingStyle.Fill
+                //先固定分为三等分
+                val widthOfOne = size.width / 3
+                //每一个弧度的中心控制点
+                val centerWidthOfOneX = widthOfOne / 2
+                //弧度端口到两遍ONewidth距离
+                val marginLeftAndRight = centerWidthOfOneX / 1.6f
 
-            val controllerX = centerWidthOfOneX / 6f
+                val controllerX = centerWidthOfOneX / 6f
 
-            val keyAnimal = widthOfOne * indexValue
-            canvas.save()
-            paint.asFrameworkPaint().setShadowLayer(
-                15f,
-                5f,
-                -6f,
-                Color(0xFF108888).toArgb()
-            )
-            canvas.drawCircle(Offset(centerWidthOfOneX + keyAnimal, 0f), 60f, paint)
-
-            val path = Path().apply {
-                moveTo(0f, 0f)
-                lineTo(marginLeftAndRight / 2 + keyAnimal, 0f)
-                cubicTo(
-                    marginLeftAndRight + keyAnimal,
-                    0f,
-                    centerWidthOfOneX - (centerWidthOfOneX - controllerX) / 2f + keyAnimal,
-                    size.height / 3f,
-                    centerWidthOfOneX + keyAnimal,
-                    size.height / 2.6f
+                val keyAnimal = widthOfOne * indexValue
+                canvas.save()
+                paint.asFrameworkPaint().setShadowLayer(
+                    15f,
+                    5f,
+                    -6f,
+                    Color(0xFF108888).toArgb()
                 )
-                cubicTo(
-                    centerWidthOfOneX + (centerWidthOfOneX - controllerX) / 2f + keyAnimal,
-                    size.height / 2.6f,
-                    widthOfOne - (marginLeftAndRight) + keyAnimal,
-                    0f,
-                    widthOfOne - marginLeftAndRight / 2 + keyAnimal,
-                    0f
-                )
-                lineTo(size.width, 0f)
-                lineTo(size.width, size.height)
-                lineTo(0f, size.height)
-                close()
+                canvas.drawCircle(Offset(centerWidthOfOneX + keyAnimal, 0f), 60f, paint)
+
+                val path = Path().apply {
+                    moveTo(0f, 0f)
+                    lineTo(marginLeftAndRight / 2 + keyAnimal, 0f)
+                    cubicTo(
+                        marginLeftAndRight + keyAnimal,
+                        0f,
+                        centerWidthOfOneX - (centerWidthOfOneX - controllerX) / 2f + keyAnimal,
+                        size.height / 3f,
+                        centerWidthOfOneX + keyAnimal,
+                        size.height / 2.6f
+                    )
+                    cubicTo(
+                        centerWidthOfOneX + (centerWidthOfOneX - controllerX) / 2f + keyAnimal,
+                        size.height / 2.6f,
+                        widthOfOne - (marginLeftAndRight) + keyAnimal,
+                        0f,
+                        widthOfOne - marginLeftAndRight / 2 + keyAnimal,
+                        0f
+                    )
+                    lineTo(size.width, 0f)
+                    lineTo(size.width, size.height)
+                    lineTo(0f, size.height)
+                    close()
+                }
+
+                canvas.drawPath(path, paint)
+
+                //裁剪
+                val clipPath = Path().apply {
+                    moveTo(0f, 0f)
+                    lineTo(marginLeftAndRight / 2 + keyAnimal, 0f)
+                    cubicTo(
+                        marginLeftAndRight + keyAnimal,
+                        0f,
+                        centerWidthOfOneX - (centerWidthOfOneX - controllerX) / 2f + keyAnimal,
+                        size.height / 3f,
+                        centerWidthOfOneX + keyAnimal,
+                        size.height / 2.6f
+                    )
+                    cubicTo(
+                        centerWidthOfOneX + (centerWidthOfOneX - controllerX) / 2f + keyAnimal,
+                        size.height / 2.6f,
+                        widthOfOne - (marginLeftAndRight) + keyAnimal,
+                        0f,
+                        widthOfOne - marginLeftAndRight / 2 + keyAnimal,
+                        0f
+                    )
+                    lineTo(size.width, 0f)
+                    close()
+                }
+                canvas.clipPath(clipPath, ClipOp.Difference)
             }
-
-            canvas.drawPath(path, paint)
-
-            //裁剪
-            val clipPath = Path().apply {
-                moveTo(0f, 0f)
-                lineTo(marginLeftAndRight / 2 + keyAnimal, 0f)
-                cubicTo(
-                    marginLeftAndRight + keyAnimal,
-                    0f,
-                    centerWidthOfOneX - (centerWidthOfOneX - controllerX) / 2f + keyAnimal,
-                    size.height / 3f,
-                    centerWidthOfOneX + keyAnimal,
-                    size.height / 2.6f
-                )
-                cubicTo(
-                    centerWidthOfOneX + (centerWidthOfOneX - controllerX) / 2f + keyAnimal,
-                    size.height / 2.6f,
-                    widthOfOne - (marginLeftAndRight) + keyAnimal,
-                    0f,
-                    widthOfOne - marginLeftAndRight / 2 + keyAnimal,
-                    0f
-                )
-                lineTo(size.width, 0f)
-                close()
-            }
-            canvas.clipPath(clipPath, ClipOp.Difference)
-        }
-    })
+        })
 }
 
 class BottomShape(indexValue: Float) : Shape {
@@ -223,14 +225,14 @@ fun BottomView(
             .clickable {
                 homeViewModel.animalBoolean.value = !homeViewModel.animalBoolean.value
                 homeViewModel.positionChanged(index)
-                when(index){
-                    0->{
+                when (index) {
+                    0 -> {
                         onTapBottom(NavigationRoute.homeRoute)
                     }
-                    1->{
+                    1 -> {
                         onTapBottom(NavigationRoute.widgetRoute)
                     }
-                    2->{
+                    2 -> {
                         onTapBottom(NavigationRoute.settingRoute)
                     }
                 }
