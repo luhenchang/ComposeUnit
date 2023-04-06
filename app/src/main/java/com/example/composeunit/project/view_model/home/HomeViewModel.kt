@@ -8,7 +8,6 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.base.model.BaseViewModel
 import com.example.composeunit.ComposeData
-import com.example.composeunit.User
 import com.example.composeunit.models.chatgtp.*
 import com.example.composeunit.project.model.local.HomeRepository
 import com.example.composeunit.repository.DataBaseRepository
@@ -17,9 +16,8 @@ import com.example.composeunit.retrofit.HttpConst.Companion.CHAT_AUTHORIZATION
 import com.example.composeunit.retrofit.HttpConst.Companion.CHAT_GTP_CONTENT_TYPE
 import com.example.composeunit.retrofit.HttpConst.Companion.CHAT_GTP_MODEL
 import com.example.composeunit.retrofit.HttpConst.Companion.CHAT_GTP_ROLE
-import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
-import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val repository: DataBaseRepository = HomeRepository()
@@ -66,13 +64,10 @@ class HomeViewModel(
 
     fun getInformation(current: Context) {
         viewModelScope.launch(Dispatchers.Main) {
-            var index = 0
             repository.queryHomeLists(current).catch { ex ->
                 Log.e("queryHomeLists::error=", ex.message.toString())
             }.collect { data ->
                 Log.e("getInformation", "getInformation:${data[0].item_title}")
-                Log.e("getInformation", "index = $index")
-                index++
                 _itemsUIState.emit(data)
             }
         }

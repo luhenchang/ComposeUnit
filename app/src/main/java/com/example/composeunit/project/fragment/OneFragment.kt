@@ -1,16 +1,20 @@
 package com.example.composeunit.project.fragment
 
+import android.graphics.LinearGradient
+import android.graphics.Paint
+import android.graphics.Path
+import android.graphics.Shader
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.Scaffold
-import androidx.compose.material.Text
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollDispatcher
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
@@ -21,6 +25,8 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composeunit.composeble_ui.home.ComposeTabView
 import com.example.composeunit.composeble_ui.home.HomeItemView
+import com.example.composeunit.composeble_ui.home.getColorEndForIndex
+import com.example.composeunit.composeble_ui.home.getColorForIndex
 import com.example.composeunit.project.view_model.home.HomeViewModel
 
 
@@ -77,51 +83,147 @@ fun OneFragment(homeViewModel: HomeViewModel = viewModel()) {
     }
     val nestedScrollDispatcher = remember { NestedScrollDispatcher() }
 
-    if (state.isNullOrEmpty()) {
-        Text(text = "数据加载中")
-    } else {
-        Scaffold { innerPadding ->
-            ConstraintLayout {
-                val (bottomListView, topTab) = createRefs()
-                LazyColumn(
-                    state = scrollLazyState,
-                    contentPadding = PaddingValues(top = 125.dp),
-                    modifier = Modifier
-                        .padding(innerPadding)
-                        .constrainAs(bottomListView) {
-                            top.linkTo(parent.top)  // 顶部约束为父布局的顶部
-                            start.linkTo(parent.start)  // 左侧约束为父布局的左侧
-                            end.linkTo(parent.end)  // 右侧约束为父布局的右侧
-                        }
-                        .nestedScroll(nestedScrollConnection, nestedScrollDispatcher)
-                        .background(Color(238, 239, 247, 255))) {
-                    //遍历循环内部Item部件
-                    items(30) { index ->
-                        Box(
-                            modifier = Modifier
-                                .padding(5.dp)
-                                .fillMaxWidth()
-                        ) {
-                            HomeItemView(state[0], index, homeViewModel)
-                        }
+    ConstraintLayout {
+        val (bottomListView, topTab) = createRefs()
+        if (state.isEmpty()) {
+            LoadingPageUI(tabSelectedState.value)
+        } else {
+            LazyColumn(
+                state = scrollLazyState,
+                contentPadding = PaddingValues(top = 125.dp),
+                modifier = Modifier
+                    .constrainAs(bottomListView) {
+                        top.linkTo(parent.top)  // 顶部约束为父布局的顶部
+                        start.linkTo(parent.start)  // 左侧约束为父布局的左侧
+                        end.linkTo(parent.end)  // 右侧约束为父布局的右侧
                     }
-                }
-                Row(
-                    Modifier
-                        .fillMaxWidth()
-                        .background(Color.Transparent)
-                        .constrainAs(topTab) {}
-                ) {
-                    for (index in 0..6) {
-                        ComposeTabView(
-                            modifier = Modifier.weight(1f),
-                            index = index,
-                            tabSelectedState = tabSelectedState,
-                            scaleH = animalTabHeightScale
-                        )
+                    .nestedScroll(nestedScrollConnection, nestedScrollDispatcher)
+                    .background(Color(238, 239, 247, 255))) {
+                //遍历循环内部Item部件
+                items(30) { index ->
+                    Box(
+                        modifier = Modifier
+                            .padding(5.dp)
+                            .fillMaxWidth()
+                    ) {
+                        HomeItemView(state[0], index, homeViewModel)
                     }
                 }
             }
         }
+        Row(
+            Modifier
+                .fillMaxWidth()
+                .background(color = Color.Transparent)
+                .constrainAs(topTab) {
+                }
+        ) {
+            for (index in 0..6) {
+                ComposeTabView(
+                    "TV",
+                    modifier = Modifier.weight(1f),
+                    index = index,
+                    tabSelectedState = tabSelectedState,
+                    scaleH = animalTabHeightScale,
+                    homeViewModel
+                )
+            }
+        }
+    }
+
+}
+
+@Composable
+fun LoadingPageUI(index: Int) {
+    val waveWidth=30f
+    val waveHeight=21f
+    val animalValue by rememberInfiniteTransition().animateFloat(
+        initialValue = 0f,
+        targetValue = 1f,
+        animationSpec = infiniteRepeatable(
+            tween(2000, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        )
+    )
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(170.dp), contentAlignment = Alignment.Center
+    ) {
+        Canvas(modifier = Modifier.size(100.dp)) {
+            drawIntoCanvas{
+                val  canvas:android.graphics.Canvas = it.nativeCanvas
+                canvas.scale(1f, -1f)
+
+                val roundRect = Path()
+                roundRect.addRoundRect(waveWidth * 4,waveWidth*3*(1-animalValue),waveWidth* 8,-waveWidth*3,60f,60f,Path.Direction.CCW)
+                canvas.clipPath(roundRect)
+
+                canvas.translate(animalValue*(waveWidth*4), 0f) //内层海浪
+                val wavePath= Path()
+                wavePath.moveTo(0f, -waveWidth * 6)
+                wavePath.lineTo(0f, 0f)
+                wavePath.quadTo(waveWidth, waveHeight, waveWidth * 2, 0f)
+                wavePath.quadTo(waveWidth * 3, -waveHeight, waveWidth * 4, 0f)
+                wavePath.quadTo(waveWidth * 5, waveHeight, waveWidth * 6, 0f)
+                wavePath.quadTo(waveWidth * 7, -waveHeight, waveWidth * 8, 0f)
+                wavePath.lineTo(waveWidth * 8, -waveWidth * 6)
+                canvas.drawPath(wavePath, getPaintBefore(Paint.Style.FILL,waveWidth, index))
+
+                canvas.translate(animalValue*(waveWidth*4), 0f) //内层海浪
+                val wavePathOut= Path()
+                wavePathOut.moveTo(-waveWidth * 7, -waveWidth * 6)
+                wavePathOut.lineTo(-waveWidth * 7, 0f)
+                wavePathOut.quadTo(-waveWidth * 7, waveHeight, -waveWidth * 6, 0f)
+                wavePathOut.quadTo(-waveWidth * 5, -waveHeight, -waveWidth * 4, 0f)
+                wavePathOut.quadTo(-waveWidth * 3, waveHeight, -waveWidth * 2, 0f)
+                wavePathOut.quadTo(-waveWidth, -waveHeight, 0f, 0f)
+                wavePathOut.quadTo(waveWidth, waveHeight, waveWidth * 2, 0f)
+                wavePathOut.quadTo(waveWidth * 3, -waveHeight, waveWidth * 4, 0f)
+                wavePathOut.quadTo(waveWidth * 5, waveHeight, waveWidth * 6, 0f)
+                wavePathOut.quadTo(waveWidth * 7, -waveHeight, waveWidth * 8, 0f)
+                wavePathOut.lineTo(waveWidth * 8, -waveWidth * 6)
+                canvas.drawPath(wavePathOut, getPaint(Paint.Style.FILL,waveWidth,index))
+            }
+        }
     }
 }
+fun getPaintBefore(style: Paint.Style, waveWidth: Float, index :Int): Paint {
+    val gPaint = Paint()
+    gPaint.strokeWidth = 2f
+    gPaint.isAntiAlias = true
+    gPaint.style = style
+    gPaint.textSize = 26f
+    gPaint.color = getColorForIndex(index).toArgb()
+    val linearGradient = LinearGradient(
+        waveWidth * 4, -waveWidth * 8,
+        waveWidth * 4,
+        80f,
+        getColorForIndex(index).toArgb(),
+        getColorEndForIndex(index).toArgb(),
+        Shader.TileMode.CLAMP
+    )
+    gPaint.shader=linearGradient
+    return gPaint
+}
+
+private fun getPaint(style: Paint.Style,waveWidth:Float,index:Int): Paint {
+    val gPaint = Paint()
+    gPaint.color = android.graphics.Color.BLUE
+    gPaint.strokeWidth = 2f
+    gPaint.isAntiAlias = true
+    gPaint.style = style
+    gPaint.textSize = 26f
+    gPaint.color = android.graphics.Color.argb(255, 75, 151, 79)
+    val linearGradient = LinearGradient(
+        waveWidth * 4, -waveWidth * 2,
+        waveWidth * 4,
+        80f,
+        getColorForIndex(index).toArgb(),
+        getColorEndForIndex(index).toArgb(),
+        Shader.TileMode.CLAMP
+    )
+    gPaint.shader=linearGradient
+    return gPaint
+}
+

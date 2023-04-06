@@ -1,29 +1,18 @@
 package com.example.composeunit.composeble_ui.home
 
-import android.graphics.text.MeasuredText
-import android.os.Build
-import android.view.View
 import androidx.compose.animation.*
 import androidx.compose.animation.core.Spring
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.MutableState
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
@@ -31,12 +20,11 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import androidx.compose.foundation.*
-import androidx.compose.foundation.gestures.draggable
-import androidx.compose.ui.geometry.Rect
-import androidx.compose.ui.geometry.RoundRect
+import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.text.drawText
-import androidx.core.view.ViewCompat.setLayerType
+import androidx.compose.ui.platform.LocalContext
+import androidx.lifecycle.viewmodel.compose.viewModel
+import com.example.composeunit.project.view_model.home.HomeViewModel
 
 /**
  * Created by wangfei44 on 2023/3/24.
@@ -49,8 +37,10 @@ fun ComposeTabView(
     modifier: Modifier,
     index: Int,
     tabSelectedState: MutableState<Int>,
-    scaleH: Float
+    scaleH: Float,
+    homeViewModel: HomeViewModel = viewModel()
 ) {
+    val context = LocalContext.current
     val tabHeight by animateDpAsState(
         targetValue = if (tabSelectedState.value == index) {
             120.dp
@@ -70,7 +60,10 @@ fun ComposeTabView(
                 .fillMaxWidth()
                 .height(if (tabSelectedState.value == index) tabHeight.value.dp * scaleH else 100.dp * scaleH)
                 .clickable(onClick = {
-                    tabSelectedState.value = index
+                    if (tabSelectedState.value != index) {
+                        tabSelectedState.value = index
+                        homeViewModel.getInformation(context)
+                    }
                 }, indication = null, interactionSource = remember {
                     MutableInteractionSource()
                 }),
@@ -184,21 +177,15 @@ fun getColorForIndex(index: Int): Color {
     }
 }
 
-
-@Composable
-fun TabText(modifier: Modifier) {
-    Text(
-        "Te",
-        fontSize = 14.sp,
-        color = Color.White,
-        modifier = modifier,
-        style = TextStyle(
-            fontWeight = FontWeight.Bold, fontSize = 15.sp, shadow = Shadow(
-                color = Color(32, 3, 37, 100),
-                offset = Offset(2f, 3f),
-                blurRadius = 3f
-            )
-        )
-    )
+fun getColorEndForIndex(index: Int): Color {
+    return when (index) {
+        0 -> Color(0xFF0CF3F3)
+        1 -> Color(0xFF3A0144)
+        2 -> Color(0xFFF5734C)
+        3 -> Color(0xFF31E739)
+        4 -> Color(0xFF740A03)
+        5 -> Color(0xFFC9B4EE)
+        else -> Color(0xFFEEB303)
+    }
 }
 
