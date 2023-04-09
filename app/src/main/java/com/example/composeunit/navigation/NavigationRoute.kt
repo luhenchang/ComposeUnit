@@ -15,6 +15,8 @@ object NavigationRoute {
     const val homeRoute = "HomePage/OnFragment"
     const val widgetRoute = "HomePage/TwoFragment"
     const val settingRoute = "HomePage/ThreeFragment"
+    const val settingOpenAIRoute = "HomePage/ThreeFragment/OpenAIPage"
+
 }
 
 // 路由跳转

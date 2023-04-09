@@ -3,6 +3,7 @@ import HomePage
 import LoginPage
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -12,13 +13,15 @@ import com.example.composeunit.navigation.NavigationRoute.LOGIN_PAGE_ROUTE
 import com.example.composeunit.navigation.NavigationRoute.MESSAGE_DETAILS_PAGE_ROUTE
 import com.example.composeunit.navigation.NavigationRoute.SETTING_PAGE_ROUTE
 import com.example.composeunit.navigation.NavigationRoute.SPLASH_PAGE_ROUTE
+import com.example.composeunit.navigation.NavigationRoute.settingOpenAIRoute
 import com.example.composeunit.project.SplashCompass
 import com.example.composeunit.project.fragment.MessageDetailPage
 import com.example.composeunit.project.fragment.ThreeFragment
-import com.example.composeunit.project.view_model.home.HomeViewModel
+import com.example.composeunit.project.page.OpenAIPage
+import com.example.composeunit.project.view_model.ai.OpenAiViewModel
 
 @Composable
-fun NavGraph(startDestination: String = SPLASH_PAGE_ROUTE) {
+fun NavGraph(startDestination: String = settingOpenAIRoute) {
     val navController = rememberNavController()
     val actions = remember(navController) { MainActions(navController) }
     //设置导航
@@ -40,6 +43,10 @@ fun NavGraph(startDestination: String = SPLASH_PAGE_ROUTE) {
             }
             composable(MESSAGE_DETAILS_PAGE_ROUTE) {
                 MessageDetailPage(actions)
+            }
+            composable(settingOpenAIRoute) {
+                val viewModel: OpenAiViewModel = viewModel()
+                OpenAIPage(actions,viewModel)
             }
         }
     )
@@ -67,5 +74,9 @@ class MainActions(navController: NavController) {
     //中间信息页面的详情页面
     val messageDetailsPage:() -> Unit = {
         navController.navigate(MESSAGE_DETAILS_PAGE_ROUTE)
+    }
+
+    val openAIPage: () -> Unit = {
+        navController.navigate(settingOpenAIRoute)
     }
 }

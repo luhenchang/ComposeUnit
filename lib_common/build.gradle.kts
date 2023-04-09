@@ -48,32 +48,37 @@ android {
 dependencies {
     val composeVersion = "1.3.3"
     val roomVersion: String by rootProject.extra
-    api("androidx.compose.runtime:runtime:1.3.3")
-    api("androidx.core:core-ktx:1.9.0")
+    api("androidx.compose.runtime:runtime:1.4.1")
+    api("androidx.core:core-ktx:1.10.0")
     testApi("junit:junit:4.13.2")
     androidTestApi("androidx.test.ext:junit:1.1.5")
     androidTestApi("androidx.test.espresso:espresso-core:3.5.1")
     api("androidx.appcompat:appcompat:1.6.1")
     api("com.google.android.material:material:1.8.0")
-    api("androidx.compose.ui:ui:1.3.3")
-    api("androidx.compose.material:material:1.3.1")
+    api("androidx.compose.ui:ui:1.4.1")
+    api("androidx.compose.material:material:1.4.1")
     api("androidx.compose.ui:ui-tooling:$composeVersion")
-    api("androidx.lifecycle:lifecycle-runtime-ktx:2.6.0")
-    api("androidx.activity:activity-compose:1.6.1")
+    api("androidx.lifecycle:lifecycle-runtime-ktx:2.6.1")
+    api("androidx.activity:activity-compose:1.7.0")
 
     // compose
     api("androidx.compose.runtime:runtime-livedata:$composeVersion")
-    api("androidx.lifecycle:lifecycle-livedata-core-ktx:2.6.0")
+    api("androidx.lifecycle:lifecycle-livedata-core-ktx:2.6.1")
     api("androidx.constraintlayout:constraintlayout:2.1.4")
-    api("androidx.compose.material:material:1.3.1")
+    api("androidx.compose.material:material:1.4.1")
     // https://mvnrepository.com/artifact/androidx.constraintlayout/constraintlayout-compose
-    api("androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha08")
-    api("androidx.activity:activity-compose:1.6.1")
-    api("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.0")
-    api("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.0")
-    api("androidx.compose.foundation:foundation:1.3.1")
-    api("androidx.compose.foundation:foundation-layout:1.3.1")
-    api("androidx.compose.material:material-icons-extended:1.3.1")
+    api("androidx.constraintlayout:constraintlayout-compose:1.1.0-alpha09")
+    api("androidx.activity:activity-compose:1.7.0")
+    api("androidx.lifecycle:lifecycle-viewmodel-compose:2.6.1")
+    api("androidx.lifecycle:lifecycle-viewmodel-ktx:2.6.1")
+    api("androidx.compose.foundation:foundation:1.4.1")
+    api("androidx.compose.foundation:foundation-layout:1.4.1")
+    api("androidx.compose.material:material-icons-extended:1.4.1")
+    api ("androidx.compose.material3:material3:1.1.0-beta02")
+    api("androidx.appcompat:appcompat:1.6.1")
+    api("com.google.android.material:material:1.8.0")
+    api("androidx.constraintlayout:constraintlayout:2.1.4")
+    api("io.coil-kt:coil-compose:2.2.2")
 
     // 安卓Utils
     api("com.blankj:utilcode:1.30.7")
@@ -81,7 +86,7 @@ dependencies {
     androidTestApi("androidx.compose.ui:ui-test-junit4:$composeVersion")
 
     // navigation
-    api("androidx.navigation:navigation-compose:2.6.0-alpha07")
+    api("androidx.navigation:navigation-compose:2.6.0-alpha09")
     api("com.google.accompanist:accompanist-insets:0.27.0")
     api("com.google.accompanist:accompanist-coil:0.15.0")
     api("com.google.accompanist:accompanist-pager:0.27.0")

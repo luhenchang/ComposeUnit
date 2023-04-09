@@ -18,9 +18,9 @@ import javax.security.cert.CertificateException
 object RetrofitManger {
     private const val BASE_URL = "https://api.openai.com/v1/"
     private var retrofit: Retrofit? = null
-    private const val READ_TIMEOUT = 10L
-    private const val WRITE_TIMEOUT = 10L
-    private const val CONNECT_TIMEOUT = 10L
+    private const val READ_TIMEOUT = 50L
+    private const val WRITE_TIMEOUT = 50L
+    private const val CONNECT_TIMEOUT = 50L
 
     val service: ApiService by lazy {
         getRetrofitInstance().create(ApiService::class.java)
@@ -43,15 +43,17 @@ object RetrofitManger {
     private fun getHttpClient(): OkHttpClient? {
         try {
             return getSSLSocketFactory().let {
-                OkHttpClient.Builder()
-                    .sslSocketFactory(it.first, it.second as X509TrustManager)
-                    .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
-                    .retryOnConnectionFailure(true)
-                    .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
-                    .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
-                    .hostnameVerifier(HostnameVerifier { _, _ ->
-                        return@HostnameVerifier true
-                    }).build()
+                it.first?.let { it1 ->
+                    OkHttpClient.Builder()
+                        .sslSocketFactory(it1, it.second as X509TrustManager)
+                        .readTimeout(READ_TIMEOUT, TimeUnit.SECONDS)
+                        .retryOnConnectionFailure(true)
+                        .writeTimeout(WRITE_TIMEOUT, TimeUnit.SECONDS)
+                        .connectTimeout(CONNECT_TIMEOUT, TimeUnit.SECONDS)
+                        .hostnameVerifier(HostnameVerifier { _, _ ->
+                            return@HostnameVerifier true
+                        }).build()
+                }
             }
         } catch (e: Exception) {
             Log.e("OkHttpClientError", e.message!!)

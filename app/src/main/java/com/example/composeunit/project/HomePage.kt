@@ -1,10 +1,7 @@
 import androidx.compose.foundation.layout.*
-import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -17,8 +14,8 @@ import com.example.composeunit.navigation.NavigationRoute
 import com.example.composeunit.navigation.navigatorTo
 import com.example.composeunit.project.fragment.OneFragment
 import com.example.composeunit.project.fragment.ThreeFragment
+import com.example.composeunit.project.view_model.ai.OpenAiViewModel
 import com.example.composeunit.project.view_model.message.MessageViewModel
-import com.google.accompanist.insets.navigationBarsHeight
 
 @Composable
 fun HomePage(

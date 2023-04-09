@@ -1,9 +1,8 @@
 package com.example.composeunit.models.chatgtp
 
 interface ChatGTPModel
-sealed class ChatGTPFailModel(val errCode:Int) : ChatGTPModel {
-    object NETTER : ChatGTPFailModel(101)
-    object LOADER : ChatGTPFailModel(102)
+sealed class ChatGTPFailModel(val errCode: Int, val message: String?) : ChatGTPModel {
+    object NETTER : ChatGTPFailModel(404,"网络错误")
 }
 
 data class ModelData(
@@ -12,7 +11,9 @@ data class ModelData(
     val id: String? = null,
     val model: String? = null,
     val `object`: String? = null,
-    val usage: Usage? = null
+    val usage: Usage? = null,
+    val isAI: Boolean = true,
+    val errorNet: Boolean = false
 ) : ChatGTPModel
 
 data class Choice(

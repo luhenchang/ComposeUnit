@@ -16,8 +16,11 @@ import com.example.composeunit.retrofit.HttpConst.Companion.CHAT_AUTHORIZATION
 import com.example.composeunit.retrofit.HttpConst.Companion.CHAT_GTP_CONTENT_TYPE
 import com.example.composeunit.retrofit.HttpConst.Companion.CHAT_GTP_MODEL
 import com.example.composeunit.retrofit.HttpConst.Companion.CHAT_GTP_ROLE
-import kotlinx.coroutines.*
-import kotlinx.coroutines.flow.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.launch
 
 class HomeViewModel(
     private val repository: DataBaseRepository = HomeRepository()
@@ -36,30 +39,6 @@ class HomeViewModel(
 
     fun positionChanged(selectedIndex: Int) {
         _position.value = selectedIndex
-    }
-
-    var responseData = MutableStateFlow<ChatGTPModel>(ModelData())
-    private fun getChatGTPMessage(info: String) {
-        viewModelScope.launch {
-            ChatGTPRepository.getMessage(
-                CHAT_GTP_CONTENT_TYPE, CHAT_AUTHORIZATION,
-                ClientSendBody(listOf(ClientMessage(info, CHAT_GTP_ROLE)), CHAT_GTP_MODEL)
-            ).let { result ->
-                when (result) {
-                    is ChatGTPResult.Success -> {
-                        result.data.choices?.let {
-                            Log.e("result==", it[0].message?.content.toString())
-                        }
-                        responseData.emit(result.data)
-                    }
-                    is ChatGTPResult.Fail -> {
-                        Log.e("result==", result.errCode.toString())
-                        responseData.emit(if (result.errCode == 101) ChatGTPFailModel.LOADER else ChatGTPFailModel.NETTER)
-                    }
-                }
-            }
-
-        }
     }
 
     fun getInformation(current: Context) {
