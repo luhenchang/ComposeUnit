@@ -1,16 +1,11 @@
 package com.example.composeunit.project.view_model.ai
 
 import android.util.Log
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.composeunit.models.chatgtp.*
 import com.example.composeunit.retrofit.ChatGTPRepository
 import com.example.composeunit.retrofit.HttpConst
-import com.example.composeunit.retrofit.HttpConst.Companion.CHAT_GTP_ERO
 import kotlinx.coroutines.*
 import kotlinx.coroutines.flow.*
 
@@ -27,54 +22,65 @@ class OpenAiViewModel : ViewModel() {
     private var _loading = MutableStateFlow(false)
     var loading: StateFlow<Boolean> = _loading
 
-    fun setLoadValue(value :Boolean){
+    private var _startAnimal = MutableStateFlow(false)
+    var startAnimal: StateFlow<Boolean> = _startAnimal
+
+    fun setLoadValue(value: Boolean) {
         _loading.value = value
     }
 
-    private var _responseData = MutableStateFlow<ChatGTPModel?>(null)
-    private var _bitmapData = MutableStateFlow<ChatGTPModel?>(null)
+    fun setStarAnimalValue(value: Boolean) {
+        _startAnimal.value = value
+    }
+
     private val handler = CoroutineExceptionHandler { _, exception ->
         Log.e("handler", "exception = ${exception.message}")
         val newList = _pageList.value.clone() as ArrayList<ChatGTPModel>
-        newList.add(
-            ModelData(
-                choices = arrayListOf(Choice(message = Message(content = exception.message))),
-                isAI = true,
-                errorNet = true
-            )
+        val errorModel = ModelData(
+            choices = arrayListOf(Choice(message = Message(content = exception.message))),
+            isAI = true,
+            errorNet = true
         )
+        newList.add(errorModel)
         viewModelScope.launch {
             _pageList.emit(newList)
+            updateLoadingState(errorModel)
         }
     }
     private var job: Job? = null
     private var genericjob: Job? = null
 
     fun cancelJob() {
-        Log.e("cancelJob", "()")
         job?.apply {
-            Log.e("cancelJob", isActive.toString())
             if (isActive) {
-                Log.e("cancelJob", isCancelled.toString())
                 cancel()
             }
         }
         genericjob?.apply {
-            Log.e("cancelJob1", isActive.toString())
             if (isActive) {
-                Log.e("cancelJob1", isCancelled.toString())
                 cancel()
             }
         }
     }
 
     fun getChatGTPMessage(info: String) {
-        if (info.contains("生成图片")){
-            generateImage()
-        }
         job = viewModelScope.launch(handler) {
             flow {
                 val newList = _pageList.value.clone() as ArrayList<ChatGTPModel>
+                if (newList.isNotEmpty()) {
+                    when (val lastData = newList[newList.size - 1]) {
+                        is ModelData -> {
+                            if (!lastData.isAI) {//解决
+                                newList.remove(lastData)
+                            }
+                        }
+                        is ImageData -> {
+                            if (!lastData.isAI) {//解决
+                                newList.remove(lastData)
+                            }
+                        }
+                    }
+                }
                 newList.add(
                     ModelData(
                         choices = arrayListOf(Choice(message = Message(content = info))),
@@ -82,26 +88,36 @@ class OpenAiViewModel : ViewModel() {
                     )
                 )
                 _pageList.emit(newList)
-                emit(getMessage(info))
-            }.flowOn(Dispatchers.IO).collect { info ->
-                when (info) {
+                if (info.contains("生成图片")) {
+                    emit(generateImage(info))
+                } else {
+                    Log.e("progress ==", "01")
+                    emit(getMessage(info))
+                }
+            }.flowOn(Dispatchers.IO).collect { result ->
+                Log.e("progress ==", "03")
+                when (result) {
                     is ChatGTPResult.Success -> {
+                        _startAnimal.emit(true)
+                        Log.e("progress ==", "04")
                         //新数据来了增加到集合
                         val newList = _pageList.value.clone() as ArrayList<ChatGTPModel>
-                        newList.add(info.data)
+                        newList.add(result.data)
                         //去刷新UI
+                        Log.e("progress ==", "05")
                         _pageList.emit(newList)
+                        updateLoadingState(result.data)
                     }
                     is ChatGTPResult.Fail -> {
                         val newList = _pageList.value.clone() as ArrayList<ChatGTPModel>
-                        newList.add(
-                            ModelData(
-                                choices = arrayListOf(Choice(message = Message(content = info.message))),
-                                isAI = true,
-                                errorNet = true
-                            )
+                        val mode = ModelData(
+                            choices = arrayListOf(Choice(message = Message(content = result.message))),
+                            isAI = true,
+                            errorNet = true
                         )
+                        newList.add(mode)
                         _pageList.emit(newList)
+                        updateLoadingState(mode)
                     }
                 }
             }
@@ -111,7 +127,12 @@ class OpenAiViewModel : ViewModel() {
     fun regenerateChatGTPMMessage(info: String) {
         genericjob = viewModelScope.launch(handler) {
             flow {
-                emit(getMessage(info))
+                if (info.contains("z生成图片")) {
+                    emit(generateImage(info))
+                } else {
+                    Log.e("zprogress ==", "01")
+                    emit(getMessage(info))
+                }
             }.flowOn(Dispatchers.IO).collect { info ->
                 when (info) {
                     is ChatGTPResult.Success -> {
@@ -120,16 +141,16 @@ class OpenAiViewModel : ViewModel() {
                         newList.add(info.data.apply { })
                         //去刷新UI
                         _pageList.emit(newList)
+                        updateLoadingState(info.data)
                     }
                     is ChatGTPResult.Fail -> {
                         val newList = _pageList.value.clone() as ArrayList<ChatGTPModel>
-                        newList.add(
-                            ModelData(
-                                choices = arrayListOf(Choice(message = Message(content = info.message))),
-                                isAI = true,
-                                errorNet = true
-                            )
+                        val mode = ModelData(
+                            choices = arrayListOf(Choice(message = Message(content = info.message))),
+                            isAI = true,
+                            errorNet = true
                         )
+                        newList.add(mode)
                         _pageList.emit(newList)
                     }
                 }
@@ -137,29 +158,35 @@ class OpenAiViewModel : ViewModel() {
         }
     }
 
-    private fun generateImage(
-        prompt: String = "A cute baby sea otter",
-        n: Int = 1,
-        size: String = "256x256"
-    ) {
-        viewModelScope.launch {
-            ChatGTPRepository.generateImage(
-                HttpConst.CHAT_GTP_CONTENT_TYPE,
-                HttpConst.CHAT_AUTHORIZATION,
-                ImageBody(prompt, n, size)
-            ).apply {
-                when (this) {
-                    is ChatGTPResult.Success -> {
-                        _bitmapData.emit(this.data)
-                    }
-                    is ChatGTPResult.Fail -> {
-                        _bitmapData.emit(ChatGTPFailModel.NETTER)
-                    }
+    private fun updateLoadingState(info: ChatGTPModel) {
+        when (info) {
+            is ModelData -> {
+                Log.e("progress ==", "07")
+                Log.e("pageList ModeData=", info.isAI.toString())
+                if (info.isAI) {
+                    setLoadValue(false)
                 }
-
+            }
+            is ImageData -> {
+                Log.e("progress ==", "08")
+                Log.e("pageList ImageData=", info.toString())
+                Log.e("pageList ImageData=", info.isAI.toString())
+                if (info.isAI) {
+                    setLoadValue(false)
+                }
             }
         }
     }
+
+    private suspend fun generateImage(
+        prompt: String = "A cute baby sea otter",
+        n: Int = 1,
+        size: String = "256x256"
+    ) = ChatGTPRepository.generateImage(
+        HttpConst.CHAT_GTP_CONTENT_TYPE,
+        HttpConst.CHAT_AUTHORIZATION,
+        ImageBody(prompt, n, size)
+    )
 
     fun setRegenerateInfo(text: String) = viewModelScope.launch {
         _generateInfo.emit(text)

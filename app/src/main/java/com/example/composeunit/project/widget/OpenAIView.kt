@@ -31,7 +31,9 @@ import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextRange
@@ -39,7 +41,9 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import com.example.composeunit.R
 import com.example.composeunit.models.chatgtp.ChatGTPModel
 import com.example.composeunit.models.chatgtp.Data
@@ -47,6 +51,7 @@ import com.example.composeunit.models.chatgtp.ImageData
 import com.example.composeunit.models.chatgtp.ModelData
 import com.example.composeunit.project.view_model.ai.OpenAiViewModel
 import kotlinx.coroutines.delay
+import com.example.composeunit.utils.ai.*
 
 
 @Preview
@@ -57,15 +62,11 @@ fun OpenAIUI(
     interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     viewModel: OpenAiViewModel,
 ) {
+    Log.e("OpenAIUI=", "OpenAIUI")
     val loading by viewModel.loading.collectAsState()
     val regenerateInfo by viewModel.regenerateResponseInfo.collectAsState()
 
-    val pageList = viewModel.pageList.collectAsState().value.apply {
-        if (isNotEmpty() && (this[size - 1] as ModelData).isAI) {
-            Log.e("loading =", loading.toString())
-            viewModel.setLoadValue(false)
-        }
-    }
+    val pageList = viewModel.pageList.collectAsState().value
     val textFieldValue = remember { mutableStateOf(TextFieldValue("")) }
     val isFocused = interactionSource.collectIsFocusedAsState().value
     DisposableEffect(isFocused) {
@@ -90,16 +91,6 @@ fun OpenAIUI(
         }
     })
 
-    val infiniteTransition = rememberInfiniteTransition()
-    val animation by infiniteTransition.animateFloat(
-        initialValue = 0f,
-        targetValue = 3f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(durationMillis = 1100, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        )
-    )
-
     Box(modifier = modifier
         .draggable(
             state = draggableState, orientation = Orientation.Vertical
@@ -110,7 +101,7 @@ fun OpenAIUI(
             focusManager.clearFocus()
         }, contentAlignment = textFieldAlignment
     ) {
-        OpenAIListView(pageList)
+        OpenAIListView(pageList, viewModel)
         Column(
             Modifier
                 .fillMaxWidth()
@@ -131,7 +122,6 @@ fun OpenAIUI(
                 loading,
                 interactionSource,
                 focusRequester,
-                animation,
                 viewModel,
                 focusManager
             )
@@ -161,11 +151,26 @@ private fun OpenAIReRequestUI(
                         viewModel.setLoadValue(false)
                         viewModel.cancelJob()
                     } else {
-                        if (regenerateInfo.isNotEmpty() && !(pageList[pageList.size - 1] as ModelData).isAI) {
-                            viewModel.setLoadValue(true)
-                            viewModel.regenerateChatGTPMMessage(regenerateInfo)
-                            focusManager.clearFocus()
+                        if (regenerateInfo.isEmpty()) {
+                            return@clickable
                         }
+                        when (val data = pageList[pageList.size - 1]) {
+                            is ModelData -> {
+                                if (!data.isAI) {
+                                    viewModel.setLoadValue(true)
+                                    viewModel.regenerateChatGTPMMessage(regenerateInfo)
+                                    focusManager.clearFocus()
+                                }
+                            }
+                            is ImageData -> {
+                                if (!data.isAI) {
+                                    viewModel.setLoadValue(true)
+                                    viewModel.regenerateChatGTPMMessage(regenerateInfo)
+                                    focusManager.clearFocus()
+                                }
+                            }
+                        }
+
                     }
                 },
             horizontalArrangement = Arrangement.Center,
@@ -194,27 +199,30 @@ private fun OpenAIReRequestUI(
 }
 
 @Composable
-private fun OpenAIListView(pageList: ArrayList<ChatGTPModel>) {
+private fun OpenAIListView(pageList: ArrayList<ChatGTPModel>, viewModel: OpenAiViewModel) {
+    Log.e("OpenAIListView=", "OpenAIListView")
     LazyColumn(
         Modifier
             .fillMaxSize()
             .padding(bottom = 80.dp)
     ) {
-        items(pageList.size) { index ->
+        items(pageList.size, key = { index ->
+            index
+        }) { index ->
             when (val data = pageList[index]) {
                 is ModelData -> {
                     data.choices?.get(0)?.message?.content?.let { content ->
                         if (index % 2 == 0)
                             UserMessagesUI(content)
                         else
-                            OpenAIMessageUI(content)
+                            OpenAIMessageUI(content, data.errorNet, viewModel)
                     }
                 }
                 is ImageData -> {
                     if (index % 2 == 0)
                         UserMessagesUI(data.userData)
                     else
-                        OpenAIImageUI(data.data[0])
+                        OpenAIImageUI(data.data?.get(0), data.errorNet)
                 }
             }
         }
@@ -228,7 +236,6 @@ private fun OpenAIBottomInputUI(
     loading: Boolean,
     interactionSource: MutableInteractionSource,
     focusRequester: FocusRequester,
-    animation: Float,
     viewModel: OpenAiViewModel,
     focusManager: FocusManager
 ) {
@@ -271,38 +278,9 @@ private fun OpenAIBottomInputUI(
                 )
             }
         }, trailingIcon = {
-            if (loading)
-                Row(
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.Start,
-                    modifier = Modifier
-                        .width(15.dp)
-                        .background(Color.Transparent)
-                ) {
-                    Box(
-                        modifier = Modifier
-                            .size(3.dp)
-                            .background(Color(141, 141, 159, 255), shape = CircleShape)
-                    )
-                    Box(Modifier.width(3.dp))
-                    AnimatedVisibility(visible = (animation >= 1f)) {
-                        Box(
-                            modifier = Modifier
-                                .size(3.dp)
-                                .background(Color(141, 141, 159, 255), shape = CircleShape)
-                        )
-                    }
-                    Box(Modifier.width(3.dp))
-                    AnimatedVisibility(visible = (animation >= 2f)) {
-                        Box(
-                            modifier = Modifier
-                                .size(3.dp)
-                                .background(Color(141, 141, 159, 255), shape = CircleShape)
-                        )
-                    }
-
-                }
-            else
+            if (loading) {
+                trailingAnimalIcon()
+            } else
                 Icon(
                     modifier = Modifier.clickable {
                         if (textFieldValue.value.text.isNotEmpty()) {
@@ -323,30 +301,81 @@ private fun OpenAIBottomInputUI(
 }
 
 @Composable
-fun OpenAIInputUI(content: String) {
+private fun trailingAnimalIcon() {
+    Log.e("trailingAnimalIcon=", "trailingAnimalIcon")
+    val infiniteTransition = rememberInfiniteTransition()
+    val animation by infiniteTransition.animateFloat(
+        initialValue = 0f,
+        targetValue = 3f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1100, easing = LinearEasing),
+            repeatMode = RepeatMode.Restart
+        )
+    )
+    Row(
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.Start,
+        modifier = Modifier
+            .width(15.dp)
+            .background(Color.Transparent)
+    ) {
+        Box(
+            modifier = Modifier
+                .size(3.dp)
+                .background(Color(141, 141, 159, 255), shape = CircleShape)
+        )
+        Box(Modifier.width(3.dp))
+        AnimatedVisibility(visible = (animation >= 1f)) {
+            Box(
+                modifier = Modifier
+                    .size(3.dp)
+                    .background(Color(141, 141, 159, 255), shape = CircleShape)
+            )
+        }
+        Box(Modifier.width(3.dp))
+        AnimatedVisibility(visible = (animation >= 2f)) {
+            Box(
+                modifier = Modifier
+                    .size(3.dp)
+                    .background(Color(141, 141, 159, 255), shape = CircleShape)
+            )
+        }
+
+    }
+}
+
+@Composable
+fun OpenAIInputUI(content: String, errorNet: Boolean, viewModel: OpenAiViewModel) {
     var text by remember { mutableStateOf("") }
+    val startAnimal by viewModel.startAnimal.collectAsState()
     Text(
         text = text,
-        color = Color.White,
+        color = if (errorNet) Color.Red else Color.White,
         modifier = Modifier
             .padding(start = 20.dp, bottom = 20.dp, end = 20.dp)
     )
 
-    LaunchedEffect(content) {
+    LaunchedEffect(Unit) {
         val data = content.toCharArray()
+        if (!startAnimal) {
+            text = content
+            return@LaunchedEffect
+        }
         for (index in data.indices) {
             delay(getDelayTime(data.size))
             val endContext = text.replace("_", "") + data[index]
-            text = if (index < data.size - 1)
+            text = if (index < data.size - 1) {
                 endContext + "_"
-            else
+            } else {
+                viewModel.setStarAnimalValue(false)
                 endContext
+            }
         }
     }
 }
 
 @Composable
-private fun UserMessagesUI(content: String) {
+private fun UserMessagesUI(content: String?) {
     Row(
         Modifier
             .fillMaxWidth()
@@ -374,9 +403,10 @@ private fun UserMessagesUI(content: String) {
                 color = Color.White,
             )
         }
+
         SelectionContainer {
             Text(
-                text = content,
+                text = content.toString(),
                 color = Color.White,
                 modifier = Modifier
                     .padding(start = 20.dp, bottom = 20.dp, end = 20.dp)
@@ -386,7 +416,8 @@ private fun UserMessagesUI(content: String) {
 }
 
 @Composable
-private fun OpenAIMessageUI(content: String) {
+private fun OpenAIMessageUI(content: String, errorNet: Boolean, viewModel: OpenAiViewModel) {
+    Log.e("OpenAIMessageUI", content)
     Row(
         Modifier
             .fillMaxWidth()
@@ -395,21 +426,42 @@ private fun OpenAIMessageUI(content: String) {
         verticalAlignment = Alignment.Top
     ) {
         Box(Modifier.width(20.dp))
-        Image(
-            painter = painterResource(id = R.mipmap.open_ai_head),
-            contentDescription = "head",
-            contentScale = ContentScale.Fit,
-            modifier = Modifier
-                .size(30.dp)
-        )
+        ConstraintLayout {
+            val (imageView, errorView) = createRefs()
+            Image(
+                painter = painterResource(id = R.mipmap.open_ai_head),
+                contentDescription = "head",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .constrainAs(imageView) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                    }
+                    .size(30.dp)
+            )
+            if (errorNet)
+                Image(
+                    painter = painterResource(id = R.mipmap.open_ai_error),
+                    colorFilter = ColorFilter.tint(Color.Red),
+                    contentDescription = "error",
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        .constrainAs(errorView) {
+                            bottom.linkTo(imageView.bottom)
+                            end.linkTo(imageView.end)
+                        }
+                        .offset(x = 6.dp, y = 8.dp)
+                        .size(16.dp)
+                )
+        }
         SelectionContainer {
-            OpenAIInputUI(content)
+            OpenAIInputUI(content, errorNet, viewModel)
         }
     }
 }
 
 @Composable
-private fun OpenAIImageUI(content: Data) {
+private fun OpenAIImageUI(content: Data?, errorNet: Boolean) {
     Row(
         Modifier
             .fillMaxWidth()
@@ -418,42 +470,52 @@ private fun OpenAIImageUI(content: Data) {
         verticalAlignment = Alignment.Top
     ) {
         Box(Modifier.width(20.dp))
-        Image(
-            painter = painterResource(id = R.mipmap.open_ai_head),
-            contentDescription = "head",
-            contentScale = ContentScale.Fit,
-            modifier = Modifier
-                .size(30.dp)
-        )
+        ConstraintLayout {
+            val (imageView, errorView) = createRefs()
+            Image(
+                painter = painterResource(id = R.mipmap.open_ai_head),
+                contentDescription = "head",
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .constrainAs(imageView) {
+                        top.linkTo(parent.top)
+                        start.linkTo(parent.start)
+                    }
+                    .size(30.dp)
+            )
+            if (errorNet)
+                Image(
+                    painter = painterResource(id = R.mipmap.open_ai_error),
+                    colorFilter = ColorFilter.tint(Color(95, 1, 1, 255)),
+                    contentDescription = "error",
+                    contentScale = ContentScale.Fit,
+                    modifier = Modifier
+                        .constrainAs(errorView) {
+                            bottom.linkTo(imageView.bottom)
+                            end.linkTo(imageView.end)
+                        }
+                        .size(10.dp)
+                )
+        }
         AsyncImage(
-            modifier = Modifier.size(60.dp),
-            model = content.url,
+            modifier = Modifier
+                .size(125.dp)
+                .padding(start = 20.dp, bottom = 20.dp, end = 20.dp),
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(content?.url)
+                .crossfade(true)
+                .build(),
+            onLoading = {
+
+            },
+            onSuccess = {
+
+            },
+            onError = {
+
+            },
+            placeholder = painterResource(R.drawable.jetpack),
             contentDescription = ""
         )
     }
 }
-
-
-fun getDelayTime(size: Int): Long {
-    return if (size < 20) {
-        100
-    } else if (size < 100) {
-        50
-    } else {
-        30
-    }
-}
-
-@Composable
-private fun submitColor(isFocused: Boolean, textValue: String, loading: Boolean = false) =
-    if (isFocused && textValue.isNotEmpty() && !loading) Color.White
-    else Color(
-        141, 141, 159, 255
-    )
-
-@Composable
-private fun inputColor(isFocused: Boolean, textValue: String, loading: Boolean = false) =
-    if (isFocused && textValue.isNotEmpty() && !loading) Color.White
-    else Color(
-        141, 141, 159, 255
-    )
