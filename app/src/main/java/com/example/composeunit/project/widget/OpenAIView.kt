@@ -4,6 +4,7 @@ package com.example.composeunit.project.widget
  * Created by wangfei44 on 2023/4/7.
  */
 import android.util.Log
+import android.widget.TextView
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
@@ -30,17 +31,23 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.graphics.Shadow
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.TextRange
-import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.*
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
@@ -49,9 +56,13 @@ import com.example.composeunit.models.chatgtp.ChatGTPModel
 import com.example.composeunit.models.chatgtp.Data
 import com.example.composeunit.models.chatgtp.ImageData
 import com.example.composeunit.models.chatgtp.ModelData
+import com.example.composeunit.project.fragment.SpannableText
+import com.example.composeunit.project.fragment.getKotlinScheme
 import com.example.composeunit.project.view_model.ai.OpenAiViewModel
+import com.example.composeunit.ui.theme.openAiLight
 import kotlinx.coroutines.delay
 import com.example.composeunit.utils.ai.*
+import com.neo.highlight.core.Highlight
 
 
 @Preview
@@ -215,7 +226,7 @@ private fun OpenAIListView(pageList: ArrayList<ChatGTPModel>, viewModel: OpenAiV
                         if (index % 2 == 0)
                             UserMessagesUI(content)
                         else
-                            OpenAIMessageUI(content, data.errorNet, viewModel)
+                            OpenAIMessageUI(content, data.errorNet, viewModel,index)
                     }
                 }
                 is ImageData -> {
@@ -281,28 +292,37 @@ private fun OpenAIBottomInputUI(
             if (loading) {
                 trailingAnimalIcon()
             } else
-                Icon(
-                    modifier = Modifier.clickable {
-                        if (textFieldValue.value.text.isNotEmpty()) {
-                            viewModel.setLoadValue(true)
-                            viewModel.getChatGTPMessage(textFieldValue.value.text)
-                            viewModel.setRegenerateInfo(textFieldValue.value.text)
-                            textFieldValue.value = TextFieldValue(
-                                text = ""
-                            )
-                            focusManager.clearFocus()
-                        }
-                    },
-                    painter = painterResource(R.mipmap.send_icon),
-                    contentDescription = "sendIcon",
-                    tint = submitColor(isFocused, textFieldValue.value.text)
-                )
+                trailingSubmitIcon(textFieldValue, viewModel, focusManager, isFocused)
         })
 }
 
 @Composable
+private fun trailingSubmitIcon(
+    textFieldValue: MutableState<TextFieldValue>,
+    viewModel: OpenAiViewModel,
+    focusManager: FocusManager,
+    isFocused: Boolean
+) {
+    Icon(
+        modifier = Modifier.clickable {
+            if (textFieldValue.value.text.isNotEmpty()) {
+                viewModel.setLoadValue(true)
+                viewModel.getChatGTPMessage(textFieldValue.value.text)
+                viewModel.setRegenerateInfo(textFieldValue.value.text)
+                textFieldValue.value = TextFieldValue(
+                    text = ""
+                )
+                focusManager.clearFocus()
+            }
+        },
+        painter = painterResource(R.mipmap.send_icon),
+        contentDescription = "sendIcon",
+        tint = submitColor(isFocused, textFieldValue.value.text)
+    )
+}
+
+@Composable
 private fun trailingAnimalIcon() {
-    Log.e("trailingAnimalIcon=", "trailingAnimalIcon")
     val infiniteTransition = rememberInfiniteTransition()
     val animation by infiniteTransition.animateFloat(
         initialValue = 0f,
@@ -345,19 +365,18 @@ private fun trailingAnimalIcon() {
 }
 
 @Composable
-fun OpenAIInputUI(content: String, errorNet: Boolean, viewModel: OpenAiViewModel) {
+fun OpenAIInputUI(content: String, errorNet: Boolean, viewModel: OpenAiViewModel, index: Int) {
     var text by remember { mutableStateOf("") }
     val startAnimal by viewModel.startAnimal.collectAsState()
-    Text(
-        text = text,
-        color = if (errorNet) Color.Red else Color.White,
-        modifier = Modifier
-            .padding(start = 20.dp, bottom = 20.dp, end = 20.dp)
-    )
-
+    SpannableText(text)
     LaunchedEffect(Unit) {
         val data = content.toCharArray()
         if (!startAnimal) {
+            text = content
+            return@LaunchedEffect
+        }
+        Log.e("size ==", "${(viewModel.getListSize())}::${index}")
+        if (viewModel.getListSize() - 1 != index) {
             text = content
             return@LaunchedEffect
         }
@@ -416,7 +435,7 @@ private fun UserMessagesUI(content: String?) {
 }
 
 @Composable
-private fun OpenAIMessageUI(content: String, errorNet: Boolean, viewModel: OpenAiViewModel) {
+private fun OpenAIMessageUI(content: String, errorNet: Boolean, viewModel: OpenAiViewModel,index:Int) {
     Log.e("OpenAIMessageUI", content)
     Row(
         Modifier
@@ -455,7 +474,7 @@ private fun OpenAIMessageUI(content: String, errorNet: Boolean, viewModel: OpenA
                 )
         }
         SelectionContainer {
-            OpenAIInputUI(content, errorNet, viewModel)
+            OpenAIInputUI(content, errorNet, viewModel, index)
         }
     }
 }
@@ -516,6 +535,35 @@ private fun OpenAIImageUI(content: Data?, errorNet: Boolean) {
             },
             placeholder = painterResource(R.drawable.jetpack),
             contentDescription = ""
+        )
+    }
+}
+
+
+@Composable
+fun OpenAITopBar() {
+    Box(
+        Modifier
+            .fillMaxWidth()
+            .height(70.dp)
+            .background(
+                openAiLight
+            ),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "OpenAI",
+            fontSize = 18.sp,
+            textAlign = TextAlign.Center,
+            color = Color.White,
+            fontWeight = FontWeight.Bold,
+            style = TextStyle(
+                shadow = Shadow(
+                    Color(43, 43, 43, 255),
+                    offset = Offset(2f, 6f),
+                    blurRadius = 11f
+                )
+            )
         )
     }
 }

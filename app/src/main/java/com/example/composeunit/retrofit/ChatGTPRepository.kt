@@ -2,11 +2,8 @@ package com.example.composeunit.retrofit
 
 import android.util.Log
 import com.example.composeunit.models.chatgtp.*
-import kotlinx.coroutines.CoroutineExceptionHandler
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-import retrofit2.Response
 import retrofit2.awaitResponse
 
 /**
@@ -15,14 +12,14 @@ import retrofit2.awaitResponse
 object ChatGTPRepository {
     suspend fun getMessage(
         type: String, authorization: String, body: ClientSendBody
-    ): ChatGTPResult<ModelData> = withContext(Dispatchers.IO) {
+    ): ChatGTPResult<ChatGTPModel> = withContext(Dispatchers.IO) {
         val response = RetrofitManger.service.getMessage(type, authorization, body).awaitResponse()
         Log.e(
             "response msg=",
             "body=${response.body().toString()}" + ":message=${response.message()}"
         )
         if (response.isSuccessful) {
-            ChatGTPResult.Success(response.body()!!)
+            ChatGTPResult.Success(response.body())
         } else {
             ChatGTPResult.Fail(response.code(), response.message().messageResult())
         }
@@ -30,7 +27,7 @@ object ChatGTPRepository {
 
     suspend fun generateImage(
         type: String, authorization: String, imageBody: ImageBody
-    ): ChatGTPResult<ImageData> = withContext(Dispatchers.IO) {
+    ): ChatGTPResult<ChatGTPModel> = withContext(Dispatchers.IO) {
         val response =
             RetrofitManger.service.generateImage(type, authorization, imageBody).awaitResponse()
         Log.e(
@@ -38,11 +35,12 @@ object ChatGTPRepository {
             "body=${response.body().toString()}" + ":message=${response.message()}"
         )
         if (response.isSuccessful) {
-            ChatGTPResult.Success(response.body()!!)
+            ChatGTPResult.Success(response.body())
         } else {
             ChatGTPResult.Fail(response.code(), response.message().messageResult())
         }
     }
 }
 
-fun String.messageResult(): String = if (isNullOrEmpty()) "unknown error" else this
+fun String.messageResult(): String =
+    if (isNullOrEmpty()) "unknown error may need to be created or replaced API keys" else this

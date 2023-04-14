@@ -1,11 +1,11 @@
 package com.example.lib_common.utils
 
-import android.graphics.Color
 import android.text.SpannableString
 import android.text.Spanned
 import android.text.style.ForegroundColorSpan
 import android.util.Log
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import java.util.regex.Pattern
 
@@ -30,11 +30,11 @@ data class CodeLightColor(
  *@param parameterColor 参数的颜色 例如 Offset(2f,2f) 中的 2f 和 2f
  */
 fun codeSetConfing(
-    textColor: Int = Color.BLACK,
-    keywordColor: Int = Color.argb(255, 139, 167, 238),
-    valueColor: Int = Color.argb(255, 52, 131, 0),
-    attributeColor: Int = Color.argb(255, 119, 64, 142),
-    parameterColor: Int = Color.argb(255, 15, 0, 255)
+    textColor: Int = android.graphics.Color.BLACK,
+    keywordColor: Int = Color(255, 139, 167, 238).toArgb(),
+    valueColor: Int = Color(255, 52, 131, 0).toArgb(),
+    attributeColor: Int = Color(255, 119, 64, 142).toArgb(),
+    parameterColor: Int = Color(255, 15, 0, 255).toArgb()
 ): CodeLightColor = CodeLightColor(
     textColor,
     keywordColor,
@@ -73,7 +73,7 @@ fun RegexUtils(codeSetConfig: CodeLightColor, text: String?): SpannableString {
     //头部的Compose和PreView修饰
     if (s.contains("@")) {
         s.setSpan(
-            ForegroundColorSpan(Color.argb(255, 131, 132, 8)),
+            ForegroundColorSpan(Color(255, 131, 132, 8).toArgb()),
             0,
             s.length,
             Spanned.SPAN_EXCLUSIVE_EXCLUSIVE
@@ -130,6 +130,5 @@ private fun matcherPattern(color: Int, s: SpannableString, starPn: String, endPn
 
     }
 }
-
-val keywords = arrayOf("=", "text", "style", "blurRadius", "color", "shadow", "color", "offset")
+val keywords = arrayOf("=", "text", "style", "blurRadius", "color", "shadow", "color", "offset","public","class","static","main","void","data")
 

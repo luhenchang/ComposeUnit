@@ -8,6 +8,9 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
+val openAiDark = Color(52, 54, 65, 255)
+val openAiLight = Color(68, 70, 84, 255)
+
 val blue =  Color(0xFF108888)
 val blueDark = Color(0xFF0B182E)
 

@@ -29,6 +29,8 @@ class OpenAiViewModel : ViewModel() {
         _loading.value = value
     }
 
+    fun getListSize(): Int = _pageList.value.size
+
     fun setStarAnimalValue(value: Boolean) {
         _startAnimal.value = value
     }
@@ -91,22 +93,20 @@ class OpenAiViewModel : ViewModel() {
                 if (info.contains("生成图片")) {
                     emit(generateImage(info))
                 } else {
-                    Log.e("progress ==", "01")
                     emit(getMessage(info))
                 }
             }.flowOn(Dispatchers.IO).collect { result ->
-                Log.e("progress ==", "03")
                 when (result) {
                     is ChatGTPResult.Success -> {
-                        _startAnimal.emit(true)
-                        Log.e("progress ==", "04")
                         //新数据来了增加到集合
                         val newList = _pageList.value.clone() as ArrayList<ChatGTPModel>
-                        newList.add(result.data)
-                        //去刷新UI
-                        Log.e("progress ==", "05")
-                        _pageList.emit(newList)
-                        updateLoadingState(result.data)
+                        result.data?.let {
+                            newList.add(it)
+                            //去刷新UI
+                            _pageList.emit(newList)
+                            updateLoadingState(it)
+                        }
+                        _startAnimal.emit(true)
                     }
                     is ChatGTPResult.Fail -> {
                         val newList = _pageList.value.clone() as ArrayList<ChatGTPModel>
@@ -127,10 +127,9 @@ class OpenAiViewModel : ViewModel() {
     fun regenerateChatGTPMMessage(info: String) {
         genericjob = viewModelScope.launch(handler) {
             flow {
-                if (info.contains("z生成图片")) {
+                if (info.contains("生成图片")) {
                     emit(generateImage(info))
                 } else {
-                    Log.e("zprogress ==", "01")
                     emit(getMessage(info))
                 }
             }.flowOn(Dispatchers.IO).collect { info ->
@@ -138,10 +137,13 @@ class OpenAiViewModel : ViewModel() {
                     is ChatGTPResult.Success -> {
                         //新数据来了增加到集合
                         val newList = _pageList.value.clone() as ArrayList<ChatGTPModel>
-                        newList.add(info.data.apply { })
-                        //去刷新UI
-                        _pageList.emit(newList)
-                        updateLoadingState(info.data)
+                        info.data?.let {
+                            newList.add(it)
+                            //去刷新UI
+                            _pageList.emit(newList)
+                            updateLoadingState(it)
+                        }
+
                     }
                     is ChatGTPResult.Fail -> {
                         val newList = _pageList.value.clone() as ArrayList<ChatGTPModel>
@@ -161,16 +163,11 @@ class OpenAiViewModel : ViewModel() {
     private fun updateLoadingState(info: ChatGTPModel) {
         when (info) {
             is ModelData -> {
-                Log.e("progress ==", "07")
-                Log.e("pageList ModeData=", info.isAI.toString())
                 if (info.isAI) {
                     setLoadValue(false)
                 }
             }
             is ImageData -> {
-                Log.e("progress ==", "08")
-                Log.e("pageList ImageData=", info.toString())
-                Log.e("pageList ImageData=", info.isAI.toString())
                 if (info.isAI) {
                     setLoadValue(false)
                 }
@@ -191,14 +188,14 @@ class OpenAiViewModel : ViewModel() {
     fun setRegenerateInfo(text: String) = viewModelScope.launch {
         _generateInfo.emit(text)
     }
-}
 
-private suspend fun getMessage(info: String): ChatGTPResult<ModelData> {
-    return ChatGTPRepository.getMessage(
-        HttpConst.CHAT_GTP_CONTENT_TYPE, HttpConst.CHAT_AUTHORIZATION,
-        ClientSendBody(
-            listOf(ClientMessage(info, HttpConst.CHAT_GTP_ROLE)),
-            HttpConst.CHAT_GTP_MODEL
+    private suspend fun getMessage(info: String): ChatGTPResult<ChatGTPModel> {
+        return ChatGTPRepository.getMessage(
+            HttpConst.CHAT_GTP_CONTENT_TYPE, HttpConst.CHAT_AUTHORIZATION,
+            ClientSendBody(
+                listOf(ClientMessage(info, HttpConst.CHAT_GTP_ROLE)),
+                HttpConst.CHAT_GTP_MODEL
+            )
         )
-    )
+    }
 }

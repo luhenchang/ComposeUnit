@@ -5,7 +5,7 @@ package com.example.composeunit.retrofit
  */
 class HttpConst {
     companion object {
-        private const val CHAT_GTP_KEY = "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"
+        private const val CHAT_GTP_KEY = "自己的API key"
         const val CHAT_AUTHORIZATION = "Bearer $CHAT_GTP_KEY"
         const val CHAT_GTP_CONTENT_TYPE = "application/json"
         const val CHAT_GTP_ROLE = "user"

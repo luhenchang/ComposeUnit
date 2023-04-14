@@ -46,7 +46,7 @@ fun NavGraph(startDestination: String = settingOpenAIRoute) {
             }
             composable(settingOpenAIRoute) {
                 val viewModel: OpenAiViewModel = viewModel()
-                OpenAIPage(actions,viewModel)
+                OpenAIPage(viewModel)
             }
         }
     )
