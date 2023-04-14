@@ -57,7 +57,7 @@
 
 **充值相关：**国内充值比较麻烦。当然可以通过下面方式进行充值。
 
-通过 [**欧易平台购买USDT**](https://www.cnouyi.care/cn/join/18639032)->**[提现到Depay钱包](https://depay.depay.one/web-app/register-h5?invitCode=920750&lang=zh-cn)**->**兑换成美刀Depay信用卡**->**[充值](https://platform.openai.com/account/billing/overview)**或[**升级到ChatGPT Plus**](https://pay.openai.com/c/pay/cs_live_a11dxrOIyW9wy8boj6BoiaqV1omgDJHYyTfKOLpM9IUUuOTAAgdcjfxU3Y#fidkdWxOYHwnPyd1blppbHNgWjA0TUp3VnJGM200a31Cakw2aVFEYldvXFN3fzFhUDZjU0pkZ3xGZk5XNnVnQE9icEZTRGl0Rn1hfUZQc2pXbTRdUnJXZGZTbGpzUDZuSU5zdW5vbTJMdG5SNTVsXVR2b2o2aycpJ2N3amhWYHdzYHcnP3F3cGApJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYCkndXdgaWpkYUNqa3EnPydMa3Fgdyd4JSUl)。（开发者根据实际情况，选择是否**升级**开通**[ChatGPT Plus](https://pay.openai.com/c/pay/cs_live_a11dxrOIyW9wy8boj6BoiaqV1omgDJHYyTfKOLpM9IUUuOTAAgdcjfxU3Y#fidkdWxOYHwnPyd1blppbHNgWjA0TUp3VnJGM200a31Cakw2aVFEYldvXFN3fzFhUDZjU0pkZ3xGZk5XNnVnQE9icEZTRGl0Rn1hfUZQc2pXbTRdUnJXZGZTbGpzUDZuSU5zdW5vbTJMdG5SNTVsXVR2b2o2aycpJ2N3amhWYHdzYHcnP3F3cGApJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYCkndXdgaWpkYUNqa3EnPydMa3Fgdyd4JSUl)**）
+通过 [**欧易平台购买USDT**](https://www.cnouyi.care/cn/join/18639032)->[**提现到Depay钱包**](https://depay.depay.one/web-app/register-h5?invitCode=920750&lang=zh-cn) ->**兑换成美刀Depay信用卡**->[**充值**](https://platform.openai.com/account/billing/overview)或[**升级到ChatGPT Plus**](https://pay.openai.com/c/pay/cs_live_a11dxrOIyW9wy8boj6BoiaqV1omgDJHYyTfKOLpM9IUUuOTAAgdcjfxU3Y#fidkdWxOYHwnPyd1blppbHNgWjA0TUp3VnJGM200a31Cakw2aVFEYldvXFN3fzFhUDZjU0pkZ3xGZk5XNnVnQE9icEZTRGl0Rn1hfUZQc2pXbTRdUnJXZGZTbGpzUDZuSU5zdW5vbTJMdG5SNTVsXVR2b2o2aycpJ2N3amhWYHdzYHcnP3F3cGApJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYCkndXdgaWpkYUNqa3EnPydMa3Fgdyd4JSUl)。（开发者根据实际情况，选择是否**升级**开通[**ChatGPT Plus**](https://pay.openai.com/c/pay/cs_live_a11dxrOIyW9wy8boj6BoiaqV1omgDJHYyTfKOLpM9IUUuOTAAgdcjfxU3Y#fidkdWxOYHwnPyd1blppbHNgWjA0TUp3VnJGM200a31Cakw2aVFEYldvXFN3fzFhUDZjU0pkZ3xGZk5XNnVnQE9icEZTRGl0Rn1hfUZQc2pXbTRdUnJXZGZTbGpzUDZuSU5zdW5vbTJMdG5SNTVsXVR2b2o2aycpJ2N3amhWYHdzYHcnP3F3cGApJ2lkfGpwcVF8dWAnPyd2bGtiaWBabHFgaCcpJ2BrZGdpYFVpZGZgbWppYWB3dic%2FcXdwYCkndXdgaWpkYUNqa3EnPydMa3Fgdyd4JSUl)）
 
 #### 一、官方UI
 
@@ -500,12 +500,12 @@ private fun OpenAIReRequestUI(
 
 **[官方API](https://platform.openai.com/docs/api-reference)**在文字信息获取方面提供了**[Completinos](https://platform.openai.com/docs/api-reference/completions)**和**[Chat](https://platform.openai.com/docs/api-reference/chat)**两个种。两者是有一些区别：
 
-- **功能不同：** **[Completinos](https://platform.openai.com/docs/api-reference/completions)**是一个用于自动生成API端点代码的工具，它基于OpenAPI规范，可以帮助开发人员自动创建API端点的代码。而**[Chat](https://platform.openai.com/docs/api-reference/chat)**是一个自然语言处理模型，可以用于生成语言文本、回答问题等。
-- **使用场景不同：**  **[Completinos](https://platform.openai.com/docs/api-reference/completions)**适用于开发人员，可以帮助他们更快速、更准确地创建API端点的代码，提高开发效率。而**[Chat](https://platform.openai.com/docs/api-reference/chat)**则可以用于各种场景，例如客户服务、智能助手等。
-- **技术实现不同：** **[Completinos](https://platform.openai.com/docs/api-reference/completions)**是基于机器学习技术实现的，它可以通过学习OpenAPI规范中定义的API接口信息，自动生成相应的代码。而**[Chat](https://platform.openai.com/docs/api-reference/chat)**则是基于自然语言处理技术实现的，它可以理解人类语言，并生成有意义的回答或文本。
-- **输出结果不同：** **[Completinos](https://platform.openai.com/docs/api-reference/completions)**的输出结果是一段API端点的代码，可以直接用于开发项目。而**[Chat](https://platform.openai.com/docs/api-reference/chat)**的输出结果是一段文本，可以用于回答问题、提供信息等。
+- **功能不同：** [**Completinos**](https://platform.openai.com/docs/api-reference/completions)是一个用于自动生成API端点代码的工具，它基于OpenAPI规范，可以帮助开发人员自动创建API端点的代码。而[**Chat**](https://platform.openai.com/docs/api-reference/chat)是一个自然语言处理模型，可以用于生成语言文本、回答问题等。
+- **使用场景不同：**  [**Completinos**](https://platform.openai.com/docs/api-reference/completions)适用于开发人员，可以帮助他们更快速、更准确地创建API端点的代码，提高开发效率。而[**Chat**](https://platform.openai.com/docs/api-reference/chat)则可以用于各种场景，例如客户服务、智能助手等。
+- **技术实现不同：** [**Completinos**](https://platform.openai.com/docs/api-reference/completions)是基于机器学习技术实现的，它可以通过学习OpenAPI规范中定义的API接口信息，自动生成相应的代码。而[**Chat**](https://platform.openai.com/docs/api-reference/chat)则是基于自然语言处理技术实现的，它可以理解人类语言，并生成有意义的回答或文本。
+- **输出结果不同：** [**Completinos**](https://platform.openai.com/docs/api-reference/completions)的输出结果是一段API端点的代码，可以直接用于开发项目。而[**Chat**](https://platform.openai.com/docs/api-reference/chat)的输出结果是一段文本，可以用于回答问题、提供信息等。
 
-案例中，我演示拿**[Chat API](https://platform.openai.com/docs/api-reference/chat)**进行网络请求数据。
+案例中，我演示拿[**Chat API**](https://platform.openai.com/docs/api-reference/chat)进行网络请求数据。
 
 ###### **1、Request url**
 
@@ -1175,6 +1175,3 @@ private fun OpenAIImageUI(content: Data?, errorNet: Boolean) {
 **对于企业：** OpenAI根据产品的需要可以进行深度挖掘，带给用户更好的体验工具。
 
 **对于个人：** 想赚点外快的开发者，可以试一试马甲包，应该是空前绝后的机会。
-
-
-
