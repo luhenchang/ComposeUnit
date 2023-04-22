@@ -1,7 +1,5 @@
 package com.example.composeunit.models.chatgtp
 
-import androidx.compose.ui.platform.LocalFocusManager
-import androidx.compose.ui.text.input.TextFieldValue
 import com.example.composeunit.repository.dao.table.ChatContent
 
 /**
@@ -13,3 +11,12 @@ data class ChatGTPUIState(
     val regenerateInfo: String = "",
     val dataList: ArrayList<ChatContent> = arrayListOf()
 )
+
+class ChatContentType {
+    companion object {
+        const val TEXT_TYPE = 0
+        const val IMG_TYPE = 1
+        const val FILE_TYPE = 2
+    }
+
+}
