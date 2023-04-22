@@ -3,6 +3,7 @@ package com.example.base.ui
 import android.Manifest
 import android.app.AlertDialog
 import android.util.Log
+import android.view.MotionEvent
 import com.blankj.utilcode.util.ToastUtils
 import pub.devrel.easypermissions.EasyPermissions
 import java.lang.StringBuilder
@@ -36,6 +37,10 @@ abstract class PermissionActivity : BaseActivity(), EasyPermissions.PermissionCa
                     "否"
                 ) { _, _ -> exitProcess(-1) }.show()
         }
+    }
+
+    override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
+        return super.dispatchTouchEvent(ev)
     }
 
     override fun onPermissionsGranted(requestCode: Int, perms: MutableList<String>) {

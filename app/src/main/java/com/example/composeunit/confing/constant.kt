@@ -3,6 +3,7 @@ import HomePage
 import LoginPage
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
@@ -46,6 +47,7 @@ fun NavGraph(startDestination: String = settingOpenAIRoute) {
             }
             composable(settingOpenAIRoute) {
                 val viewModel: OpenAiViewModel = viewModel()
+                viewModel.updateUIState(LocalContext.current)
                 OpenAIPage(viewModel)
             }
         }

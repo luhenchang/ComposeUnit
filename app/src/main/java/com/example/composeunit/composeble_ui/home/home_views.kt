@@ -22,7 +22,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.composeunit.ComposeData
+import com.example.composeunit.repository.dao.table.ComposeData
 import com.example.composeunit.canvas_ui.BoxBorderClipShape
 import com.example.composeunit.canvas_ui.BoxClipShapes
 import com.example.composeunit.project.view_model.home.HomeViewModel

@@ -1,5 +1,8 @@
 package com.example.composeunit
 
+import android.content.Context
+import android.view.MotionEvent
+import android.view.View
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.SpanStyle
@@ -98,4 +101,11 @@ object Test {
         }
 
     }
+}
+class MyView constructor(context:Context) :View (context){
+    override fun dispatchTouchEvent(event: MotionEvent?): Boolean {
+        return super.dispatchTouchEvent(event)
+        parent.requestDisallowInterceptTouchEvent(true)
+    }
+
 }

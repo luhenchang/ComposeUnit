@@ -1,14 +1,13 @@
-package com.example.composeunit
+package com.example.composeunit.repository.dao
 
 import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.composeunit.repository.dao.table.*
 
 @Database(
-    entities = [Customers::class, Employees::class, User::class, ComposeData::class],
+    entities = [Customers::class, Employees::class, User::class, ComposeData::class,ChatProgram::class,ChatContent::class,ChatContents::class],
     version = 1
 )
 abstract class AppDatabase : RoomDatabase() {

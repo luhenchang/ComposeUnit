@@ -1,9 +1,12 @@
 package com.example.composeunit.project.view_model.ai
 
+import android.content.Context
 import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.composeunit.models.chatgtp.*
+import com.example.composeunit.project.model.local.OpenAIRepository
+import com.example.composeunit.repository.dao.table.ChatContent
 import com.example.composeunit.retrofit.ChatGTPRepository
 import com.example.composeunit.retrofit.HttpConst
 import kotlinx.coroutines.*
@@ -12,45 +15,46 @@ import kotlinx.coroutines.flow.*
 /**
  * Created by wangfei44 on 2023/4/7.
  */
-class OpenAiViewModel : ViewModel() {
-    private var _pageList = MutableStateFlow<ArrayList<ChatGTPModel>>(arrayListOf())
-    var pageList: StateFlow<ArrayList<ChatGTPModel>> = _pageList
-
-    private var _generateInfo = MutableStateFlow("")
-    var regenerateResponseInfo: StateFlow<String> = _generateInfo
-
-    private var _loading = MutableStateFlow(false)
-    var loading: StateFlow<Boolean> = _loading
-
-    private var _startAnimal = MutableStateFlow(false)
-    var startAnimal: StateFlow<Boolean> = _startAnimal
+class OpenAiViewModel(
+    private val openAIRepository: OpenAIRepository = OpenAIRepository()
+) : ViewModel() {
+    private var _uiState = MutableStateFlow(ChatGTPUIState())
+    var uiState: StateFlow<ChatGTPUIState> = _uiState.asStateFlow()
 
     fun setLoadValue(value: Boolean) {
-        _loading.value = value
+        _uiState.update { it.copy(loading = value) }
     }
 
-    fun getListSize(): Int = _pageList.value.size
+    fun getListSize(): Int = _uiState.value.dataList.size
 
-    fun setStarAnimalValue(value: Boolean) {
-        _startAnimal.value = value
+    val getLastChatContent: ChatContent? get() = _uiState.value.dataList.lastOrNull()
+    val startAnimal: Boolean get() = _uiState.value.startAnimal
+    fun updateStarAnimalValue(value: Boolean) {
+        _uiState.update {
+            it.copy(startAnimal = value)
+        }
     }
 
-    private val handler = CoroutineExceptionHandler { _, exception ->
+    private fun handler(context: Context) = CoroutineExceptionHandler { _, exception ->
         Log.e("handler", "exception = ${exception.message}")
-        val newList = _pageList.value.clone() as ArrayList<ChatGTPModel>
         val errorModel = ModelData(
             choices = arrayListOf(Choice(message = Message(content = exception.message))),
             isAI = true,
             errorNet = true
         )
-        newList.add(errorModel)
         viewModelScope.launch {
-            _pageList.emit(newList)
+            getCustomMessage(exception.message, 0, 1, true)?.let { chatContent ->
+                openAIRepository.insertMessageToChatTable(
+                    context,
+                    chatContent
+                )
+            }
             updateLoadingState(errorModel)
         }
     }
+
     private var job: Job? = null
-    private var genericjob: Job? = null
+    private var genericJob: Job? = null
 
     fun cancelJob() {
         job?.apply {
@@ -58,38 +62,32 @@ class OpenAiViewModel : ViewModel() {
                 cancel()
             }
         }
-        genericjob?.apply {
+        genericJob?.apply {
             if (isActive) {
                 cancel()
             }
         }
     }
 
-    fun getChatGTPMessage(info: String) {
-        job = viewModelScope.launch(handler) {
-            flow {
-                val newList = _pageList.value.clone() as ArrayList<ChatGTPModel>
-                if (newList.isNotEmpty()) {
-                    when (val lastData = newList[newList.size - 1]) {
-                        is ModelData -> {
-                            if (!lastData.isAI) {//解决
-                                newList.remove(lastData)
-                            }
-                        }
-                        is ImageData -> {
-                            if (!lastData.isAI) {//解决
-                                newList.remove(lastData)
-                            }
-                        }
-                    }
+    fun updateUIState(context: Context) {
+        viewModelScope.launch {
+            openAIRepository.queryChatList(context).catch {
+
+            }.collect { data ->
+                _uiState.update {
+                    it.copy(dataList = data as ArrayList<ChatContent>)
                 }
-                newList.add(
-                    ModelData(
-                        choices = arrayListOf(Choice(message = Message(content = info))),
-                        isAI = false
-                    )
-                )
-                _pageList.emit(newList)
+            }
+        }
+    }
+
+    fun getChatGTPMessage(context: Context, info: String) {
+        job = viewModelScope.launch(handler(context)) {
+            flow {
+                //插入数据库
+                getCustomMessage(info, 0, 0, false)?.let {
+                    openAIRepository.insertMessageToChatTable(context, it)
+                }
                 if (info.contains("生成图片")) {
                     emit(generateImage(info))
                 } else {
@@ -99,24 +97,38 @@ class OpenAiViewModel : ViewModel() {
                 when (result) {
                     is ChatGTPResult.Success -> {
                         //新数据来了增加到集合
-                        val newList = _pageList.value.clone() as ArrayList<ChatGTPModel>
                         result.data?.let {
-                            newList.add(it)
-                            //去刷新UI
-                            _pageList.emit(newList)
+                            getChatResult(it).let { chatIt ->
+                                getCustomMessage(
+                                    chatIt.first,
+                                    chatIt.second,
+                                    1,
+                                    false
+                                )?.let { chatContent ->
+                                    openAIRepository.insertMessageToChatTable(
+                                        context,
+                                        chatContent
+                                    )
+                                }
+                            }
                             updateLoadingState(it)
                         }
-                        _startAnimal.emit(true)
+                        _uiState.update {
+                            it.copy(startAnimal = true)
+                        }
                     }
                     is ChatGTPResult.Fail -> {
-                        val newList = _pageList.value.clone() as ArrayList<ChatGTPModel>
                         val mode = ModelData(
                             choices = arrayListOf(Choice(message = Message(content = result.message))),
                             isAI = true,
                             errorNet = true
                         )
-                        newList.add(mode)
-                        _pageList.emit(newList)
+                        getCustomMessage(result.message, 0, 1, true)?.let { chatContent ->
+                            openAIRepository.insertMessageToChatTable(
+                                context,
+                                chatContent
+                            )
+                        }
                         updateLoadingState(mode)
                     }
                 }
@@ -124,8 +136,43 @@ class OpenAiViewModel : ViewModel() {
         }
     }
 
-    fun regenerateChatGTPMMessage(info: String) {
-        genericjob = viewModelScope.launch(handler) {
+    private fun getChatResult(it: ChatGTPModel): Pair<String?, Int> {
+        return when (it) {
+            is ModelData -> {
+                Pair(it.choices?.get(0)?.message?.content, 0)
+            }
+            is ImageData -> {
+                Pair(it.data?.get(0)?.url, 1)
+            }
+            else -> {
+                Pair(null, -1)
+            }
+        }
+    }
+
+    private fun getCustomMessage(
+        info: String?,
+        content_type: Int,
+        isAI: Int,
+        errorNet: Boolean
+    ): ChatContent? {
+        val time = System.currentTimeMillis()
+        if (info == null) {
+            return null
+        }
+        return ChatContent(
+            content_id = "content_$time",
+            program_id = "program_$time",
+            content = info,
+            content_type = content_type,
+            content_is_ai = isAI,
+            content_fabulous = 0,
+            errorNet = errorNet
+        )
+    }
+
+    fun regenerateChatGTPMMessage(context: Context, info: String) {
+        genericJob = viewModelScope.launch(handler(context)) {
             flow {
                 if (info.contains("生成图片")) {
                     emit(generateImage(info))
@@ -136,24 +183,37 @@ class OpenAiViewModel : ViewModel() {
                 when (info) {
                     is ChatGTPResult.Success -> {
                         //新数据来了增加到集合
-                        val newList = _pageList.value.clone() as ArrayList<ChatGTPModel>
                         info.data?.let {
-                            newList.add(it)
-                            //去刷新UI
-                            _pageList.emit(newList)
+                            getChatResult(it).let { chatIt ->
+                                getCustomMessage(
+                                    chatIt.first,
+                                    chatIt.second,
+                                    1,
+                                    false
+                                )?.let { chatContent ->
+                                    openAIRepository.insertMessageToChatTable(
+                                        context,
+                                        chatContent
+                                    )
+                                }
+                            }
                             updateLoadingState(it)
                         }
 
                     }
                     is ChatGTPResult.Fail -> {
-                        val newList = _pageList.value.clone() as ArrayList<ChatGTPModel>
                         val mode = ModelData(
                             choices = arrayListOf(Choice(message = Message(content = info.message))),
                             isAI = true,
                             errorNet = true
                         )
-                        newList.add(mode)
-                        _pageList.emit(newList)
+                        getCustomMessage(info.message, 0, 1, true)?.let { chatContent ->
+                            openAIRepository.insertMessageToChatTable(
+                                context,
+                                chatContent
+                            )
+                        }
+                        updateLoadingState(mode)
                     }
                 }
             }
@@ -186,7 +246,9 @@ class OpenAiViewModel : ViewModel() {
     )
 
     fun setRegenerateInfo(text: String) = viewModelScope.launch {
-        _generateInfo.emit(text)
+        _uiState.update {
+            it.copy(regenerateInfo = text)
+        }
     }
 
     private suspend fun getMessage(info: String): ChatGTPResult<ChatGTPModel> {

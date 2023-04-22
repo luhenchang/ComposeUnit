@@ -1,11 +1,10 @@
-package com.example.composeunit
+package com.example.composeunit.repository.dao
 import android.content.Context
 import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.room.migration.Migration
-import androidx.sqlite.db.SupportSQLiteDatabase
+import com.example.composeunit.defaultSharedPreferences
 
 /**
  * User: YourPc

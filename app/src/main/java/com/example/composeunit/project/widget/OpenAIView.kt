@@ -1,19 +1,16 @@
 package com.example.composeunit.project.widget
 
 /**
- * Created by wangfei44 on 2023/4/7.
+ * Created by wang fei44 on 2023/4/7.
  */
+import android.content.Context
 import android.util.Log
-import android.widget.TextView
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.gestures.Orientation
-import androidx.compose.foundation.gestures.draggable
-import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.interaction.collectIsFocusedAsState
 import androidx.compose.foundation.layout.*
@@ -32,7 +29,6 @@ import androidx.compose.ui.focus.FocusManager
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.Shadow
@@ -47,22 +43,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.compose.ui.viewinterop.AndroidView
 import androidx.constraintlayout.compose.ConstraintLayout
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
 import com.example.composeunit.R
-import com.example.composeunit.models.chatgtp.ChatGTPModel
-import com.example.composeunit.models.chatgtp.Data
-import com.example.composeunit.models.chatgtp.ImageData
-import com.example.composeunit.models.chatgtp.ModelData
 import com.example.composeunit.project.fragment.SpannableText
-import com.example.composeunit.project.fragment.getKotlinScheme
 import com.example.composeunit.project.view_model.ai.OpenAiViewModel
+import com.example.composeunit.repository.dao.table.ChatContent
 import com.example.composeunit.ui.theme.openAiLight
 import kotlinx.coroutines.delay
 import com.example.composeunit.utils.ai.*
-import com.neo.highlight.core.Highlight
 
 
 @Preview
@@ -70,49 +60,38 @@ import com.neo.highlight.core.Highlight
 fun OpenAIUI(
     modifier: Modifier,
     textFieldAlignment: Alignment = Alignment.BottomCenter,
-    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     viewModel: OpenAiViewModel,
 ) {
-    Log.e("OpenAIUI=", "OpenAIUI")
-    val loading by viewModel.loading.collectAsState()
-    val regenerateInfo by viewModel.regenerateResponseInfo.collectAsState()
-
-    val pageList = viewModel.pageList.collectAsState().value
-    val textFieldValue = remember { mutableStateOf(TextFieldValue("")) }
-    val isFocused = interactionSource.collectIsFocusedAsState().value
-    DisposableEffect(isFocused) {
-        if (isFocused) {
-
-        }
-        onDispose {
-
+    val uiState by viewModel.uiState.collectAsState()
+    Log.e("OpenAIUI=", "uiState")
+    //局部刷新dataList相关UI
+    val dataList by remember(uiState.dataList) {
+        derivedStateOf {
+            uiState.dataList
         }
     }
-
+    //局部刷新加载相关UI
+    val loading by remember(uiState.loading) {
+        derivedStateOf {
+            uiState.loading
+        }
+    }
+    //局部控制刷新
+    val regenerateInfo by remember(uiState.regenerateInfo) {
+        derivedStateOf {
+            uiState.regenerateInfo
+        }
+    }
     val focusManager = LocalFocusManager.current
 
-    val focusRequester = remember { FocusRequester() }
-    val draggableState = rememberDraggableState(onDelta = { delta ->
-        Log.e("draggableState =", delta.toString())
-        if (delta > 40) {
-            focusRequester.requestFocus()
-        }
-        if (delta < -40) {
-            focusManager.clearFocus()
-        }
-    })
-
     Box(modifier = modifier
-        .draggable(
-            state = draggableState, orientation = Orientation.Vertical
-        )
         .clickable(
             indication = null,
             interactionSource = remember { MutableInteractionSource() }) {
             focusManager.clearFocus()
         }, contentAlignment = textFieldAlignment
     ) {
-        OpenAIListView(pageList, viewModel)
+        OpenAIListView(dataList, viewModel)
         Column(
             Modifier
                 .fillMaxWidth()
@@ -120,7 +99,6 @@ fun OpenAIUI(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             OpenAIReRequestUI(
-                pageList,
                 loading,
                 viewModel,
                 regenerateInfo,
@@ -128,13 +106,9 @@ fun OpenAIUI(
             )
             Box(Modifier.height(5.dp))
             OpenAIBottomInputUI(
-                isFocused,
-                textFieldValue,
                 loading,
-                interactionSource,
-                focusRequester,
                 viewModel,
-                focusManager
+                focusManager = focusManager
             )
         }
     }
@@ -142,13 +116,14 @@ fun OpenAIUI(
 
 @Composable
 private fun OpenAIReRequestUI(
-    pageList: ArrayList<ChatGTPModel>,
     loading: Boolean,
     viewModel: OpenAiViewModel,
     regenerateInfo: String,
-    focusManager: FocusManager
+    focusManager: FocusManager,
+    context: Context = LocalContext.current
 ) {
-    if (pageList.isNotEmpty()) {
+    Log.e("OpenAIReRequestUI=", "OpenAIReRequestUI")
+    if (viewModel.getListSize() > 0) {
         Row(
             Modifier
                 .background(color = Color(52, 54, 65, 255))
@@ -165,23 +140,12 @@ private fun OpenAIReRequestUI(
                         if (regenerateInfo.isEmpty()) {
                             return@clickable
                         }
-                        when (val data = pageList[pageList.size - 1]) {
-                            is ModelData -> {
-                                if (!data.isAI) {
-                                    viewModel.setLoadValue(true)
-                                    viewModel.regenerateChatGTPMMessage(regenerateInfo)
-                                    focusManager.clearFocus()
-                                }
-                            }
-                            is ImageData -> {
-                                if (!data.isAI) {
-                                    viewModel.setLoadValue(true)
-                                    viewModel.regenerateChatGTPMMessage(regenerateInfo)
-                                    focusManager.clearFocus()
-                                }
-                            }
+                        val data = viewModel.getLastChatContent
+                        if (data?.content_is_ai == 0) {
+                            viewModel.setLoadValue(true)
+                            viewModel.regenerateChatGTPMMessage(context, regenerateInfo)
+                            focusManager.clearFocus()
                         }
-
                     }
                 },
             horizontalArrangement = Arrangement.Center,
@@ -210,7 +174,10 @@ private fun OpenAIReRequestUI(
 }
 
 @Composable
-private fun OpenAIListView(pageList: ArrayList<ChatGTPModel>, viewModel: OpenAiViewModel) {
+private fun OpenAIListView(
+    pageList: ArrayList<ChatContent>,
+    viewModel: OpenAiViewModel
+) {
     Log.e("OpenAIListView=", "OpenAIListView")
     LazyColumn(
         Modifier
@@ -218,22 +185,30 @@ private fun OpenAIListView(pageList: ArrayList<ChatGTPModel>, viewModel: OpenAiV
             .padding(bottom = 80.dp)
     ) {
         items(pageList.size, key = { index ->
-            index
+            pageList[index].content_id + index
         }) { index ->
-            when (val data = pageList[index]) {
-                is ModelData -> {
-                    data.choices?.get(0)?.message?.content?.let { content ->
-                        if (index % 2 == 0)
-                            UserMessagesUI(content)
+            val data = pageList[index]
+            when (data.content_type) {
+                0 -> {
+                    data.let { chatInfo ->
+                        if (chatInfo.content_is_ai == 0)
+                            UserMessagesUI(chatInfo.content)
                         else
-                            OpenAIMessageUI(content, data.errorNet, viewModel,index)
+                            OpenAIMessageUI(
+                                chatInfo.content,
+                                chatInfo.errorNet,
+                                viewModel,
+                                index
+                            )
                     }
                 }
-                is ImageData -> {
-                    if (index % 2 == 0)
-                        UserMessagesUI(data.userData)
-                    else
-                        OpenAIImageUI(data.data?.get(0), data.errorNet)
+                1 -> {
+                    data.let { chatInfo ->
+                        if (chatInfo.content_is_ai == 0)
+                            UserMessagesUI(chatInfo.content)
+                        else
+                            OpenAIImageUI(chatInfo.content, data.errorNet)
+                    }
                 }
             }
         }
@@ -242,17 +217,21 @@ private fun OpenAIListView(pageList: ArrayList<ChatGTPModel>, viewModel: OpenAiV
 
 @Composable
 private fun OpenAIBottomInputUI(
-    isFocused: Boolean,
-    textFieldValue: MutableState<TextFieldValue>,
     loading: Boolean,
-    interactionSource: MutableInteractionSource,
-    focusRequester: FocusRequester,
     viewModel: OpenAiViewModel,
+    interactionSource: MutableInteractionSource = remember { MutableInteractionSource() },
     focusManager: FocusManager
 ) {
+    Log.e("OpenAIBottomInputUI=", "OpenAIBottomInputUI")
+    val isFocused = interactionSource.collectIsFocusedAsState().value
+    //局部刷新textField相关UI
+    val mTextFieldValue = remember {
+        mutableStateOf(TextFieldValue(""))
+    }
+    val focusRequester = remember { FocusRequester() }
     TextField(
         textStyle = TextStyle(
-            color = (inputColor(isFocused, textFieldValue.value.text, loading))
+            color = (inputColor(isFocused, mTextFieldValue.value.text, loading))
         ), colors = TextFieldDefaults.textFieldColors(
             unfocusedIndicatorColor = Color.Transparent,
             focusedIndicatorColor = Color.Transparent,
@@ -272,57 +251,60 @@ private fun OpenAIBottomInputUI(
         placeholder = {
             Text(
                 text = "Send a message...",
-                color = (inputColor(isFocused, textFieldValue.value.text))
+                color = (inputColor(isFocused, mTextFieldValue.value.text))
             )
         },
         shape = RoundedCornerShape(10),
-        value = textFieldValue.value,
+        value = mTextFieldValue.value.text,
         onValueChange = {
-            if (!isFocused && it.text.isNotEmpty()) {
-                textFieldValue.value = TextFieldValue(
-                    text = it.text, selection = TextRange(0, it.text.lastIndex + 1)
+            val value: TextFieldValue = if (!isFocused && it.isNotEmpty()) {
+                TextFieldValue(
+                    text = it, selection = TextRange(0, it.lastIndex + 1)
                 )
             } else {
-                textFieldValue.value = TextFieldValue(
-                    text = it.text,
-                    selection = TextRange(it.text.lastIndex + 1)
+                TextFieldValue(
+                    text = it,
+                    selection = TextRange(it.lastIndex + 1)
                 )
             }
+            mTextFieldValue.value = value
         }, trailingIcon = {
             if (loading) {
-                trailingAnimalIcon()
+                TrailingAnimalIcon()
             } else
-                trailingSubmitIcon(textFieldValue, viewModel, focusManager, isFocused)
+                TrailingSubmitIcon(mTextFieldValue.value.text, viewModel, focusManager, isFocused) {
+                    mTextFieldValue.value = TextFieldValue("")
+                }
         })
 }
 
 @Composable
-private fun trailingSubmitIcon(
-    textFieldValue: MutableState<TextFieldValue>,
+private fun TrailingSubmitIcon(
+    textFieldValue: String,
     viewModel: OpenAiViewModel,
     focusManager: FocusManager,
-    isFocused: Boolean
+    isFocused: Boolean,
+    textFieldFun: (content: String) -> Unit
 ) {
+    val context = LocalContext.current
     Icon(
         modifier = Modifier.clickable {
-            if (textFieldValue.value.text.isNotEmpty()) {
+            if (textFieldValue.isNotEmpty()) {
                 viewModel.setLoadValue(true)
-                viewModel.getChatGTPMessage(textFieldValue.value.text)
-                viewModel.setRegenerateInfo(textFieldValue.value.text)
-                textFieldValue.value = TextFieldValue(
-                    text = ""
-                )
+                viewModel.getChatGTPMessage(context, textFieldValue)
+                viewModel.setRegenerateInfo(textFieldValue)
+                textFieldFun("")
                 focusManager.clearFocus()
             }
         },
         painter = painterResource(R.mipmap.send_icon),
         contentDescription = "sendIcon",
-        tint = submitColor(isFocused, textFieldValue.value.text)
+        tint = submitColor(isFocused, textFieldValue)
     )
 }
 
 @Composable
-private fun trailingAnimalIcon() {
+private fun TrailingAnimalIcon() {
     val infiniteTransition = rememberInfiniteTransition()
     val animation by infiniteTransition.animateFloat(
         initialValue = 0f,
@@ -365,18 +347,21 @@ private fun trailingAnimalIcon() {
 }
 
 @Composable
-fun OpenAIInputUI(content: String, errorNet: Boolean, viewModel: OpenAiViewModel, index: Int) {
+fun OpenAIInputUI(
+    content: String,
+    viewModel: OpenAiViewModel,
+    currentIndex: Int
+) {
     var text by remember { mutableStateOf("") }
-    val startAnimal by viewModel.startAnimal.collectAsState()
     SpannableText(text)
     LaunchedEffect(Unit) {
         val data = content.toCharArray()
-        if (!startAnimal) {
+        if (!viewModel.startAnimal) {
             text = content
             return@LaunchedEffect
         }
-        Log.e("size ==", "${(viewModel.getListSize())}::${index}")
-        if (viewModel.getListSize() - 1 != index) {
+        Log.e("size ==", "${(viewModel.getListSize())}::${currentIndex}")
+        if (viewModel.getListSize() - 1 != currentIndex) {
             text = content
             return@LaunchedEffect
         }
@@ -386,7 +371,7 @@ fun OpenAIInputUI(content: String, errorNet: Boolean, viewModel: OpenAiViewModel
             text = if (index < data.size - 1) {
                 endContext + "_"
             } else {
-                viewModel.setStarAnimalValue(false)
+                viewModel.updateStarAnimalValue(false)
                 endContext
             }
         }
@@ -435,7 +420,12 @@ private fun UserMessagesUI(content: String?) {
 }
 
 @Composable
-private fun OpenAIMessageUI(content: String, errorNet: Boolean, viewModel: OpenAiViewModel,index:Int) {
+private fun OpenAIMessageUI(
+    content: String,
+    errorNet: Boolean,
+    viewModel: OpenAiViewModel,
+    index: Int
+) {
     Log.e("OpenAIMessageUI", content)
     Row(
         Modifier
@@ -474,13 +464,13 @@ private fun OpenAIMessageUI(content: String, errorNet: Boolean, viewModel: OpenA
                 )
         }
         SelectionContainer {
-            OpenAIInputUI(content, errorNet, viewModel, index)
+            OpenAIInputUI(content, viewModel, index)
         }
     }
 }
 
 @Composable
-private fun OpenAIImageUI(content: Data?, errorNet: Boolean) {
+private fun OpenAIImageUI(content: String, errorNet: Boolean) {
     Row(
         Modifier
             .fillMaxWidth()
@@ -521,7 +511,7 @@ private fun OpenAIImageUI(content: Data?, errorNet: Boolean) {
                 .size(125.dp)
                 .padding(start = 20.dp, bottom = 20.dp, end = 20.dp),
             model = ImageRequest.Builder(LocalContext.current)
-                .data(content?.url)
+                .data(content)
                 .crossfade(true)
                 .build(),
             onLoading = {

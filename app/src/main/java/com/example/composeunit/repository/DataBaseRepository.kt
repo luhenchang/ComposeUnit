@@ -1,7 +1,6 @@
 package com.example.composeunit.repository
 import android.content.Context
-import com.example.composeunit.ComposeData
-import com.example.composeunit.User
+import com.example.composeunit.repository.dao.table.ComposeData
 import kotlinx.coroutines.flow.Flow
 
 /**

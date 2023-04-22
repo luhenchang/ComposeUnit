@@ -7,15 +7,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
 import com.example.base.model.BaseViewModel
-import com.example.composeunit.ComposeData
-import com.example.composeunit.models.chatgtp.*
+import com.example.composeunit.repository.dao.table.ComposeData
 import com.example.composeunit.project.model.local.HomeRepository
 import com.example.composeunit.repository.DataBaseRepository
-import com.example.composeunit.retrofit.ChatGTPRepository
-import com.example.composeunit.retrofit.HttpConst.Companion.CHAT_AUTHORIZATION
-import com.example.composeunit.retrofit.HttpConst.Companion.CHAT_GTP_CONTENT_TYPE
-import com.example.composeunit.retrofit.HttpConst.Companion.CHAT_GTP_MODEL
-import com.example.composeunit.retrofit.HttpConst.Companion.CHAT_GTP_ROLE
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -54,7 +48,9 @@ class HomeViewModel(
 
     fun insertComposeData(current: Context){
         viewModelScope.launch(Dispatchers.IO) {
-            repository.insertComposeData(current,ComposeData(2,"Column","垂直容器布局","Compose 提供了一系列现成可用的布局来帮助您排列界面元素，并可让您轻松定义自己的更专业布局，使用 Column 可将多个项垂直地放置在屏幕上",5))
+            repository.insertComposeData(current,
+                ComposeData(2,"Column","垂直容器布局","Compose 提供了一系列现成可用的布局来帮助您排列界面元素，并可让您轻松定义自己的更专业布局，使用 Column 可将多个项垂直地放置在屏幕上",5)
+            )
         }
     }
 
