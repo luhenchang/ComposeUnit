@@ -20,3 +20,11 @@ class ChatContentType {
     }
 
 }
+
+class ChatContentIsAI {
+    companion object {
+        const val IS_AI = 1
+        const val NOT_AI = 0
+    }
+
+}

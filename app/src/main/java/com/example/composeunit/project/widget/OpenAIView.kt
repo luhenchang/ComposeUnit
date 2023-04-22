@@ -134,7 +134,7 @@ private fun OpenAIReRequestUI(
                         val data = viewModel.getLastChatContent
                         if (data?.content_is_ai == 0) {
                             viewModel.setLoadValue(true)
-                            viewModel.regenerateChatGTPMMessage(context, regenerateInfo)
+                            viewModel.getChatGTPMessage(context, regenerateInfo, true)
                             focusManager.clearFocus()
                         }
                     }
