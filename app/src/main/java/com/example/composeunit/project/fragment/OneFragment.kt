@@ -4,6 +4,7 @@ import android.graphics.LinearGradient
 import android.graphics.Paint
 import android.graphics.Path
 import android.graphics.Shader
+import android.util.Log
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
@@ -20,6 +21,7 @@ import androidx.compose.ui.input.nestedscroll.NestedScrollDispatcher
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -28,6 +30,7 @@ import com.example.composeunit.composeble_ui.home.HomeItemView
 import com.example.composeunit.composeble_ui.home.getColorEndForIndex
 import com.example.composeunit.composeble_ui.home.getColorForIndex
 import com.example.composeunit.project.view_model.home.HomeViewModel
+import com.example.lib_common.utils.pxToDp
 
 
 @Composable
@@ -52,35 +55,55 @@ fun OneFragment(homeViewModel: HomeViewModel = viewModel()) {
             1f
         } else {
             0.7f
-        }, animationSpec = TweenSpec(durationMillis = if (tabOpenOrClose) 10 else 100)
+        }, animationSpec = TweenSpec(durationMillis = if (tabOpenOrClose) 10 else 100),
+        label = ""
     )
     val nestedScrollConnection = remember {
         object : NestedScrollConnection {
             override fun onPreScroll(available: Offset, source: NestedScrollSource): Offset {
                 //向下滚,判断list是否已经滚动到第0个，滚动完了才去刷新顶部TabLayout
                 availableY = available.y
+                Log.e("availableY",availableY.toString())
                 return Offset.Zero
             }
         }
     }
-
+    var itemIndex by remember {
+        mutableStateOf(0)
+    }
     //这里首先根据显示的最上面ItemView.Index来根据是目前是上滑还是下滑来进行驱动TabView的展开和半关闭。
     //因为要用动画所以转为Flow去减少重复点的上报导致不断重回性能问题，例如滑动到顶部继续上滑，还是会上报availableY的
     LaunchedEffect(Unit) {
         snapshotFlow {
             scrollLazyState.firstVisibleItemIndex
         }.collect { index ->
+            itemIndex = index
+            Log.e("offset index =",index.toString())
+        }
+    }
+    var heightValue by remember {
+        mutableStateOf(0f)
+    }
+    LaunchedEffect(Unit) {
+        snapshotFlow {
+            scrollLazyState.firstVisibleItemScrollOffset
+        }.collect { offset ->
+            if (availableY < 0) {//向上滚
+               Log.e("offset up::"," offset=$offset、availableY = $availableY")
+               if (itemIndex ==0 && offset<150){
+                   heightValue = offset.toFloat()
+               }
+            }
+
             if (availableY > 0) {//向下滚
-                if (index < 1) {
-                    tabOpenOrClose = true
-                }
-            } else {//向上滚
-                if (index > 0) {
-                    tabOpenOrClose = false
+                Log.e("offset up::"," offset=$offset、availableY = $availableY")
+                if (itemIndex == 0 && offset<150){
+                    heightValue = offset.toFloat()
                 }
             }
         }
     }
+
     val nestedScrollDispatcher = remember { NestedScrollDispatcher() }
 
     ConstraintLayout {
@@ -124,7 +147,7 @@ fun OneFragment(homeViewModel: HomeViewModel = viewModel()) {
                     modifier = Modifier.weight(1f),
                     index = index,
                     tabSelectedState = tabSelectedState,
-                    scaleH = animalTabHeightScale,
+                    heightValue = heightValue,
                     homeViewModel
                 )
             }
@@ -135,8 +158,8 @@ fun OneFragment(homeViewModel: HomeViewModel = viewModel()) {
 
 @Composable
 fun LoadingPageUI(index: Int) {
-    val waveWidth=30f
-    val waveHeight=21f
+    val waveWidth = 30f
+    val waveHeight = 21f
     val animalValue by rememberInfiniteTransition().animateFloat(
         initialValue = 0f,
         targetValue = 1f,
@@ -151,16 +174,24 @@ fun LoadingPageUI(index: Int) {
             .padding(170.dp), contentAlignment = Alignment.Center
     ) {
         Canvas(modifier = Modifier.size(100.dp)) {
-            drawIntoCanvas{
-                val  canvas:android.graphics.Canvas = it.nativeCanvas
+            drawIntoCanvas {
+                val canvas: android.graphics.Canvas = it.nativeCanvas
                 canvas.scale(1f, -1f)
 
                 val roundRect = Path()
-                roundRect.addRoundRect(waveWidth * 4,waveWidth*3*(1-animalValue),waveWidth* 8,-waveWidth*3,60f,60f,Path.Direction.CCW)
+                roundRect.addRoundRect(
+                    waveWidth * 4,
+                    waveWidth * 3 * (1 - animalValue),
+                    waveWidth * 8,
+                    -waveWidth * 3,
+                    60f,
+                    60f,
+                    Path.Direction.CCW
+                )
                 canvas.clipPath(roundRect)
 
-                canvas.translate(animalValue*(waveWidth*4), 0f) //内层海浪
-                val wavePath= Path()
+                canvas.translate(animalValue * (waveWidth * 4), 0f) //内层海浪
+                val wavePath = Path()
                 wavePath.moveTo(0f, -waveWidth * 6)
                 wavePath.lineTo(0f, 0f)
                 wavePath.quadTo(waveWidth, waveHeight, waveWidth * 2, 0f)
@@ -168,10 +199,10 @@ fun LoadingPageUI(index: Int) {
                 wavePath.quadTo(waveWidth * 5, waveHeight, waveWidth * 6, 0f)
                 wavePath.quadTo(waveWidth * 7, -waveHeight, waveWidth * 8, 0f)
                 wavePath.lineTo(waveWidth * 8, -waveWidth * 6)
-                canvas.drawPath(wavePath, getPaintBefore(Paint.Style.FILL,waveWidth, index))
+                canvas.drawPath(wavePath, getPaintBefore(Paint.Style.FILL, waveWidth, index))
 
-                canvas.translate(animalValue*(waveWidth*4), 0f) //内层海浪
-                val wavePathOut= Path()
+                canvas.translate(animalValue * (waveWidth * 4), 0f) //内层海浪
+                val wavePathOut = Path()
                 wavePathOut.moveTo(-waveWidth * 7, -waveWidth * 6)
                 wavePathOut.lineTo(-waveWidth * 7, 0f)
                 wavePathOut.quadTo(-waveWidth * 7, waveHeight, -waveWidth * 6, 0f)
@@ -183,12 +214,13 @@ fun LoadingPageUI(index: Int) {
                 wavePathOut.quadTo(waveWidth * 5, waveHeight, waveWidth * 6, 0f)
                 wavePathOut.quadTo(waveWidth * 7, -waveHeight, waveWidth * 8, 0f)
                 wavePathOut.lineTo(waveWidth * 8, -waveWidth * 6)
-                canvas.drawPath(wavePathOut, getPaint(Paint.Style.FILL,waveWidth,index))
+                canvas.drawPath(wavePathOut, getPaint(Paint.Style.FILL, waveWidth, index))
             }
         }
     }
 }
-fun getPaintBefore(style: Paint.Style, waveWidth: Float, index :Int): Paint {
+
+fun getPaintBefore(style: Paint.Style, waveWidth: Float, index: Int): Paint {
     val gPaint = Paint()
     gPaint.strokeWidth = 2f
     gPaint.isAntiAlias = true
@@ -203,11 +235,11 @@ fun getPaintBefore(style: Paint.Style, waveWidth: Float, index :Int): Paint {
         getColorEndForIndex(index).toArgb(),
         Shader.TileMode.CLAMP
     )
-    gPaint.shader=linearGradient
+    gPaint.shader = linearGradient
     return gPaint
 }
 
-private fun getPaint(style: Paint.Style,waveWidth:Float,index:Int): Paint {
+private fun getPaint(style: Paint.Style, waveWidth: Float, index: Int): Paint {
     val gPaint = Paint()
     gPaint.color = android.graphics.Color.BLUE
     gPaint.strokeWidth = 2f
@@ -223,7 +255,7 @@ private fun getPaint(style: Paint.Style,waveWidth:Float,index:Int): Paint {
         getColorEndForIndex(index).toArgb(),
         Shader.TileMode.CLAMP
     )
-    gPaint.shader=linearGradient
+    gPaint.shader = linearGradient
     return gPaint
 }
 

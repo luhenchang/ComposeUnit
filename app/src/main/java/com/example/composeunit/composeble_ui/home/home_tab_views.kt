@@ -1,30 +1,25 @@
 package com.example.composeunit.composeble_ui.home
 
 import androidx.compose.animation.*
-import androidx.compose.animation.core.Spring
-import androidx.compose.animation.core.animateDpAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.*
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import androidx.compose.foundation.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composeunit.project.view_model.home.HomeViewModel
+import com.example.lib_common.utils.pxToDp
 
 /**
  * Created by wangfei44 on 2023/3/24.
@@ -37,20 +32,19 @@ fun ComposeTabView(
     modifier: Modifier,
     index: Int,
     tabSelectedState: MutableState<Int>,
-    scaleH: Float,
+    heightValue: Float,
     homeViewModel: HomeViewModel = viewModel()
 ) {
     val context = LocalContext.current
-    val tabHeight by animateDpAsState(
-        targetValue = if (tabSelectedState.value == index) {
-            120.dp
-        } else {
-            100.dp
-        }, animationSpec = spring(
-            dampingRatio = Spring.DampingRatioNoBouncy,
-            stiffness = Spring.StiffnessLow
-        )
-    )
+    val headerHeightPx = with(LocalDensity.current) {
+        120.dp.roundToPx().toFloat()
+    }
+    val headerOtherHeightPx = with(LocalDensity.current) {
+        100.dp.roundToPx().toFloat()
+    }
+    val endHeight =headerHeightPx - heightValue
+    val endOtherHeight =headerOtherHeightPx - heightValue
+
     Column(
         modifier,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -58,7 +52,7 @@ fun ComposeTabView(
         Canvas(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(if (tabSelectedState.value == index) tabHeight.value.dp * scaleH else 100.dp * scaleH)
+                .height(if (tabSelectedState.value == index) endHeight.pxToDp() else endOtherHeight.pxToDp())
                 .clickable(onClick = {
                     if (tabSelectedState.value != index) {
                         tabSelectedState.value = index

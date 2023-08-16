@@ -22,7 +22,7 @@ import com.example.composeunit.project.page.OpenAIPage
 import com.example.composeunit.project.view_model.ai.OpenAiViewModel
 
 @Composable
-fun NavGraph(startDestination: String = settingOpenAIRoute) {
+fun NavGraph(startDestination: String = SPLASH_PAGE_ROUTE) {
     val navController = rememberNavController()
     val actions = remember(navController) { MainActions(navController) }
     //设置导航
