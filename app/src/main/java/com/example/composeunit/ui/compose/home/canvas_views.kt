@@ -1,4 +1,4 @@
-package com.example.composeunit.composeble_ui.home
+package com.example.composeunit.ui.compose.home
 
 import android.graphics.Bitmap
 import android.graphics.Path
@@ -27,16 +27,8 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.pow
 import kotlin.math.sqrt
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.Card
-import androidx.compose.runtime.Stable
-import androidx.compose.ui.draw.drawBehind
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.Paint
-import androidx.compose.ui.res.colorResource
-import androidx.compose.ui.unit.Dp
-import androidx.compose.ui.unit.dp
+
 /**
  * Created by wangfei44 on 2023/3/24.
  */

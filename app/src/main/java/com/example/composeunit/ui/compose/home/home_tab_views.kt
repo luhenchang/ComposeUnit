@@ -1,4 +1,4 @@
-package com.example.composeunit.composeble_ui.home
+package com.example.composeunit.ui.compose.home
 
 import androidx.compose.animation.*
 import androidx.compose.animation.core.tween
@@ -25,14 +25,14 @@ import com.example.lib_common.utils.pxToDp
  * Created by wangfei44 on 2023/3/24.
  */
 
-@OptIn(ExperimentalAnimationApi::class)
 @Composable
 fun ComposeTabView(
-    tabTitle: String = "TV",
+    tabTitle: String = "",
     modifier: Modifier,
     index: Int,
-    tabSelectedState: MutableState<Int>,
+    tabSelectedCallBack:(Int)->Unit,
     heightValue: Float,
+    tabSelectedState:MutableState<Int>,
     homeViewModel: HomeViewModel = viewModel()
 ) {
     val context = LocalContext.current
@@ -56,6 +56,7 @@ fun ComposeTabView(
                 .clickable(onClick = {
                     if (tabSelectedState.value != index) {
                         tabSelectedState.value = index
+                        tabSelectedCallBack.invoke(index)
                         homeViewModel.getInformation(context)
                     }
                 }, indication = null, interactionSource = remember {
@@ -125,13 +126,13 @@ fun ComposeTabView(
                         getColorForIndex(tabSelectedState.value).toArgb()
                     )
                     val rect = android.graphics.Rect()
-                    frameworkPaint.getTextBounds(tabTitle, 0, 2, rect)
+                    frameworkPaint.getTextBounds(tabTitle, 0, tabTitle.length, rect)
                     canvas.nativeCanvas.drawText(
                         tabTitle,
-                        size.width / 2f - rect.width() / 2,
+                        (size.width  - rect.width()) / 2,
                         size.height * 2 / 3f,
                         frameworkPaint.apply {
-                            style = android.graphics.Paint.Style.STROKE
+                            style = android.graphics.Paint.Style.FILL
                         }
                     )
                 }

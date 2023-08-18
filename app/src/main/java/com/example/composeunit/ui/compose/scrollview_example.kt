@@ -1,4 +1,4 @@
-package com.example.composeunit.composeble_ui
+package com.example.composeunit.ui.compose
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background

@@ -1,4 +1,4 @@
-package com.example.composeunit.confing
+package com.example.composeunit.ui.compose.confing
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*

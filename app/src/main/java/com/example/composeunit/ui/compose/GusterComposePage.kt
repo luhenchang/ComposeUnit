@@ -1,4 +1,4 @@
-package com.example.composeunit.composeble_ui
+package com.example.composeunit.ui.compose
 
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.Image
@@ -17,7 +17,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.composeunit.R
-import com.example.composeunit.canvas_ui.QureytoImageShapes
+import com.example.composeunit.ui.compose.canvas_ui.QureytoImageShapes
 import com.example.composeunit.utils.getBitmap
 import androidx.compose.animation.splineBasedDecay
 import androidx.compose.foundation.gestures.awaitFirstDown
@@ -28,7 +28,7 @@ import androidx.compose.ui.input.pointer.util.VelocityTracker
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
 import androidx.compose.ui.unit.IntOffset
-import com.example.composeunit.confing.CicleImageShape
+import com.example.composeunit.ui.compose.confing.CicleImageShape
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt

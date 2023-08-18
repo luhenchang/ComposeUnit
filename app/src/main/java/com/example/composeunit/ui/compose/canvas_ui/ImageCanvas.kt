@@ -1,4 +1,4 @@
-package com.example.composeunit.canvas_ui
+package com.example.composeunit.ui.compose.canvas_ui
 
 import android.R.attr
 import android.os.Build

@@ -1,4 +1,4 @@
-package com.example.composeunit.composeble_ui.home;
+package com.example.composeunit.ui.compose.home;
 
 /**
  * Created by wangfei44 on 2023/3/24.
@@ -23,8 +23,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composeunit.repository.dao.table.ComposeData
-import com.example.composeunit.canvas_ui.BoxBorderClipShape
-import com.example.composeunit.canvas_ui.BoxClipShapes
+import com.example.composeunit.ui.compose.canvas_ui.BoxBorderClipShape
+import com.example.composeunit.ui.compose.canvas_ui.BoxClipShapes
 import com.example.composeunit.project.view_model.home.HomeViewModel
 import com.example.lib_common.utils.notNull
 import com.example.lib_common.utils.splitEndContent
@@ -34,7 +34,7 @@ fun HomeItemView(composeData: ComposeData, index: Int, viewModel: HomeViewModel)
     Box(
         modifier = Modifier
             .clip(BoxBorderClipShape)
-            .background(Color(0XFF0DBEBF))
+            .background(Color(0x1B0DBEBF))
             .shadow(elevation = 33.dp, spotColor = Color.Red, ambientColor = Color.Yellow)
             .clickable(onClick = {})
     ) {

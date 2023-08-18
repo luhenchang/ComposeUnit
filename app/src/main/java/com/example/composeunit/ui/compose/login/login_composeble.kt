@@ -1,4 +1,4 @@
-package com.example.composeunit.composeble_ui.login
+package com.example.composeunit.ui.compose.login
 import android.graphics.Color
 import android.graphics.LinearGradient
 import android.graphics.Matrix
@@ -30,10 +30,10 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import com.example.composeunit.R
-import com.example.composeunit.confing.AnimalRoundedCornerShape
-import com.example.composeunit.confing.CicleImageShape
-import com.example.composeunit.confing.MainActions
-import com.example.composeunit.canvas_ui.QureytoImageShapes
+import com.example.composeunit.ui.compose.confing.AnimalRoundedCornerShape
+import com.example.composeunit.ui.compose.confing.CicleImageShape
+import com.example.composeunit.ui.compose.confing.MainActions
+import com.example.composeunit.ui.compose.canvas_ui.QureytoImageShapes
 import com.example.composeunit.utils.BitmapBlur
 
 /**

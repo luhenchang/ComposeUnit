@@ -1,7 +1,5 @@
-package com.example.composeunit.composeble_ui.home
+package com.example.composeunit.ui.compose.home
 
-import android.content.Context
-import android.content.res.Resources
 import android.util.Log
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
@@ -14,13 +12,12 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.example.composeunit.R
-import com.example.composeunit.navigation.NavigationRoute
+import com.example.composeunit.ui.compose.navigation.NavigationRoute
 import com.example.composeunit.project.view_model.home.HomeViewModel
 import com.example.composeunit.utils.getBitmap
 import kotlinx.coroutines.*

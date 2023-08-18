@@ -37,8 +37,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.*
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composeunit.R
-import com.example.composeunit.confing.CicleImageShape
-import com.example.composeunit.confing.MainActions
+import com.example.composeunit.ui.compose.confing.CicleImageShape
+import com.example.composeunit.ui.compose.confing.MainActions
 import com.example.composeunit.project.view_model.home.HomeViewModel
 import com.example.composeunit.project.view_model.message.MessageViewModel
 import com.example.composeunit.utils.getBitmap

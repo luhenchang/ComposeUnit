@@ -1,4 +1,4 @@
-package com.example.composeunit.canvas_ui
+package com.example.composeunit.ui.compose.canvas_ui
 
 import android.annotation.SuppressLint
 import android.graphics.*
@@ -21,12 +21,12 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.tooling.preview.Preview
 import com.example.composeunit.R
-import com.example.composeunit.confing.MainActions
+import com.example.composeunit.ui.compose.confing.MainActions
 import com.example.composeunit.utils.getBitmap
 
 @Preview(name = "canvas")
 @Composable
-fun MyCureView(mainActions: MainActions,imgList:ArrayList<ImageBitmap>) {
+fun MyCureView(mainActions: MainActions, imgList:ArrayList<ImageBitmap>) {
     val imgList:ArrayList<ImageBitmap> = ArrayList()
     imgList.add(getBitmap(resource = R.drawable.head_lhc))
     imgList.add(getBitmap(R.drawable.mn_1))

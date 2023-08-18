@@ -30,8 +30,8 @@ import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
 import com.example.base.ui.PermissionActivity
 import com.example.composeunit.R
-import com.example.composeunit.confing.MainActions
-import com.example.composeunit.confing.NavGraph
+import com.example.composeunit.ui.compose.confing.MainActions
+import com.example.composeunit.ui.compose.confing.NavGraph
 import com.example.composeunit.project.SplashActivity.Companion.TAG
 import com.example.composeunit.project.service.RecorderService
 import com.example.composeunit.project.view_model.splash.SplashViewModel

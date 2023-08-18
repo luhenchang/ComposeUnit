@@ -1,4 +1,4 @@
-package com.example.composeunit.navigation;
+package com.example.composeunit.ui.compose.navigation;
 
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.NavHostController

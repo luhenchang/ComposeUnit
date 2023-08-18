@@ -1,4 +1,4 @@
-package com.example.composeunit.confing
+package com.example.composeunit.ui.compose.confing
 import HomePage
 import LoginPage
 import androidx.compose.runtime.Composable
@@ -9,12 +9,12 @@ import androidx.navigation.NavController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.composeunit.navigation.NavigationRoute.HOME_PAGE_ROUTE
-import com.example.composeunit.navigation.NavigationRoute.LOGIN_PAGE_ROUTE
-import com.example.composeunit.navigation.NavigationRoute.MESSAGE_DETAILS_PAGE_ROUTE
-import com.example.composeunit.navigation.NavigationRoute.SETTING_PAGE_ROUTE
-import com.example.composeunit.navigation.NavigationRoute.SPLASH_PAGE_ROUTE
-import com.example.composeunit.navigation.NavigationRoute.settingOpenAIRoute
+import com.example.composeunit.ui.compose.navigation.NavigationRoute.HOME_PAGE_ROUTE
+import com.example.composeunit.ui.compose.navigation.NavigationRoute.LOGIN_PAGE_ROUTE
+import com.example.composeunit.ui.compose.navigation.NavigationRoute.MESSAGE_DETAILS_PAGE_ROUTE
+import com.example.composeunit.ui.compose.navigation.NavigationRoute.SETTING_PAGE_ROUTE
+import com.example.composeunit.ui.compose.navigation.NavigationRoute.SPLASH_PAGE_ROUTE
+import com.example.composeunit.ui.compose.navigation.NavigationRoute.settingOpenAIRoute
 import com.example.composeunit.project.SplashCompass
 import com.example.composeunit.project.fragment.MessageDetailPage
 import com.example.composeunit.project.fragment.ThreeFragment

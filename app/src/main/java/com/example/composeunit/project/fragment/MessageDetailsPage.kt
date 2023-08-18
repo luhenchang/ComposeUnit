@@ -29,9 +29,9 @@ import com.bumptech.glide.Glide
 import com.example.lib_common.utils.AndroidShare
 import com.example.lib_common.utils.pxToDp
 import com.example.composeunit.R
-import com.example.composeunit.confing.AppDivider
-import com.example.composeunit.confing.MainActions
-import com.example.composeunit.confing.MyTopAppBar
+import com.example.composeunit.ui.compose.confing.AppDivider
+import com.example.composeunit.ui.compose.confing.MainActions
+import com.example.composeunit.ui.compose.confing.MyTopAppBar
 import com.example.composeunit.project.fragment.twofragments.TextPage
 import com.example.composeunit.project.fragment.twofragments.textContentString
 import com.example.composeunit.ui.theme.blue

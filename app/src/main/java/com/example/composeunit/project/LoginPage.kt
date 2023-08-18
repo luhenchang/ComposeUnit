@@ -7,7 +7,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.input.pointer.pointerInput
-import com.example.composeunit.confing.MainActions
+import com.example.composeunit.ui.compose.confing.MainActions
 import kotlinx.coroutines.launch
 import androidx.compose.animation.core.*
 import androidx.compose.animation.core.Spring.StiffnessLow
@@ -19,7 +19,13 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
-import com.example.composeunit.composeble_ui.login.*
+import com.example.composeunit.ui.compose.login.LoginPageBackgroundBlurImage
+import com.example.composeunit.ui.compose.login.LoginPageBootomButton
+import com.example.composeunit.ui.compose.login.LoginPageCheckBox
+import com.example.composeunit.ui.compose.login.LoginPageInput
+import com.example.composeunit.ui.compose.login.LoginPageTopBlurImage
+import com.example.composeunit.ui.compose.login.LoginPageTopRotaAndScaleImage
+import com.example.composeunit.ui.compose.login.LoginPageTopTextBox
 
 @Composable
 fun LoginPage(mainActions: MainActions, navController: NavHostController) {

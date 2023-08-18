@@ -6,16 +6,15 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.example.composeunit.confing.MainActions
+import com.example.composeunit.ui.compose.confing.MainActions
 import com.example.composeunit.project.fragment.TwoFragment
 import com.example.composeunit.project.view_model.home.HomeViewModel
-import  com.example.composeunit.composeble_ui.home.*
-import com.example.composeunit.navigation.NavigationRoute
-import com.example.composeunit.navigation.navigatorTo
+import com.example.composeunit.ui.compose.navigation.NavigationRoute
+import com.example.composeunit.ui.compose.navigation.navigatorTo
 import com.example.composeunit.project.fragment.OneFragment
 import com.example.composeunit.project.fragment.ThreeFragment
-import com.example.composeunit.project.view_model.ai.OpenAiViewModel
 import com.example.composeunit.project.view_model.message.MessageViewModel
+import com.example.composeunit.ui.compose.home.BottomNavigation
 
 @Composable
 fun HomePage(

@@ -18,7 +18,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.example.composeunit.R
-import com.example.composeunit.confing.MainActions
+import com.example.composeunit.ui.compose.confing.MainActions
 import com.example.composeunit.project.view_model.ai.OpenAiViewModel
 import com.neo.highlight.core.Highlight
 import com.neo.highlight.core.Scheme
