@@ -9,8 +9,10 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -23,6 +25,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.asAndroidBitmap
+import androidx.compose.ui.graphics.asImageBitmap
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -34,15 +39,18 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composeunit.R
 import com.example.composeunit.project.view_model.home.HomeViewModel
+import com.example.composeunit.project.view_model.splash.SplashViewModel
 import com.example.composeunit.ui.compose.home.ComposeTabView
 import com.example.composeunit.ui.compose.home.HomeItemView
 import com.example.composeunit.ui.compose.home.LoadingPageUI
+import com.example.composeunit.utils.BitmapBlur
+import com.example.composeunit.utils.getBitmap
 
 
 @Composable
-fun OneFragment(homeViewModel: HomeViewModel = viewModel()) {
+fun OneFragment(homeViewModel: HomeViewModel = viewModel(), splashViewModel:SplashViewModel,onBack:(index:Int)->Unit) {
     homeViewModel.getInformation(LocalContext.current)
-    var tabSelectedState by remember { mutableStateOf(0) }
+    val tabSelectedState by homeViewModel.tabSelectedIndex.collectAsState()
     var heightValue by remember {
         mutableStateOf(0f)
     }
@@ -53,8 +61,7 @@ fun OneFragment(homeViewModel: HomeViewModel = viewModel()) {
                 top.linkTo(parent.top)
                 start.linkTo(parent.start)
                 end.linkTo(parent.end)
-            }
-            .alpha(0.7f), tabSelectedState, homeViewModel,
+            }, tabSelectedState, homeViewModel,
             scrollYOffset = {
                 heightValue = it
             })
@@ -67,8 +74,10 @@ fun OneFragment(homeViewModel: HomeViewModel = viewModel()) {
             heightValue,
             homeViewModel,
             tabSelectedCallBack = {
-                tabSelectedState = it
-            })
+                homeViewModel.selectedTabIndex(it)
+                splashViewModel.updateTheme(it)
+                onBack.invoke(it)
+            },tabSelectedState = tabSelectedState)
     }
 }
 
@@ -133,12 +142,12 @@ fun LoadingOrLazyColumn(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(Color(0, 150, 136, 255))
+                .background(Color.White)
         ) {
             Image(
                 modifier = Modifier
                     .fillMaxSize()
-                    .alpha(0.7f),
+                    .alpha(0.3f),
                 painter = painterResource(id = R.drawable.hbmr),
                 contentScale = ContentScale.FillHeight,
                 contentDescription = ""
@@ -168,9 +177,9 @@ private fun TabRow(
     modifier: Modifier = Modifier,
     heightValue: Float,
     homeViewModel: HomeViewModel,
-    tabSelectedCallBack: (Int) -> Unit
+    tabSelectedCallBack: (Int) -> Unit,
+    tabSelectedState:Int
 ) {
-    val tabSelectedState = remember { mutableStateOf(0) }
     Row(
         modifier
             .fillMaxWidth()

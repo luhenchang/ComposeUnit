@@ -14,6 +14,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.catch
+import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 
 class HomeViewModel(
@@ -21,6 +22,13 @@ class HomeViewModel(
 ) : BaseViewModel() {
     //首页选中项的索引
     private val _position = MutableLiveData(0)
+
+    //首页Tab选中的索引
+    private val _tabSelectedIndex = MutableStateFlow(0)
+    var tabSelectedIndex: StateFlow<Int> = _tabSelectedIndex
+    fun selectedTabIndex(index: Int) = viewModelScope.launch {
+        _tabSelectedIndex.emit(index)
+    }
 
     //动画状态
     val animalBoolean = mutableStateOf(true)
@@ -46,10 +54,17 @@ class HomeViewModel(
         }
     }
 
-    fun insertComposeData(current: Context){
+    fun insertComposeData(current: Context) {
         viewModelScope.launch(Dispatchers.IO) {
-            repository.insertComposeData(current,
-                ComposeData(2,"Column","垂直容器布局","Compose 提供了一系列现成可用的布局来帮助您排列界面元素，并可让您轻松定义自己的更专业布局，使用 Column 可将多个项垂直地放置在屏幕上",5)
+            repository.insertComposeData(
+                current,
+                ComposeData(
+                    2,
+                    "Column",
+                    "垂直容器布局",
+                    "Compose 提供了一系列现成可用的布局来帮助您排列界面元素，并可让您轻松定义自己的更专业布局，使用 Column 可将多个项垂直地放置在屏幕上",
+                    5
+                )
             )
         }
     }

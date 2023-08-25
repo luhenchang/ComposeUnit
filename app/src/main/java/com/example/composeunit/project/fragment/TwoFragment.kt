@@ -46,14 +46,15 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 @Composable
-fun TwoFragment(mainActions: MainActions, viewModel: MessageViewModel) {
-    MessagePageCanvasQueryBox(mainActions, viewModel)
+fun TwoFragment(mainActions: MainActions, viewModel: MessageViewModel,index:Int) {
+    MessagePageCanvasQueryBox(mainActions, viewModel,index)
 }
 
 @Composable
 fun MessagePageCanvasQueryBox(
     mainActions: MainActions,
-    viewModel: MessageViewModel
+    viewModel: MessageViewModel,
+    index: Int
 ) {
     val homeViewModel: HomeViewModel = viewModel()
     val listName = homeViewModel.itemUIState.collectAsState(arrayListOf())
@@ -108,7 +109,7 @@ fun MessagePageCanvasQueryBox(
                     horizontalAlignment = Alignment.Start
                 ) {
                     Text(
-                        text = "Compose UI",
+                        text = "Compose UI${index}",
                         fontSize = 19.sp,
                         fontWeight = FontWeight.Bold,
                         fontFamily = FontFamily.Serif,

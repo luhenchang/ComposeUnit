@@ -14,12 +14,17 @@ import com.example.composeunit.ui.compose.navigation.navigatorTo
 import com.example.composeunit.project.fragment.OneFragment
 import com.example.composeunit.project.fragment.ThreeFragment
 import com.example.composeunit.project.view_model.message.MessageViewModel
+import com.example.composeunit.project.view_model.splash.SplashViewModel
 import com.example.composeunit.ui.compose.home.BottomNavigation
+import androidx.navigation.NavOptions
+import androidx.navigation.NavType
+import androidx.navigation.navArgument
 
 @Composable
 fun HomePage(
     mainActions: MainActions,
     homeViewModel: HomeViewModel = viewModel(),
+    viewModel:SplashViewModel
 ) {
     val navCtrl = rememberNavController()
     Box(
@@ -30,11 +35,14 @@ fun HomePage(
             startDestination = NavigationRoute.homeRoute,
         ) {
             composable(NavigationRoute.homeRoute) {
-                OneFragment()
+                OneFragment(splashViewModel = viewModel, onBack ={
+                    navigatorTo(navCtrl, NavigationRoute.widgetRoute+"/$it")
+                })
             }
-            composable(NavigationRoute.widgetRoute) {
+            composable(NavigationRoute.widgetRoute+"/{index}", arguments = listOf(navArgument("index") { type = NavType.IntType })){entry->
                 val vieModel: MessageViewModel = viewModel()
-                TwoFragment(mainActions, vieModel)
+                val index = entry.arguments?.getInt("index")?:0
+                TwoFragment(mainActions, vieModel,index = index)
             }
             composable(NavigationRoute.settingRoute) {
                 ThreeFragment(mainActions)

@@ -19,6 +19,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composeunit.project.view_model.home.HomeViewModel
+import com.example.composeunit.ui.theme.getPrimaryColorForIndex
 import com.example.lib_common.utils.pxToDp
 
 /**
@@ -32,7 +33,7 @@ fun ComposeTabView(
     index: Int,
     tabSelectedCallBack:(Int)->Unit,
     heightValue: Float,
-    tabSelectedState:MutableState<Int>,
+    tabSelectedState:Int,
     homeViewModel: HomeViewModel = viewModel()
 ) {
     val context = LocalContext.current
@@ -52,10 +53,9 @@ fun ComposeTabView(
         Canvas(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(if (tabSelectedState.value == index) endHeight.pxToDp() else endOtherHeight.pxToDp())
+                .height(if (tabSelectedState == index) endHeight.pxToDp() else endOtherHeight.pxToDp())
                 .clickable(onClick = {
-                    if (tabSelectedState.value != index) {
-                        tabSelectedState.value = index
+                    if (tabSelectedState != index) {
                         tabSelectedCallBack.invoke(index)
                         homeViewModel.getInformation(context)
                     }
@@ -83,7 +83,7 @@ fun ComposeTabView(
                         close()
                     }
                     val paint = Paint()
-                    paint.color = getColorForIndex(index)
+                    paint.color = getPrimaryColorForIndex(index)
                     paint.style = PaintingStyle.Fill
                     paint.isAntiAlias = true
                     canvas.drawPath(path, paint)
@@ -106,7 +106,7 @@ fun ComposeTabView(
                     }
                     val frameworkPaint = Paint().asFrameworkPaint()
                     frameworkPaint.style = android.graphics.Paint.Style.STROKE
-                    frameworkPaint.color = getColorForIndex(tabSelectedState.value).toArgb()
+                    frameworkPaint.color = getPrimaryColorForIndex(tabSelectedState).toArgb()
                     frameworkPaint.isAntiAlias = true
                     frameworkPaint.textSize = 36f
                     /**绘制阴影*/
@@ -123,7 +123,7 @@ fun ComposeTabView(
                         6f,
                         0f,
                         3f,
-                        getColorForIndex(tabSelectedState.value).toArgb()
+                        getPrimaryColorForIndex(tabSelectedState).toArgb()
                     )
                     val rect = android.graphics.Rect()
                     frameworkPaint.getTextBounds(tabTitle, 0, tabTitle.length, rect)
@@ -140,7 +140,7 @@ fun ComposeTabView(
         )
         Box(Modifier.height(4.dp))
         AnimatedVisibility(
-            visible = tabSelectedState.value != index,
+            visible = tabSelectedState != index,
             enter = fadeIn() + scaleIn(animationSpec = tween(300)),
             exit = fadeOut() + scaleOut(animationSpec = tween(300))
         ) {
@@ -150,25 +150,13 @@ fun ComposeTabView(
                     .shadow(
                         elevation = 4.dp,
                         shape = CircleShape,
-                        ambientColor = getColorForIndex(tabSelectedState.value),
-                        spotColor = getColorForIndex(tabSelectedState.value),
+                        ambientColor = getPrimaryColorForIndex(tabSelectedState),
+                        spotColor = getPrimaryColorForIndex(tabSelectedState),
                         clip = false
                     )
-                    .background(getColorForIndex(index), shape = CircleShape)
+                    .background(getPrimaryColorForIndex(index), shape = CircleShape)
             )
         }
-    }
-}
-
-fun getColorForIndex(index: Int): Color {
-    return when (index) {
-        0 -> Color(0xFF108888)
-        1 -> Color(0xFF9C27B0)
-        2 -> Color(0xFFFFC107)
-        3 -> Color(0xFF4CAF50)
-        4 -> Color(0xFFF44336)
-        5 -> Color(0xFF673AB7)
-        else -> Color(0xFFCDDC39)
     }
 }
 

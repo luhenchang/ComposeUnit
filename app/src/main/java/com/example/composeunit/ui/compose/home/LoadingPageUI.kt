@@ -24,18 +24,19 @@ import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.nativeCanvas
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.unit.dp
+import com.example.composeunit.ui.theme.getPrimaryColorForIndex
 
 @Composable
 fun LoadingPageUI(index: Int) {
     val waveWidth = 30f
     val waveHeight = 21f
-    val animalValue by rememberInfiniteTransition().animateFloat(
+    val animalValue by rememberInfiniteTransition(label = "").animateFloat(
         initialValue = 0f,
         targetValue = 1f,
         animationSpec = infiniteRepeatable(
             tween(2000, easing = LinearEasing),
             repeatMode = RepeatMode.Restart
-        )
+        ), label = ""
     )
     Box(
         modifier = Modifier
@@ -95,12 +96,12 @@ fun getPaintBefore(style: Paint.Style, waveWidth: Float, index: Int): Paint {
     gPaint.isAntiAlias = true
     gPaint.style = style
     gPaint.textSize = 26f
-    gPaint.color = getColorForIndex(index).toArgb()
+    gPaint.color = getPrimaryColorForIndex(index).toArgb()
     val linearGradient = LinearGradient(
         waveWidth * 4, -waveWidth * 8,
         waveWidth * 4,
         80f,
-        getColorForIndex(index).toArgb(),
+        getPrimaryColorForIndex(index).toArgb(),
         getColorEndForIndex(index).toArgb(),
         Shader.TileMode.CLAMP
     )
@@ -120,7 +121,7 @@ private fun getPaint(style: Paint.Style, waveWidth: Float, index: Int): Paint {
         waveWidth * 4, -waveWidth * 2,
         waveWidth * 4,
         80f,
-        getColorForIndex(index).toArgb(),
+        getPrimaryColorForIndex(index).toArgb(),
         getColorEndForIndex(index).toArgb(),
         Shader.TileMode.CLAMP
     )

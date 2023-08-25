@@ -28,6 +28,7 @@ import androidx.compose.ui.res.dimensionResource
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import androidx.core.view.WindowCompat
+import androidx.lifecycle.lifecycleScope
 import com.example.base.ui.PermissionActivity
 import com.example.composeunit.R
 import com.example.composeunit.ui.compose.confing.MainActions
@@ -36,6 +37,8 @@ import com.example.composeunit.project.SplashActivity.Companion.TAG
 import com.example.composeunit.project.service.RecorderService
 import com.example.composeunit.project.view_model.splash.SplashViewModel
 import com.example.composeunit.ui.theme.PlayTheme
+import com.example.composeunit.ui.theme.ThemeType
+import kotlinx.coroutines.launch
 
 class SplashActivity : PermissionActivity() {
     companion object {
@@ -54,6 +57,9 @@ class SplashActivity : PermissionActivity() {
             Log.i(TAG, "serveConnect :: onServiceDisconnected")
         }
     }
+    private val themeTypeState: MutableState<ThemeType> by lazy(mode = LazyThreadSafetyMode.SYNCHRONIZED) {
+        mutableStateOf(ThemeType.GREEN_THEM)
+    }
 
     override fun initView() {
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -62,9 +68,14 @@ class SplashActivity : PermissionActivity() {
             serveConnect,
             BIND_AUTO_CREATE
         )
+        lifecycleScope.launch {
+            viewModel.themTypeState.collect {
+                themeTypeState.value = it
+            }
+        }
         setContent {
-            PlayTheme {
-                NavGraph()
+            PlayTheme(themType = themeTypeState.value) {
+                NavGraph(viewModel = viewModel)
             }
         }
     }
@@ -85,7 +96,7 @@ class SplashActivity : PermissionActivity() {
 fun SplashCompass(actions: MainActions, viewModel: SplashViewModel = SplashViewModel()) {
     val animalValue: Float? = viewModel.animalValue.observeAsState().value
 
-    Log.e("SplashCompass::","结果::animalValue=$animalValue")
+    Log.e("SplashCompass::", "结果::animalValue=$animalValue")
     initAnimal(viewModel, actions)
     val context = LocalContext.current
     Box(
@@ -151,7 +162,7 @@ fun initAnimal(viewModel: SplashViewModel, actions: MainActions) {
             0f
         }, animationSpec = TweenSpec(durationMillis = 2000),
         finishedListener = {
-            Log.e("SplashViewModel","updateAnimalValue listener::animalValue = $it")
+            Log.e("SplashViewModel", "updateAnimalValue listener::animalValue = $it")
             actions.loginPage()
         }
     )

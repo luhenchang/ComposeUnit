@@ -4,6 +4,7 @@ import android.util.Log
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,7 +39,7 @@ fun BottomNavigation(
             0f
         } else {
             1f
-        }, animationSpec = TweenSpec(durationMillis = 600)
+        }, animationSpec = TweenSpec(durationMillis = 600), label = ""
     )
     val indexValue: Float by animateFloatAsState(
         when (homeViewModel.position.value) {
@@ -52,7 +53,7 @@ fun BottomNavigation(
                 2f
             }
         },
-        animationSpec = TweenSpec(durationMillis = 500)
+        animationSpec = TweenSpec(durationMillis = 500), label = ""
     )
     Column(
         modifier = modifier
@@ -78,6 +79,7 @@ fun BottomNavigation(
 //背景动画
 @Composable
 private fun BottomBarAnimalBgView(indexValue: Float) {
+    val paintColor = MaterialTheme.colors.primary.copy(alpha = 0.6f )
     Canvas(modifier = Modifier
         .fillMaxWidth()
         .height(70.dp)
@@ -85,7 +87,7 @@ private fun BottomBarAnimalBgView(indexValue: Float) {
         onDraw = {
             drawIntoCanvas { canvas ->
                 val paint = Paint()
-                paint.color = Color(0xFF108888)//Color(0XFF0DBEBF)
+                paint.color = paintColor
                 paint.style = PaintingStyle.Fill
                 //先固定分为三等分
                 val widthOfOne = size.width / 3
@@ -102,8 +104,7 @@ private fun BottomBarAnimalBgView(indexValue: Float) {
                     15f,
                     5f,
                     -6f,
-                    Color(0xFF108888).toArgb()
-                )
+                    Color.White.toArgb())
                 canvas.drawCircle(Offset(centerWidthOfOneX + keyAnimal, 0f), 60f, paint)
 
                 val path = Path().apply {
@@ -227,7 +228,7 @@ fun BottomView(
                         onTapBottom(NavigationRoute.homeRoute)
                     }
                     1 -> {
-                        onTapBottom(NavigationRoute.widgetRoute)
+                        onTapBottom(NavigationRoute.widgetRoute+"/0")
                     }
                     2 -> {
                         onTapBottom(NavigationRoute.settingRoute)

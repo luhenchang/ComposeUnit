@@ -8,10 +8,12 @@ package com.example.composeunit.ui.compose.home;
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
@@ -34,16 +36,16 @@ fun HomeItemView(composeData: ComposeData, index: Int, viewModel: HomeViewModel)
     Box(
         modifier = Modifier
             .clip(BoxBorderClipShape)
-            .background(Color(0x1B0DBEBF))
-            .shadow(elevation = 33.dp, spotColor = Color.Red, ambientColor = Color.Yellow)
-            .clickable(onClick = {})
+            .background(MaterialTheme.colors.primary)
+            .shadow(elevation = 33.dp, spotColor = MaterialTheme.colors.primary, ambientColor = Color.Yellow)
+            .clickable(onClick = {}).alpha(1f)
     ) {
         Box(
             modifier = Modifier
                 .padding(0.dp)
                 .clip(BoxClipShapes)
-                .background(Color(206, 236, 250))
-                .border(width = 1.dp, color = Color(0XFF0DBEBF), shape = BoxBorderClipShape)
+                .background(MaterialTheme.colors.background)
+                .border(width = 1.dp, color = MaterialTheme.colors.primary, shape = BoxBorderClipShape)
         ) {
             Row(
                 verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(6.dp)
@@ -53,18 +55,18 @@ fun HomeItemView(composeData: ComposeData, index: Int, viewModel: HomeViewModel)
                         .height(55.dp)
                         .width(55.dp)
                         .align(Alignment.CenterVertically)
-                        .border(2.dp, color = Color(238, 204, 203, 255), shape = CircleShape)
+                        .border(2.dp, color = Color.White, shape = CircleShape)
                         .shadow(
                             elevation = 1.dp, shape = CircleShape
                         )
                         .background(
-                            Color(13, 189, 190, 193), shape = CircleShape
+                            Color(161, 202, 221, 255), shape = CircleShape
                         )
                 ) {
                     Text(
                         composeData.item_title.notNull().splitEndContent(),
                         fontSize = 18.sp,
-                        color = Color.White,
+                        color = MaterialTheme.colors.primary,
                         modifier = Modifier
                             .padding(bottom = 5.dp)
                             .align(Alignment.Center),

@@ -6,6 +6,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
@@ -20,9 +21,10 @@ import com.example.composeunit.project.fragment.MessageDetailPage
 import com.example.composeunit.project.fragment.ThreeFragment
 import com.example.composeunit.project.page.OpenAIPage
 import com.example.composeunit.project.view_model.ai.OpenAiViewModel
+import com.example.composeunit.project.view_model.splash.SplashViewModel
 
 @Composable
-fun NavGraph(startDestination: String = SPLASH_PAGE_ROUTE) {
+fun NavGraph(startDestination: String = SPLASH_PAGE_ROUTE,viewModel:SplashViewModel) {
     val navController = rememberNavController()
     val actions = remember(navController) { MainActions(navController) }
     //设置导航
@@ -37,7 +39,7 @@ fun NavGraph(startDestination: String = SPLASH_PAGE_ROUTE) {
                 LoginPage(actions,navController)
             }
             composable(HOME_PAGE_ROUTE) {
-                HomePage(actions)
+                HomePage(actions,viewModel = viewModel)
             }
             composable(SETTING_PAGE_ROUTE){
                 ThreeFragment(actions)

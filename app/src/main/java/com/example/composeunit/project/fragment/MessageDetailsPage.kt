@@ -34,12 +34,11 @@ import com.example.composeunit.ui.compose.confing.MainActions
 import com.example.composeunit.ui.compose.confing.MyTopAppBar
 import com.example.composeunit.project.fragment.twofragments.TextPage
 import com.example.composeunit.project.fragment.twofragments.textContentString
-import com.example.composeunit.ui.theme.blue
+import com.example.composeunit.ui.theme.primary_green
 import com.example.composeunit.utils.getBitmap
 import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.google.accompanist.flowlayout.FlowRow
 import com.google.accompanist.glide.LocalRequestManager
-import kotlinx.coroutines.NonDisposableHandle.parent
 import kotlin.math.cos
 import kotlin.math.pow
 import kotlin.math.sin
@@ -206,7 +205,7 @@ fun CodeCompose() {
                     .width(10.dp)
                     .height(10.dp)
                     .shadow(5.dp, CircleShape)
-                    .background(blue, CircleShape)
+                    .background(primary_green, CircleShape)
                     .clip(CircleShape)
                     .padding(end = 5.dp)
             )
@@ -221,7 +220,7 @@ fun CodeCompose() {
             Spacer(Modifier.weight(1f))
             Image(
                 bitmap = getBitmap(resource = R.drawable.shared_icon),
-                colorFilter = tint(blue),
+                colorFilter = tint(primary_green),
                 contentDescription = null,
                 modifier = Modifier
                     .width(23.dp)
@@ -240,7 +239,7 @@ fun CodeCompose() {
             Spacer(modifier = Modifier.width(15.dp))
             Image(
                 bitmap = getBitmap(resource = R.drawable.code),
-                colorFilter = tint(blue),
+                colorFilter = tint(primary_green),
                 contentDescription = null,
                 modifier = Modifier
                     .width(23.dp)
@@ -314,7 +313,7 @@ private fun FlowRowItem(text: String) {
                 shape = RoundedCornerShape(15.dp)
             )
             .background(
-                blue,
+                primary_green,
                 shape = RoundedCornerShape(15.dp)
             )
             .clip(RoundedCornerShape(15.dp))
