@@ -5,13 +5,13 @@ plugins {
 }
 
 android {
-    val compileSdkV: Int by rootProject.extra
-    val minSdkV: Int by rootProject.extra
+    val sdkVersion = libs.versions.sdkVersion.get().toInt()
+    val minSdkVersion = libs.versions.minSdkVersion.get().toInt()
 
-    compileSdk = compileSdkV
+    compileSdk = sdkVersion
 
     defaultConfig {
-        minSdk = minSdkV
+        minSdk = minSdkVersion
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
     @Suppress("UnstableApiUsage")
@@ -25,11 +25,12 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_1_8
-        targetCompatibility = JavaVersion.VERSION_1_8
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
+    val javaVersion = libs.versions.javaVersion.get()
     kotlinOptions {
-        jvmTarget = "1.8"
+        jvmTarget = javaVersion
     }
 }
 

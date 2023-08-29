@@ -1,15 +1,16 @@
 buildscript {
-    apply("config.gradle.kts")
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath("com.android.tools.build:gradle:${project.extra["gradleVersion"]}")
-        classpath("org.jetbrains.kotlin:kotlin-gradle-plugin:1.8.0")
+        classpath(libs.build.gradle)
+        classpath(libs.kotlin.gradle.plugin)
     }
 }
-
+plugins{
+    id("com.google.devtools.ksp") version "1.8.10-1.0.9" apply false
+}
 task<Delete>("clean") {
     delete(rootProject.buildDir)
 }

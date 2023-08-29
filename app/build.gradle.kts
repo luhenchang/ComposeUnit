@@ -1,23 +1,20 @@
 plugins {
     id("com.android.application")
     id("kotlin-android")
-    id("kotlin-kapt")
+    id("com.google.devtools.ksp")
 }
 android {
-    val compileSdkV: Int by rootProject.extra
-    val minSdkV: Int by rootProject.extra
-    val targetSdkV: Int by rootProject.extra
-    val versionC: Int by rootProject.extra
-    val versionN: String by rootProject.extra
-
-    compileSdk = compileSdkV
+    val sdkVersion = libs.versions.sdkVersion.get().toInt()
+    val minSdkVersion = libs.versions.minSdkVersion.get().toInt()
+    compileSdk = sdkVersion
 
     defaultConfig {
         applicationId = "com.example.composeunit"
-        minSdk = minSdkV
-        targetSdk = targetSdkV
-        versionCode = versionC
-        versionName = versionN
+        minSdk = minSdkVersion
+        targetSdk = sdkVersion
+
+        versionCode = libs.versions.versionCode.get().toInt()
+        versionName = libs.versions.versionName.get()
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -37,24 +34,24 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_17
+        targetCompatibility = JavaVersion.VERSION_17
     }
+    val javaVersion = libs.versions.javaVersion.get()
     kotlinOptions {
-        jvmTarget = "11"
+        jvmTarget = javaVersion
     }
     java {
         toolchain {
-            languageVersion.set(JavaLanguageVersion.of(11))
+            languageVersion.set(JavaLanguageVersion.of(javaVersion.toInt()))
         }
     }
     @Suppress("UnstableApiUsage")
     buildFeatures.compose = true
     @Suppress("UnstableApiUsage")
     composeOptions {
-        val composeVersion: String by rootProject.extra
+        val composeVersion = libs.versions.composeVersion.get()
         kotlinCompilerExtensionVersion = composeVersion
-        //kotlinCompilerVersion = "1.5.10"
     }
 }
 
@@ -62,6 +59,5 @@ dependencies {
     implementation(project(":base"))
     implementation(project(":highlight"))
     //room 数据库
-    val roomVersion = "2.4.3"
-    kapt("androidx.room:room-compiler:$roomVersion")
+    ksp(libs.room.compiler)
 }

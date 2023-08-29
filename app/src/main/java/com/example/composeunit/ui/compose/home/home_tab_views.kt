@@ -116,7 +116,7 @@ fun ComposeTabView(
                         20f,
                         Color(0.0f, 0.588f, 0.533f, 0.5f).toArgb()
                     )
-                    canvas.drawPath(pathShadow, frameworkPaint.toComposePaint())
+                    canvas.drawPath(pathShadow, frameworkPaint.asComposePaint())
                     frameworkPaint.textSize = 36f
                     frameworkPaint.color = Color.White.toArgb()
                     frameworkPaint.setShadowLayer(

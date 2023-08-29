@@ -89,7 +89,7 @@ fun UserScreen() {
     ) {
         Box(
             modifier = Modifier
-                .background(colorResource(R.color.colorAccent))
+                .background(colorResource(R.color.clazz))
                 .fillMaxWidth()
                 .height(titleBarSize + targetHeight * targetPercent.value)
         ) {
@@ -124,7 +124,7 @@ fun UserScreen() {
                         y = 35.dp * targetPercent.value
                     ),
                 fontSize = 16.sp,
-                color = colorResource(R.color.colorPrimary),
+                color = colorResource(R.color.clazz),
             )
             Text(
                 text = "积分:",
@@ -135,7 +135,7 @@ fun UserScreen() {
                         alpha = targetPercent.value
                     },
                 fontSize = 12.sp,
-                color = colorResource(R.color.colorPrimary),
+                color = colorResource(R.color.clazz),
             )
         }
         LazyColumn(
