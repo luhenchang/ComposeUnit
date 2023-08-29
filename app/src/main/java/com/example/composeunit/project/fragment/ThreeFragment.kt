@@ -52,12 +52,14 @@ val code = "@Composable\n" +
 
 @Composable
 fun ThreeFragment(actions: MainActions) {
-    Column(
-        Modifier
-            .verticalScroll(ScrollState(0))
-            .padding(bottom = 20.dp)
-    ) {
-        CodeHighlighter(code, actions)
+    Box(Modifier.fillMaxSize()) {
+        Column(
+            Modifier
+                .verticalScroll(ScrollState(0))
+                .padding(bottom = 20.dp)
+        ) {
+            CodeHighlighter(code, actions)
+        }
     }
 }
 
@@ -88,7 +90,8 @@ fun SpannableText(content:String?) {
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color(52, 54, 65, 255))
-                    .height(30.dp).clip(RoundedCornerShape(topStart = 5.dp, topEnd = 5.dp)),
+                    .height(30.dp)
+                    .clip(RoundedCornerShape(topStart = 5.dp, topEnd = 5.dp)),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ){

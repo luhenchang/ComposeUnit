@@ -32,15 +32,15 @@ import androidx.lifecycle.lifecycleScope
 import com.example.base.ui.PermissionActivity
 import com.example.composeunit.R
 import com.example.composeunit.ui.compose.confing.MainActions
-import com.example.composeunit.ui.compose.confing.NavGraph
-import com.example.composeunit.project.SplashActivity.Companion.TAG
+import com.example.composeunit.project.MainActivity.Companion.TAG
 import com.example.composeunit.project.service.RecorderService
 import com.example.composeunit.project.view_model.splash.SplashViewModel
-import com.example.composeunit.ui.theme.PlayTheme
+import com.example.composeunit.ui.compose.confing.NavGraph
+import com.example.composeunit.ui.theme.ComposeUnitTheme
 import com.example.composeunit.ui.theme.ThemeType
 import kotlinx.coroutines.launch
 
-class SplashActivity : PermissionActivity() {
+class MainActivity : PermissionActivity() {
     companion object {
         var TAG = this::class.java.name.toString()
     }
@@ -74,7 +74,7 @@ class SplashActivity : PermissionActivity() {
             }
         }
         setContent {
-            PlayTheme(themType = themeTypeState.value) {
+            ComposeUnitTheme(themType = themeTypeState.value) {
                 NavGraph(viewModel = viewModel)
             }
         }
@@ -95,7 +95,6 @@ class SplashActivity : PermissionActivity() {
 @Composable
 fun SplashCompass(actions: MainActions, viewModel: SplashViewModel = SplashViewModel()) {
     val animalValue: Float? = viewModel.animalValue.observeAsState().value
-
     Log.e("SplashCompass::", "结果::animalValue=$animalValue")
     initAnimal(viewModel, actions)
     val context = LocalContext.current

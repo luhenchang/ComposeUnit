@@ -29,6 +29,11 @@ android {
         targetCompatibility = JavaVersion.VERSION_17
     }
     val javaVersion = libs.versions.javaVersion.get()
+    java {
+        toolchain {
+            languageVersion.set(JavaLanguageVersion.of(javaVersion.toInt()))
+        }
+    }
     kotlinOptions {
         jvmTarget = javaVersion
     }

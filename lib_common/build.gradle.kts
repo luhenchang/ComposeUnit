@@ -61,14 +61,16 @@ dependencies {
     api(libs.androidx.compose.runtime.runtime.livedata)
     api(libs.androidx.lifecycle.lifecycle.livedata.core.ktx)
     api(libs.androidx.constraintlayout.constraintlayout)
-    // https://mvnrepository.com/artifact/androidx.constraintlayout/constraintlayout-compose
     api(libs.androidx.constraintlayout.constraintlayout.compose)
+    //systemUI
+    api(libs.google.accompanist.webview)
+    api(libs.google.accompanist.systemuicontroller)
     api(libs.androidx.lifecycle.viewmodel.compose)
     api(libs.androidx.lifecycle.viewmodel.ktx)
     api(libs.androidx.foundation)
     api(libs.androidx.foundation.layout)
     api(libs.androidx.material.icons.extended)
-    api (libs.androidx.material3)
+    api(libs.androidx.material3)
     api(libs.androidx.appcompat)
     api(libs.coil.compose)
 

@@ -8,19 +8,26 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import com.example.composeunit.R
 import com.example.composeunit.ui.compose.navigation.NavigationRoute
 import com.example.composeunit.project.view_model.home.HomeViewModel
 import com.example.composeunit.utils.getBitmap
+import com.google.accompanist.insets.navigationBarsHeight
+import com.google.accompanist.insets.statusBarsHeight
 import kotlinx.coroutines.*
 
 /**
@@ -32,7 +39,8 @@ import kotlinx.coroutines.*
 fun BottomNavigation(
     homeViewModel: HomeViewModel,
     onTapBottom: (String) -> Unit,
-    modifier: Modifier
+    modifier: Modifier,
+    bottomHeight: Dp = 60.dp
 ) {
     val animalBooleanState: Float by animateFloatAsState(
         if (homeViewModel.animalBoolean.value) {
@@ -46,9 +54,11 @@ fun BottomNavigation(
             0 -> {
                 0f
             }
+
             1 -> {
                 1f
             }
+
             else -> {
                 2f
             }
@@ -57,18 +67,42 @@ fun BottomNavigation(
     )
     Column(
         modifier = modifier
-            .fillMaxWidth()
     ) {
-        Box(Modifier.height(70.dp)) {
+        Box(
+            Modifier.height(bottomHeight)
+        ) {
             BottomBarAnimalBgView(indexValue)
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .fillMaxHeight(),
                 horizontalArrangement = Arrangement.SpaceAround,
-                verticalAlignment = Alignment.Top
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                BottomView(homeViewModel, 0, R.drawable.center, animalBooleanState, onTapBottom)
-                BottomView(homeViewModel, 1, R.drawable.home, animalBooleanState, onTapBottom)
-                BottomView(homeViewModel, 2, R.drawable.min, animalBooleanState, onTapBottom)
+                BottomView(
+                    homeViewModel,
+                    0,
+                    R.drawable.center,
+                    animalBooleanState,
+                    onTapBottom,
+                    bottomHeight
+                )
+                BottomView(
+                    homeViewModel,
+                    1,
+                    R.drawable.home,
+                    animalBooleanState,
+                    onTapBottom,
+                    bottomHeight
+                )
+                BottomView(
+                    homeViewModel,
+                    2,
+                    R.drawable.min,
+                    animalBooleanState,
+                    onTapBottom,
+                    bottomHeight
+                )
             }
         }
         Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars))
@@ -78,11 +112,13 @@ fun BottomNavigation(
 
 //背景动画
 @Composable
-private fun BottomBarAnimalBgView(indexValue: Float) {
-    val paintColor = MaterialTheme.colors.primary.copy(alpha = 0.6f )
+private fun BottomBarAnimalBgView(indexValue: Float, radius: Float = 60f) {
+    val paintColor = MaterialTheme.colors.primary.copy(alpha = 0.6f)
+    val navigationHeight = LocalView.current.paddingBottom
+    Log.e("navigationHeight=$", navigationHeight.toString())
     Canvas(modifier = Modifier
         .fillMaxWidth()
-        .height(70.dp)
+        .fillMaxHeight()
         .clickable(enabled = false) {},
         onDraw = {
             drawIntoCanvas { canvas ->
@@ -104,8 +140,9 @@ private fun BottomBarAnimalBgView(indexValue: Float) {
                     15f,
                     5f,
                     -6f,
-                    Color.White.toArgb())
-                canvas.drawCircle(Offset(centerWidthOfOneX + keyAnimal, 0f), 60f, paint)
+                    Color.White.toArgb()
+                )
+                canvas.drawCircle(Offset(centerWidthOfOneX + keyAnimal, 0f), radius, paint)
 
                 val path = Path().apply {
                     moveTo(0f, 0f)
@@ -200,6 +237,8 @@ class BottomShape(indexValue: Float) : Shape {
             0f
         )
         clipPath.lineTo(size.width, 0f)
+        clipPath.lineTo(size.width, size.height)
+        clipPath.lineTo(0f, size.height)
         clipPath.close()
         return Outline.Generic(clipPath)
     }
@@ -213,13 +252,14 @@ fun BottomView(
     index: Int,
     icon: Int,
     animalBooleanState: Float,
-    onTapBottom: (String) -> Unit
+    onTapBottom: (String) -> Unit,
+    bottomHeight: Dp
 ) {
     Image(
         bitmap = getBitmap(resource = icon),
         contentDescription = "1",
         modifier = Modifier
-            .modifier(homeViewModel.position.value, index, animalBooleanState)
+            .modifier(homeViewModel.position.value, index, animalBooleanState, bottomHeight)
             .clickable {
                 homeViewModel.animalBoolean.value = !homeViewModel.animalBoolean.value
                 homeViewModel.positionChanged(index)
@@ -227,9 +267,11 @@ fun BottomView(
                     0 -> {
                         onTapBottom(NavigationRoute.homeRoute)
                     }
+
                     1 -> {
-                        onTapBottom(NavigationRoute.widgetRoute+"/0")
+                        onTapBottom(NavigationRoute.widgetRoute + "/0")
                     }
+
                     2 -> {
                         onTapBottom(NavigationRoute.settingRoute)
                     }
@@ -553,18 +595,21 @@ fun Modifier.modifiers(
 fun Modifier.modifier(
     animalCenterIndex: Int?,
     i: Int,
-    animalBooleanState: Float
+    animalBooleanState: Float,
+    bottomHeight: Dp,
+    iconSize: Dp = 25.dp
 ) = this.then(
+    //radius
     if (animalCenterIndex == i) {
         Modifier
-            .padding(bottom = 57.dp)
-            .width(25.dp)
-            .height(25.dp)
+            .offset(y = -bottomHeight / 2)
+            .width(iconSize)
+            .height(iconSize)
             .rotate(animalBooleanState * 360f)
     } else {
         Modifier
-            .padding(top = 27.dp)
-            .width(25.dp)
-            .height(25.dp)
+            .padding(top = (bottomHeight - (iconSize * 2)) / 2)
+            .width(iconSize)
+            .height(iconSize)
     }
 )
