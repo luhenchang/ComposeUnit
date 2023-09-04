@@ -8,14 +8,11 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.*
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
-import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Density
@@ -25,9 +22,9 @@ import androidx.compose.ui.unit.dp
 import com.example.composeunit.R
 import com.example.composeunit.ui.compose.navigation.NavigationRoute
 import com.example.composeunit.project.view_model.home.HomeViewModel
+import com.example.composeunit.ui.navigation.BottomBarScreen
+import com.example.composeunit.ui.navigation.BottomBarScreens
 import com.example.composeunit.utils.getBitmap
-import com.google.accompanist.insets.navigationBarsHeight
-import com.google.accompanist.insets.statusBarsHeight
 import kotlinx.coroutines.*
 
 /**
@@ -79,33 +76,23 @@ fun BottomNavigation(
                 horizontalArrangement = Arrangement.SpaceAround,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                BottomView(
-                    homeViewModel,
-                    0,
-                    R.drawable.center,
-                    animalBooleanState,
-                    onTapBottom,
-                    bottomHeight
-                )
-                BottomView(
-                    homeViewModel,
-                    1,
-                    R.drawable.home,
-                    animalBooleanState,
-                    onTapBottom,
-                    bottomHeight
-                )
-                BottomView(
-                    homeViewModel,
-                    2,
-                    R.drawable.min,
-                    animalBooleanState,
-                    onTapBottom,
-                    bottomHeight
-                )
+                BottomBarScreens.forEachIndexed { index, bottomBarScreen ->
+                    BottomView(
+                        homeViewModel,
+                        index,
+                        bottomBarScreen.selectedIcon,
+                        animalBooleanState,
+                        onTapBottom,
+                        bottomHeight
+                    )
+                }
             }
         }
-        Spacer(modifier = Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars))
+        Spacer(
+            modifier = Modifier
+                .windowInsetsBottomHeight(WindowInsets.navigationBars)
+                .background(Color.Red)
+        )
     }
 
 }
@@ -164,8 +151,8 @@ private fun BottomBarAnimalBgView(indexValue: Float, radius: Float = 60f) {
                         0f
                     )
                     lineTo(size.width, 0f)
-                    lineTo(size.width, size.height)
-                    lineTo(0f, size.height)
+                    lineTo(size.width, size.height + 30)
+                    lineTo(0f, size.height + 30)
                     close()
                 }
 
@@ -265,15 +252,15 @@ fun BottomView(
                 homeViewModel.positionChanged(index)
                 when (index) {
                     0 -> {
-                        onTapBottom(NavigationRoute.homeRoute)
+                        onTapBottom(BottomBarScreen.Home.route)
                     }
 
                     1 -> {
-                        onTapBottom(NavigationRoute.widgetRoute + "/0")
+                        onTapBottom(BottomBarScreen.Widget.sendArgumentRoute(0))
                     }
 
                     2 -> {
-                        onTapBottom(NavigationRoute.settingRoute)
+                        onTapBottom(BottomBarScreen.Setting.route)
                     }
                 }
             }

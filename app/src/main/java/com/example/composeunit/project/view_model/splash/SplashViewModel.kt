@@ -23,8 +23,6 @@ class SplashViewModel : BaseViewModel() {
     private val _themTypeState = MutableStateFlow<ThemeType>(ThemeType.BLUE_THEM)
     val themTypeState: StateFlow<ThemeType> = _themTypeState
 
-    var mService: Service? = null
-
     fun setAnimal() {
         _currentState.targetState = false
     }

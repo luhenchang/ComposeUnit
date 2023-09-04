@@ -6,22 +6,21 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.NavOptions
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.example.composeunit.project.fragment.MessageDetailPage
+import com.example.composeunit.project.fragment.SettingScreen
+import com.example.composeunit.project.page.OpenAIPage
+import com.example.composeunit.project.view_model.ai.OpenAiViewModel
+import com.example.composeunit.project.view_model.splash.SplashViewModel
+import com.example.composeunit.ui.compose.StartPageScreen
 import com.example.composeunit.ui.compose.navigation.NavigationRoute.HOME_PAGE_ROUTE
 import com.example.composeunit.ui.compose.navigation.NavigationRoute.LOGIN_PAGE_ROUTE
 import com.example.composeunit.ui.compose.navigation.NavigationRoute.MESSAGE_DETAILS_PAGE_ROUTE
 import com.example.composeunit.ui.compose.navigation.NavigationRoute.SETTING_PAGE_ROUTE
 import com.example.composeunit.ui.compose.navigation.NavigationRoute.SPLASH_PAGE_ROUTE
 import com.example.composeunit.ui.compose.navigation.NavigationRoute.settingOpenAIRoute
-import com.example.composeunit.project.SplashCompass
-import com.example.composeunit.project.fragment.MessageDetailPage
-import com.example.composeunit.project.fragment.ThreeFragment
-import com.example.composeunit.project.page.OpenAIPage
-import com.example.composeunit.project.view_model.ai.OpenAiViewModel
-import com.example.composeunit.project.view_model.splash.SplashViewModel
 
 @Composable
 fun NavGraph(startDestination: String = SPLASH_PAGE_ROUTE,viewModel:SplashViewModel) {
@@ -33,7 +32,7 @@ fun NavGraph(startDestination: String = SPLASH_PAGE_ROUTE,viewModel:SplashViewMo
         startDestination = startDestination,
         builder = {
             composable(SPLASH_PAGE_ROUTE){
-                SplashCompass(actions)
+                StartPageScreen(actions)
             }
             composable(LOGIN_PAGE_ROUTE) {
                 LoginPage(actions,navController)
@@ -42,7 +41,7 @@ fun NavGraph(startDestination: String = SPLASH_PAGE_ROUTE,viewModel:SplashViewMo
                 HomePage(actions,viewModel = viewModel)
             }
             composable(SETTING_PAGE_ROUTE){
-                ThreeFragment(actions)
+                SettingScreen(actions)
             }
             composable(MESSAGE_DETAILS_PAGE_ROUTE) {
                 MessageDetailPage(actions)

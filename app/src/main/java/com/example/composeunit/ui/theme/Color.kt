@@ -16,7 +16,7 @@ import androidx.compose.ui.graphics.Color
 //     onError: Color, // 在错误色error之上的文本和图标的颜色
 //     isLight: Boolean // 是否是浅色模式
 //
-val StatusBarColor = Color(0x0)
+val StatusBarColor = Color(0x00000000)
 fun getThemeByThemType(themType: ThemeType): Colors {
     return when (themType) {
         ThemeType.GREEN_THEM -> {

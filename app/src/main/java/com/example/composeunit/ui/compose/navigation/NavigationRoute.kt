@@ -13,9 +13,6 @@ object NavigationRoute {
     const val HOME_PAGE_ROUTE = "HomePage"
     const val SETTING_PAGE_ROUTE = "SettingPage"
     const val MESSAGE_DETAILS_PAGE_ROUTE = "message_details"
-    const val homeRoute = "HomePage/OnFragment"
-    const val widgetRoute = "HomePage/TwoFragment"
-    const val settingRoute = "HomePage/ThreeFragment"
     const val settingOpenAIRoute = "HomePage/ThreeFragment/OpenAIPage"
 
 }

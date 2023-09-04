@@ -9,14 +9,13 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -25,9 +24,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.asAndroidBitmap
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
@@ -43,12 +39,10 @@ import com.example.composeunit.project.view_model.splash.SplashViewModel
 import com.example.composeunit.ui.compose.home.ComposeTabView
 import com.example.composeunit.ui.compose.home.HomeItemView
 import com.example.composeunit.ui.compose.home.LoadingPageUI
-import com.example.composeunit.utils.BitmapBlur
-import com.example.composeunit.utils.getBitmap
 
 
 @Composable
-fun OneFragment(homeViewModel: HomeViewModel = viewModel(), splashViewModel:SplashViewModel,onBack:(index:Int)->Unit) {
+fun HomeScreen(homeViewModel: HomeViewModel = viewModel(), splashViewModel:SplashViewModel, onBack:(index:Int)->Unit) {
     homeViewModel.getInformation(LocalContext.current)
     val tabSelectedState by homeViewModel.tabSelectedIndex.collectAsState()
     var heightValue by remember {
@@ -91,7 +85,7 @@ fun LoadingOrLazyColumn(
     val state = homeViewModel.itemUIState.collectAsState().value
     val scrollLazyState = rememberLazyListState()
     var itemIndex by remember {
-        mutableStateOf(0)
+        mutableIntStateOf(0)
     }
     LaunchedEffect(Unit) {
         snapshotFlow {

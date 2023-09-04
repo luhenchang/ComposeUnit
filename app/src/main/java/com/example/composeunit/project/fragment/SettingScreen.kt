@@ -13,19 +13,16 @@ import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.example.composeunit.R
 import com.example.composeunit.ui.compose.confing.MainActions
-import com.example.composeunit.project.view_model.ai.OpenAiViewModel
 import com.neo.highlight.core.Highlight
 import com.neo.highlight.core.Scheme
 import com.neo.highlight.util.scheme.ColorScheme
 import com.neo.highlight.util.scheme.Scope
 import java.util.regex.Pattern
-import androidx.compose.material.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.draw.clip
@@ -51,7 +48,7 @@ val code = "@Composable\n" +
         "}"
 
 @Composable
-fun ThreeFragment(actions: MainActions) {
+fun SettingScreen(actions: MainActions) {
     Box(Modifier.fillMaxSize()) {
         Column(
             Modifier

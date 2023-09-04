@@ -46,7 +46,7 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 @Composable
-fun TwoFragment(mainActions: MainActions, viewModel: MessageViewModel,index:Int) {
+fun WidgetScreen(mainActions: MainActions, viewModel: MessageViewModel, index:Int) {
     MessagePageCanvasQueryBox(mainActions, viewModel,index)
 }
 
