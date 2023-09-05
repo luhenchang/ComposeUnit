@@ -23,8 +23,7 @@ abstract class AppDatabase : RoomDatabase() {
                     context,
                     AppDatabase::class.java,
                     "app_database_chinook"
-                )
-                    .createFromAsset("database/chinook.db")
+                ).createFromAsset("database/chinook.db")
 //                    .addMigrations(object : Migration(0, 1) {
 //                        override fun migrate(database: SupportSQLiteDatabase) {
 //                            database.execSQL("CREATE INDEX IF NOT EXISTS `index__SupportRepId` ON customers (`SupportRepId`)")

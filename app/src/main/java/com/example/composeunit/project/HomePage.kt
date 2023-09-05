@@ -1,18 +1,11 @@
 package com.example.composeunit.project
 
-import android.app.Activity
 import android.util.Log
-import androidx.activity.OnBackPressedCallback
-import androidx.activity.compose.BackHandler
-import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavHostController
 import androidx.navigation.NavType
@@ -30,7 +23,6 @@ import com.example.composeunit.ui.compose.confing.MainActions
 import com.example.composeunit.ui.compose.home.BottomBarNavigation
 import com.example.composeunit.ui.navigation.BottomBarScreen
 import com.example.composeunit.ui.navigation.NavigationActions
-import kotlin.system.exitProcess
 
 @Composable
 fun HomePage(
