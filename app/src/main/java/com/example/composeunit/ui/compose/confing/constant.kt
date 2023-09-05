@@ -1,5 +1,5 @@
 package com.example.composeunit.ui.compose.confing
-import HomePage
+import com.example.composeunit.project.HomePage
 import LoginPage
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember

@@ -1,24 +1,41 @@
 package com.example.composeunit.ui.compose.home
 
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.scaleIn
+import androidx.compose.animation.scaleOut
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.*
-import androidx.compose.ui.unit.*
-import androidx.compose.foundation.*
-import androidx.compose.runtime.*
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.Paint
+import androidx.compose.ui.graphics.PaintingStyle
+import androidx.compose.ui.graphics.Path
+import androidx.compose.ui.graphics.asComposePaint
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
+import androidx.compose.ui.graphics.nativeCanvas
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composeunit.project.view_model.home.HomeViewModel
+import com.example.composeunit.ui.compose.home.widget.HomeScrollState
 import com.example.composeunit.ui.theme.getPrimaryColorForIndex
 import com.example.lib_common.utils.pxToDp
 
@@ -31,20 +48,22 @@ fun ComposeTabView(
     tabTitle: String = "",
     modifier: Modifier,
     index: Int,
-    tabSelectedCallBack:(Int)->Unit,
-    heightValue: Float,
-    tabSelectedState:Int,
-    homeViewModel: HomeViewModel = viewModel()
+    tabSelectedCallBack: (Int) -> Unit,
+    scrollState: HomeScrollState,
+    tabSelectedState: Int,
+    homeViewModel: HomeViewModel = viewModel(),
+    selectedHeaderHeight: Dp = 120.dp,
+    defaultHeaderHeight: Dp = 100.dp,
 ) {
     val context = LocalContext.current
     val headerHeightPx = with(LocalDensity.current) {
-        120.dp.roundToPx().toFloat()
+        selectedHeaderHeight.roundToPx().toFloat()
     }
     val headerOtherHeightPx = with(LocalDensity.current) {
-        100.dp.roundToPx().toFloat()
+        defaultHeaderHeight.roundToPx().toFloat()
     }
-    val endHeight =headerHeightPx - heightValue
-    val endOtherHeight =headerOtherHeightPx - heightValue
+    val selectedHeaderHeightPx = headerHeightPx - scrollState.getScrollYOffset()
+    val unSelectedHeaderHeightPx = headerOtherHeightPx - scrollState.getScrollYOffset()
 
     Column(
         modifier,
@@ -53,7 +72,7 @@ fun ComposeTabView(
         Canvas(
             modifier = Modifier
                 .fillMaxWidth()
-                .height(if (tabSelectedState == index) endHeight.pxToDp() else endOtherHeight.pxToDp())
+                .height(if (tabSelectedState == index) selectedHeaderHeightPx.pxToDp() else unSelectedHeaderHeightPx.pxToDp())
                 .clickable(onClick = {
                     if (tabSelectedState != index) {
                         tabSelectedCallBack.invoke(index)
@@ -129,7 +148,7 @@ fun ComposeTabView(
                     frameworkPaint.getTextBounds(tabTitle, 0, tabTitle.length, rect)
                     canvas.nativeCanvas.drawText(
                         tabTitle,
-                        (size.width  - rect.width()) / 2,
+                        (size.width - rect.width()) / 2,
                         size.height * 2 / 3f,
                         frameworkPaint.apply {
                             style = android.graphics.Paint.Style.FILL

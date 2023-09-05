@@ -50,8 +50,10 @@ sealed class BottomBarScreen(
         R.drawable.center,
         R.string.home_widget
     ) {
+        private const val argumentIndex = "index"
+        const val INDEX: String = argumentIndex
         fun argumentRoute(): String {
-            return "$route/{index}"
+            return "$route/{$argumentIndex}"
         }
 
         fun sendArgumentRoute(index: Int): String {

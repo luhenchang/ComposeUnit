@@ -1,3 +1,6 @@
+package com.example.composeunit.project
+
+import android.util.Log
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -17,7 +20,7 @@ import com.example.composeunit.project.view_model.home.HomeViewModel
 import com.example.composeunit.project.view_model.message.MessageViewModel
 import com.example.composeunit.project.view_model.splash.SplashViewModel
 import com.example.composeunit.ui.compose.confing.MainActions
-import com.example.composeunit.ui.compose.home.BottomNavigation
+import com.example.composeunit.ui.compose.home.BottomBarNavigation
 import com.example.composeunit.ui.navigation.BottomBarScreen
 import com.example.composeunit.ui.navigation.NavigationActions
 
@@ -31,7 +34,7 @@ fun HomePage(
     val actionsMain = remember(navCtrl) { NavigationActions(navCtrl) }
     Scaffold(
         bottomBar = {
-            BottomNavigation(
+            BottomBarNavigation(
                 homeViewModel,
                 onTapBottom = {
                     actionsMain::navigateTo.invoke(it)
@@ -51,6 +54,8 @@ fun BottomNavGraph(
     actionsMain: NavigationActions,
     mainActions: MainActions
 ) {
+    //如果设置了innerPaddingValues
+    Log.e("innerPaddingValues==", "$innerPaddingValues")
     NavHost(
         navController = navCtrl,
         startDestination = BottomBarScreen.Home.route,
@@ -62,10 +67,10 @@ fun BottomNavGraph(
         }
         composable(
             BottomBarScreen.Widget.argumentRoute(),
-            arguments = listOf(navArgument("index") { type = NavType.IntType })
+            arguments = listOf(navArgument(BottomBarScreen.Widget.INDEX) { type = NavType.IntType })
         ) { entry ->
             val vieModel: MessageViewModel = viewModel()
-            val index = entry.arguments?.getInt("index") ?: 0
+            val index = entry.arguments?.getInt(BottomBarScreen.Widget.INDEX) ?: 0
             WidgetScreen(mainActions, vieModel, index = index)
         }
         composable(BottomBarScreen.Setting.route) {

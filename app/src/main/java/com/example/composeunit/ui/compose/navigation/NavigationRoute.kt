@@ -10,9 +10,9 @@ import androidx.navigation.NavHostController
 object NavigationRoute {
     const val SPLASH_PAGE_ROUTE = "SplashPage"
     const val LOGIN_PAGE_ROUTE = "LoginPage"
-    const val HOME_PAGE_ROUTE = "HomePage"
+    const val HOME_PAGE_ROUTE = "com.example.composeunit.project.HomePage"
     const val SETTING_PAGE_ROUTE = "SettingPage"
     const val MESSAGE_DETAILS_PAGE_ROUTE = "message_details"
-    const val settingOpenAIRoute = "HomePage/ThreeFragment/OpenAIPage"
+    const val settingOpenAIRoute = "com.example.composeunit.project.HomePage/ThreeFragment/OpenAIPage"
 
 }
