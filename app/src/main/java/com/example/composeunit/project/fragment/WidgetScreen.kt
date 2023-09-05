@@ -41,12 +41,14 @@ import com.example.composeunit.ui.compose.confing.CicleImageShape
 import com.example.composeunit.ui.compose.confing.MainActions
 import com.example.composeunit.project.view_model.home.HomeViewModel
 import com.example.composeunit.project.view_model.message.MessageViewModel
+import com.example.composeunit.ui.navigation.ExitComposeScreen
 import com.example.composeunit.utils.getBitmap
 import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.launch
 import kotlin.math.roundToInt
 @Composable
 fun WidgetScreen(mainActions: MainActions, viewModel: MessageViewModel, index:Int) {
+    ExitComposeScreen()
     MessagePageCanvasQueryBox(mainActions, viewModel,index)
 }
 

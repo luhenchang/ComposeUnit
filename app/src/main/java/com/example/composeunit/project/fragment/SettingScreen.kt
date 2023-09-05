@@ -7,31 +7,39 @@ import android.widget.TextView
 import androidx.compose.foundation.ScrollState
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.selection.SelectionContainer
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.content.ContextCompat
 import com.example.composeunit.R
 import com.example.composeunit.ui.compose.confing.MainActions
+import com.example.composeunit.ui.navigation.ExitComposeScreen
+import com.example.lib_common.utils.RegexUtils
+import com.example.lib_common.utils.codeSetConfing
+import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 import com.neo.highlight.core.Highlight
 import com.neo.highlight.core.Scheme
 import com.neo.highlight.util.scheme.ColorScheme
 import com.neo.highlight.util.scheme.Scope
 import java.util.regex.Pattern
-import androidx.compose.material3.Text
-import androidx.compose.ui.Alignment
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.tooling.preview.Preview
-import com.example.lib_common.utils.RegexUtils
-import com.example.lib_common.utils.codeSetConfing
-import com.google.accompanist.flowlayout.FlowMainAxisAlignment
 
 /**
  * Created by wangfei44 on 2022/11/19.
@@ -49,6 +57,7 @@ val code = "@Composable\n" +
 
 @Composable
 fun SettingScreen(actions: MainActions) {
+    ExitComposeScreen()
     Box(Modifier.fillMaxSize()) {
         Column(
             Modifier
@@ -78,12 +87,12 @@ fun CodeHighlighter(code: String, actions: MainActions) {
 
 @Preview
 @Composable
-fun SpannableText(content:String?) {
+fun SpannableText(content: String?) {
     val widgetList: ArrayList<Unit> = ArrayList()
     content?.split("```kotlin", "```java", "```")?.forEach { text ->
         val regex = "\\{[^{}]*\\}".toRegex(RegexOption.DOT_MATCHES_ALL)
         if (regex.containsMatchIn(text)) {
-            val topCode =Row(
+            val topCode = Row(
                 modifier = Modifier
                     .fillMaxWidth()
                     .background(Color(52, 54, 65, 255))
@@ -91,9 +100,9 @@ fun SpannableText(content:String?) {
                     .clip(RoundedCornerShape(topStart = 5.dp, topEnd = 5.dp)),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
-            ){
-                Text(text = "code",color = Color(216, 216, 226, 255))
-                Text(text = "Copy code",color = Color(216, 216, 226, 255))
+            ) {
+                Text(text = "code", color = Color(216, 216, 226, 255))
+                Text(text = "Copy code", color = Color(216, 216, 226, 255))
             }
             widgetList.add(topCode)
             val strSplit = text.split("\n")
@@ -132,7 +141,7 @@ fun SpannableText(content:String?) {
                 widgetList.add(codeBox)
             }
         } else {
-           val selectionContainer = SelectionContainer {
+            val selectionContainer = SelectionContainer {
                 Text(
                     text = text,
                     color = Color.White,

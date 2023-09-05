@@ -63,8 +63,8 @@ sealed class BottomBarScreen(
 
     object Setting : BottomBarScreen(
         route = BottomNaviRoute.SETTING,
-        R.drawable.center,
-        R.drawable.center,
+        R.drawable.min,
+        R.drawable.min,
         R.string.home_widget
     )
 

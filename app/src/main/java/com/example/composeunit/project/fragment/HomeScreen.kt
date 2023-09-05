@@ -8,6 +8,7 @@ import androidx.lifecycle.viewmodel.compose.viewModel
 import com.example.composeunit.project.view_model.home.HomeViewModel
 import com.example.composeunit.project.view_model.splash.SplashViewModel
 import com.example.composeunit.ui.compose.home.widget.CollapsableLayout
+import com.example.composeunit.ui.navigation.ExitComposeScreen
 
 
 @Composable
@@ -16,6 +17,7 @@ fun HomeScreen(
     splashViewModel: SplashViewModel,
     onBack: (index: Int) -> Unit
 ) {
+    ExitComposeScreen()
     homeViewModel.getInformation(LocalContext.current)
     val tabSelectedState by homeViewModel.tabSelectedIndex.collectAsState()
     CollapsableLayout(
@@ -25,6 +27,8 @@ fun HomeScreen(
         onBack = onBack
     )
 }
+
+
 
 
 

@@ -19,20 +19,26 @@ import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.windowInsetsBottomHeight
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import androidx.navigation.NavController
+import androidx.navigation.NavDestination
+import androidx.navigation.NavDestination.Companion.hierarchy
+import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.composeunit.project.view_model.home.HomeViewModel
 import com.example.composeunit.ui.compose.home.shape.BottomBarAnimalBgView
 import com.example.composeunit.ui.navigation.BottomBarScreen
 import com.example.composeunit.ui.navigation.BottomBarScreens
-import com.example.composeunit.utils.getBitmap
 
 /**
  * 自定义底部导航栏切换 - 样式一
@@ -44,8 +50,11 @@ fun BottomBarNavigation(
     homeViewModel: HomeViewModel,
     onTapBottom: (String) -> Unit,
     modifier: Modifier,
-    bottomHeight: Dp = 60.dp
+    bottomHeight: Dp = 60.dp,
+    navController: NavController
 ) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
     val simplifiedValue = if (homeViewModel.animalBoolean.value) 0f else 1f
     val animalBooleanState: Float by animateFloatAsState(
         simplifiedValue, animationSpec = TweenSpec(durationMillis = 600),
@@ -73,6 +82,8 @@ fun BottomBarNavigation(
                 BottomBarScreens.forEachIndexed { index, bottomBarScreen ->
                     BottomView(
                         homeViewModel,
+                        bottomBarScreen,
+                        currentDestination,
                         index,
                         bottomBarScreen.selectedIcon,
                         animalBooleanState,
@@ -96,27 +107,36 @@ fun BottomBarNavigation(
 @Composable
 fun BottomView(
     homeViewModel: HomeViewModel,
+    bottomBarScreen: BottomBarScreen,
+    currentDestination: NavDestination?,
     index: Int,
     icon: Int,
     animalBooleanState: Float,
     onTapBottom: (String) -> Unit,
     bottomHeight: Dp
 ) {
-    Image(
-        bitmap = getBitmap(resource = icon),
+    val selected = currentDestination?.hierarchy?.any {
+        it.route?.contains(bottomBarScreen.route) ?: false
+    } ?: false
+    val tint =
+        if (selected)
+            MaterialTheme.colors.primary
+        else
+            Color.White
+    Image(painter = painterResource(id = bottomBarScreen.selectedIcon),
+        colorFilter = ColorFilter.tint(tint),
         contentDescription = "1",
         modifier = Modifier
             .modifier(homeViewModel.position.value, index, animalBooleanState, bottomHeight)
             .clickable {
                 homeViewModel.animalBoolean.value = !homeViewModel.animalBoolean.value
                 homeViewModel.positionChanged(index)
-                val route = when (index) {
-                    0 -> BottomBarScreen.Home.route
-                    1 -> BottomBarScreen.Widget.sendArgumentRoute(0)
-                    2 -> BottomBarScreen.Setting.route
-                    else -> null // 如果有其他情况需要处理
+                val route = when (bottomBarScreen.route) {
+                    BottomBarScreen.Home.route -> BottomBarScreen.Home.route
+                    BottomBarScreen.Setting.route -> BottomBarScreen.Setting.route
+                    else -> BottomBarScreen.Widget.sendArgumentRoute(0)
                 }
-                route?.let { onTapBottom(it) }
+                onTapBottom(route)
             }
     )
 }
