@@ -37,6 +37,7 @@ android {
     kotlinOptions {
         jvmTarget = javaVersion
     }
+    namespace = "com.example.base"
 }
 
 dependencies {

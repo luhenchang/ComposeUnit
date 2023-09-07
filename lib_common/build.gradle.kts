@@ -42,6 +42,7 @@ android {
     composeOptions {
         kotlinCompilerExtensionVersion = libs.versions.composeVersion.get()
     }
+    namespace = "com.example.lib_common"
 }
 
 dependencies {

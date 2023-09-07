@@ -41,6 +41,7 @@ android {
     kotlinOptions {
         jvmTarget = javaVersion
     }
+    namespace = "com.example.composeunit"
     java {
         toolchain {
             languageVersion.set(JavaLanguageVersion.of(javaVersion.toInt()))
