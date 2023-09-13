@@ -123,7 +123,7 @@ fun ScrollableTabRowSimple() {
 @OptIn(ExperimentalFoundationApi::class)
 private fun Second(stateOne: PagerState) {
     val data = remember {
-        mutableStateListOf("警情", "案件", "案卷", "涉案财物", "场所管理")
+        mutableStateListOf("Text", "Box", "Row", "Column", "Space")
     }
     val pagerState = rememberPagerState(pageCount = { data.size })
     val scope = rememberCoroutineScope()
