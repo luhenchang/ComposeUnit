@@ -15,6 +15,7 @@ import com.example.composeunit.project.page.OpenAIPage
 import com.example.composeunit.project.view_model.ai.OpenAiViewModel
 import com.example.composeunit.project.view_model.splash.SplashViewModel
 import com.example.composeunit.ui.compose.StartPageScreen
+import com.example.composeunit.ui.compose.custom.ScrollableTabRowSimple
 import com.example.composeunit.ui.compose.navigation.NavigationRoute.HOME_PAGE_ROUTE
 import com.example.composeunit.ui.compose.navigation.NavigationRoute.LOGIN_PAGE_ROUTE
 import com.example.composeunit.ui.compose.navigation.NavigationRoute.MESSAGE_DETAILS_PAGE_ROUTE
@@ -35,7 +36,8 @@ fun NavGraph(startDestination: String = SPLASH_PAGE_ROUTE,viewModel:SplashViewMo
                 StartPageScreen(actions)
             }
             composable(LOGIN_PAGE_ROUTE) {
-                LoginPage(actions,navController)
+                ScrollableTabRowSimple()
+                //LoginPage(actions,navController)
             }
             composable(HOME_PAGE_ROUTE) {
                 HomePage(actions,viewModel = viewModel)

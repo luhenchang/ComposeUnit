@@ -4,19 +4,23 @@ import android.util.Log
 import androidx.annotation.FloatRange
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
@@ -34,12 +38,17 @@ import androidx.compose.ui.geometry.CornerRadius
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
+import androidx.compose.ui.input.nestedscroll.NestedScrollSource
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
+import androidx.compose.ui.unit.Velocity
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.lerp
 import androidx.compose.ui.unit.sp
+import com.example.composeunit.ui.theme.openAiLight
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
@@ -49,11 +58,12 @@ import kotlin.math.abs
 fun ScrollableTabRowSimple() {
     val scope = rememberCoroutineScope()
     val titles = remember {
-        mutableStateListOf("Compose", "Xml")
+        mutableStateListOf("掘金小册", "字节内部课")
     }
     // Create a ViewPager state
     val pagerState = rememberPagerState(pageCount = { titles.size })
     Column {
+        Spacer(modifier = Modifier.height(20.dp))
         ScrollableTabRow(
             modifier = Modifier
                 .fillMaxWidth()
@@ -80,7 +90,7 @@ fun ScrollableTabRowSimple() {
                 ) {
                     Text(
                         text = data,
-                        fontSize = 16.sp,
+                        fontSize = if (selected) 18.sp else 16.sp,
                         fontWeight = if (selected) FontWeight.Bold else FontWeight.Normal,
                         color = if (selected) MaterialTheme.colorScheme.primary else Color.Black
                     )
@@ -90,27 +100,41 @@ fun ScrollableTabRowSimple() {
         HorizontalPager(
             state = pagerState,
             modifier = Modifier
-                .fillMaxHeight()
-        ) { pagePosition ->
-            when (pagePosition) {
-                0 -> {
-                    Box(
-                        Modifier
-                            .fillMaxSize(),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Second(pagerState)
+                .fillMaxHeight(),
+            pageNestedScrollConnection = object : NestedScrollConnection {
+                fun Velocity.consumeOffsetOnOrientations(orientation: Orientation): Velocity {
+                    return if (orientation == Orientation.Vertical) {
+                        copy(x = 0f)
+                    } else {
+                        copy(y = 0f)
                     }
                 }
 
-                1 -> {
-                    Second(pagerState)
+                fun Offset.consumeVelocityOnOrientations(orientation: Orientation): Offset {
+                    return if (orientation == Orientation.Vertical) {
+                        copy(x = 0f)
+                    } else {
+                        copy(y = 0f)
+                    }
                 }
 
-                2 -> {
-                    Second(pagerState)
+                override fun onPostScroll(
+                    consumed: Offset,
+                    available: Offset,
+                    source: NestedScrollSource
+                ): Offset {
+                    return when (source) {
+                        NestedScrollSource.Fling -> available.consumeVelocityOnOrientations(Orientation.Horizontal)
+                        else -> Offset.Zero
+                    }
+                }
+
+                override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
+                    return available.consumeOffsetOnOrientations(Orientation.Horizontal)
                 }
             }
+        ) { pagePosition ->
+            SecondPager(pagerState)
         }
 
 
@@ -121,9 +145,9 @@ fun ScrollableTabRowSimple() {
 
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
-private fun Second(stateOne: PagerState) {
+private fun SecondPager(stateOne: PagerState) {
     val data = remember {
-        mutableStateListOf("Text", "Box", "Row", "Column", "Space")
+        mutableStateListOf("Android", "IOS", "人工智能", "开发人员", "代码人生", "阅读", "购买")
     }
     val pagerState = rememberPagerState(pageCount = { data.size })
     val scope = rememberCoroutineScope()
@@ -168,22 +192,38 @@ private fun Second(stateOne: PagerState) {
                 }
             }
         }
-        val draggableState = rememberDraggablePagerState(stateOne, pagerState)
-        draggableState.initUserScrollEnableType()
+//        val draggableState = rememberDraggablePagerState(stateOne, pagerState)
+//        draggableState.initUserScrollEnableType()
         HorizontalPager(
-            userScrollEnabled = draggableState.userScrollEnabled(),
+           // userScrollEnabled = draggableState.userScrollEnabled(),
             state = pagerState,
             modifier = Modifier
                 .fillMaxHeight()
                 .draggable(
                     state = rememberDraggableState { onDetail ->
                         scope.launch {
-                            draggableState.setDraggableOnDetailToScrollToPage(onDetail)
+                            //draggableState.setDraggableOnDetailToScrollToPage(onDetail)
                         }
                     },
                     orientation = Orientation.Horizontal,
-                    enabled = (draggableState.draggableEnabled())
-                )
+                    //enabled = (draggableState.draggableEnabled())
+                ),
+            pageNestedScrollConnection = object : NestedScrollConnection {
+                override fun onPostScroll(
+                    consumed: Offset,
+                    available: Offset,
+                    source: NestedScrollSource
+                ): Offset {
+                    Log.e("tag two", "consumed=$consumed")
+                    return when (source) {
+                        else -> Offset.Zero
+                    }
+                }
+
+                override suspend fun onPostFling(consumed: Velocity, available: Velocity): Velocity {
+                    return consumed
+                }
+            }
         ) { pagePosition ->
             Log.e("tag", "加载页码$pagePosition")
             Box(
@@ -191,7 +231,44 @@ private fun Second(stateOne: PagerState) {
                     .fillMaxSize(),
                 contentAlignment = Alignment.Center
             ) {
-                Text(text = "页面：：=${pagePosition}")
+                LazyColumn(
+                    Modifier
+                        .fillMaxSize()
+                        .padding(bottom = 80.dp)
+                ) {
+                    items(32, key = { index ->
+                        index
+                    }) { index ->
+                        if (index % 2 == 0)
+                            Box(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .background(Color(52, 54, 65, 255))
+                                    .padding(top = 20.dp)
+                            ) {
+                                Text(
+                                    text = "我是假数据，用户数据",
+                                    color = Color.White,
+                                    modifier = Modifier
+                                        .padding(start = 20.dp, bottom = 20.dp, end = 20.dp)
+                                )
+                            }
+                        else
+                            Box(
+                                Modifier
+                                    .fillMaxWidth()
+                                    .background(openAiLight)
+                                    .padding(top = 20.dp)
+                            ) {
+                                Text(
+                                    text = "我是假数据，OpenAI返回数据，如果回答有问题，我希望你可以给我一些建议，我继续生成，文字不够两行。",
+                                    color = Color.White,
+                                    modifier = Modifier
+                                        .padding(start = 20.dp, bottom = 20.dp, end = 20.dp)
+                                )
+                            }
+                    }
+                }
             }
         }
 
@@ -204,7 +281,7 @@ private fun Second(stateOne: PagerState) {
 fun PagerTabIndicator(
     tabPositions: List<TabPosition>,
     pagerState: PagerState,
-    color: Color = Color.Green,
+    color: Color = MaterialTheme.colorScheme.primary,
     @FloatRange(from = 0.0, to = 1.0) percent: Float = 0.6f,
     height: Dp = 2.dp,
     paddingIndicatorWidth: Dp = 0.dp,
