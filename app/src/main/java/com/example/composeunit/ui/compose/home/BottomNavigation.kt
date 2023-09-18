@@ -1,5 +1,6 @@
 package com.example.composeunit.ui.compose.home
 
+import android.util.Log
 import androidx.compose.animation.core.TweenSpec
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.Image
@@ -53,25 +54,14 @@ fun BottomBarNavigation(
     bottomHeight: Dp = 60.dp,
     navController: NavController
 ) {
-    val navBackStackEntry by navController.currentBackStackEntryAsState()
-    val currentDestination = navBackStackEntry?.destination
-    val simplifiedValue = if (homeViewModel.animalBoolean.value) 0f else 1f
-    val animalBooleanState: Float by animateFloatAsState(
-        simplifiedValue, animationSpec = TweenSpec(durationMillis = 600),
-        label = "simplifiedValue"
-    )
-    val indexValue: Float by animateFloatAsState(
-        homeViewModel.position.value!!.toFloat(),
-        animationSpec = TweenSpec(durationMillis = 500),
-        label = "indexValue"
-    )
+    Log.e("BottomBarNavigation=$", "BottomBarNavigation".toString())
     Column(
         modifier = modifier
     ) {
         Box(
             Modifier.height(bottomHeight)
         ) {
-            BottomBarAnimalBgView(indexValue)
+            BottomBarAnimalBgView(navController = navController)
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -83,10 +73,9 @@ fun BottomBarNavigation(
                     BottomView(
                         homeViewModel,
                         bottomBarScreen,
-                        currentDestination,
+                        navController = navController,
                         index,
                         bottomBarScreen.selectedIcon,
-                        animalBooleanState,
                         onTapBottom,
                         bottomHeight
                     )
@@ -108,13 +97,19 @@ fun BottomBarNavigation(
 fun BottomView(
     homeViewModel: HomeViewModel,
     bottomBarScreen: BottomBarScreen,
-    currentDestination: NavDestination?,
+    navController : NavController,
     index: Int,
     icon: Int,
-    animalBooleanState: Float,
     onTapBottom: (String) -> Unit,
     bottomHeight: Dp
 ) {
+    val simplifiedValue = if (homeViewModel.animalBoolean.value) 0f else 1f
+    val animalBooleanState: Float by animateFloatAsState(
+        simplifiedValue, animationSpec = TweenSpec(durationMillis = 600),
+        label = "simplifiedValue"
+    )
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
     val selected = currentDestination?.hierarchy?.any {
         it.route?.contains(bottomBarScreen.route) ?: false
     } ?: false

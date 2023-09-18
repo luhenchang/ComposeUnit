@@ -1,12 +1,12 @@
 package com.example.composeunit.ui.compose.home.shape
 
-import android.util.Log
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Size
@@ -19,16 +19,27 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.graphics.toArgb
-import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.unit.Density
 import androidx.compose.ui.unit.LayoutDirection
+import androidx.navigation.NavController
+import androidx.navigation.compose.currentBackStackEntryAsState
+import com.example.composeunit.ui.navigation.BottomBarScreen
 
 //背景动画
 @Composable
-fun BottomBarAnimalBgView(indexValue: Float, radius: Float = 60f) {
+fun BottomBarAnimalBgView(
+    radius: Float = 60f,
+    navController: NavController
+) {
+    val navBackStackEntry by navController.currentBackStackEntryAsState()
+    val currentDestination = navBackStackEntry?.destination
     val paintColor = MaterialTheme.colors.primary.copy(alpha = 0.6f)
-    val navigationHeight = LocalView.current.paddingBottom
-    Log.e("navigationHeight=$", navigationHeight.toString())
+    val indexValue = when (currentDestination?.route) {
+        BottomBarScreen.Home.route ->  0
+        BottomBarScreen.Widget.argumentRoute() ->  1
+        BottomBarScreen.Setting.route -> 2
+        else -> {0}
+    }
     Canvas(modifier = Modifier
         .fillMaxWidth()
         .fillMaxHeight()

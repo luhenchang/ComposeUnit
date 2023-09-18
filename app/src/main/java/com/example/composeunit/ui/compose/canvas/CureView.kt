@@ -1,4 +1,4 @@
-package com.example.composeunit.ui.compose.canvas_ui
+package com.example.composeunit.ui.compose.canvas
 
 import android.annotation.SuppressLint
 import android.graphics.*

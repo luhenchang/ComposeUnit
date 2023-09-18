@@ -36,8 +36,7 @@ fun NavGraph(startDestination: String = SPLASH_PAGE_ROUTE,viewModel:SplashViewMo
                 StartPageScreen(actions)
             }
             composable(LOGIN_PAGE_ROUTE) {
-                ScrollableTabRowSimple()
-                //LoginPage(actions,navController)
+                LoginPage(actions,navController)
             }
             composable(HOME_PAGE_ROUTE) {
                 HomePage(actions,viewModel = viewModel)

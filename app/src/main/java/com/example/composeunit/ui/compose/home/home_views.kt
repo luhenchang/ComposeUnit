@@ -25,8 +25,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.composeunit.repository.dao.table.ComposeData
-import com.example.composeunit.ui.compose.canvas_ui.BoxBorderClipShape
-import com.example.composeunit.ui.compose.canvas_ui.BoxClipShapes
+import com.example.composeunit.ui.compose.canvas.BoxBorderClipShape
+import com.example.composeunit.ui.compose.canvas.BoxClipShapes
 import com.example.composeunit.project.view_model.home.HomeViewModel
 import com.example.lib_common.utils.notNull
 import com.example.lib_common.utils.splitEndContent

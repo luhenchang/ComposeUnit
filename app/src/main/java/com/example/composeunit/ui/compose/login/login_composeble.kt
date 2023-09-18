@@ -33,7 +33,7 @@ import com.example.composeunit.R
 import com.example.composeunit.ui.compose.confing.AnimalRoundedCornerShape
 import com.example.composeunit.ui.compose.confing.CicleImageShape
 import com.example.composeunit.ui.compose.confing.MainActions
-import com.example.composeunit.ui.compose.canvas_ui.QureytoImageShapes
+import com.example.composeunit.ui.compose.canvas.QureytoImageShapes
 import com.example.composeunit.utils.BitmapBlur
 
 /**
