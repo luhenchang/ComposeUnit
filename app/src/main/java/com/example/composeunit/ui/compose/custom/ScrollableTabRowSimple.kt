@@ -7,8 +7,13 @@ import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.Orientation
+import androidx.compose.foundation.gestures.detectHorizontalDragGestures
 import androidx.compose.foundation.gestures.draggable
 import androidx.compose.foundation.gestures.rememberDraggableState
+import androidx.compose.foundation.gestures.rememberScrollableState
+import androidx.compose.foundation.gestures.scrollable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.interaction.collectIsDraggedAsState
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
@@ -24,6 +29,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PagerState
 import androidx.compose.foundation.pager.rememberPagerState
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -41,6 +47,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.nestedscroll.NestedScrollConnection
 import androidx.compose.ui.input.nestedscroll.NestedScrollSource
 import androidx.compose.ui.input.nestedscroll.nestedScroll
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
@@ -150,6 +157,9 @@ private fun SecondPager(stateOne: PagerState) {
         mutableStateListOf("Android", "IOS", "人工智能", "开发人员", "代码人生", "阅读", "购买")
     }
     val pagerState = rememberPagerState(pageCount = { data.size })
+    val draggablePagerState = pagerState.canScrollBackward
+    Log.e("pagerState===",draggablePagerState.toString())
+    Log.e("pagerState===",pagerState.currentPageOffsetFraction.toString())
     val scope = rememberCoroutineScope()
     Column {
         ScrollableTabRow(
@@ -194,11 +204,19 @@ private fun SecondPager(stateOne: PagerState) {
         }
 //        val draggableState = rememberDraggablePagerState(stateOne, pagerState)
 //        draggableState.initUserScrollEnableType()
+
+        //Log.e("scrollState=", scrollState.value.toString())
         HorizontalPager(
            // userScrollEnabled = draggableState.userScrollEnabled(),
             state = pagerState,
             modifier = Modifier
                 .fillMaxHeight()
+                .pointerInput(Unit){
+                   detectHorizontalDragGestures { change, dragAmount ->
+                       Log.e("detectHorizontalDragGestures=", change.toString())
+                       Log.e("detectHorizontalDragGestures dragAmount=", dragAmount.toString())
+                   }
+                }
                 .draggable(
                     state = rememberDraggableState { onDetail ->
                         scope.launch {
