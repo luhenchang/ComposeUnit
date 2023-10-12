@@ -339,7 +339,7 @@ fun ScrollableTabRowSimple() {
 
 @Composable
 @OptIn(ExperimentalFoundationApi::class)
-private fun SecondPager(stateOne: PagerState) {
+private fun SecondPager(topPagerState: PagerState) {
     val data = remember {
         mutableStateListOf("Android", "IOS", "人工智能", "开发人员", "代码人生", "阅读", "购买")
     }
@@ -389,42 +389,21 @@ private fun SecondPager(stateOne: PagerState) {
                 }
             }
         }
-        val draggableState = rememberDraggablePagerState(stateOne, pagerState)
+        val draggableState = rememberDraggablePagerState(topPagerState, pagerState)
         draggableState.initUserScrollEnableType()
-
-        //Log.e("scrollState=", scrollState.value.toString())
         HorizontalPager(
-            //userScrollEnabled = draggableState.userScrollEnabled(),
+            userScrollEnabled = draggableState.userScrollEnabled(),
             state = pagerState,
             modifier = Modifier
                 .fillMaxHeight()
-                .pointerInput(Unit) {
-                    detectHorizontalDragGestures { change, dragAmount ->
-                        Log.e("detectHorizontalDragGestures=", change.toString())
-                        Log.e("detectHorizontalDragGestures dragAmount=", dragAmount.toString())
-                    }
-                }
                 .draggable(
                     state = rememberDraggableState { onDetail ->
                         scope.launch {
-                            Log.e("onPostScroll1 consumed: Velocity x=", onDetail.toString())
-                            //draggableState.setDraggableOnDetailToScrollToPage(onDetail)
+                            draggableState.setDraggableOnDetailToScrollToPage(onDetail)
                         }
                     },
                     orientation = Orientation.Horizontal,
-                    enabled = true
-                    //enabled = (draggableState.draggableEnabled())
-                )
-                .draggable(
-                    state = rememberDraggableState { onDetail ->
-                        scope.launch {
-                            Log.e("onPostScroll2 consumed: Velocity x=", onDetail.toString())
-                            //draggableState.setDraggableOnDetailToScrollToPage(onDetail)
-                        }
-                    },
-                    orientation = Orientation.Horizontal,
-                    enabled = true
-                    //enabled = (draggableState.draggableEnabled())
+                    enabled = (draggableState.draggableEnabled())
                 ),
         ) { pagePosition ->
             Log.e("tag", "加载页码$pagePosition")
