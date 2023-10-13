@@ -4,6 +4,14 @@ plugins {
     id("com.google.devtools.ksp")
 }
 android {
+    signingConfigs {
+        create("release") {
+            storeFile = file("../keystore.jks")
+            storePassword = "compose"
+            keyAlias = "compose"
+            keyPassword = "compose"
+        }
+    }
     val sdkVersion = libs.versions.sdkVersion.get().toInt()
     val minSdkVersion = libs.versions.minSdkVersion.get().toInt()
     compileSdk = sdkVersion
@@ -23,7 +31,6 @@ android {
         }
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
     }
-    @Suppress("UnstableApiUsage")
     buildTypes {
         release {
             isMinifyEnabled = false
@@ -47,9 +54,7 @@ android {
             languageVersion.set(JavaLanguageVersion.of(javaVersion.toInt()))
         }
     }
-    @Suppress("UnstableApiUsage")
     buildFeatures.compose = true
-    @Suppress("UnstableApiUsage")
     composeOptions {
         val composeVersion = libs.versions.composeVersion.get()
         kotlinCompilerExtensionVersion = composeVersion

@@ -48,7 +48,7 @@ class HomeViewModel(
             repository.queryHomeLists(current).catch { ex ->
                 Log.e("queryHomeLists::error=", ex.message.toString())
             }.collect { data ->
-                Log.e("getInformation", "getInformation:${data[0].item_title}")
+                Log.e("getInformation", "getInformation:${data.toString()}")
                 _itemsUIState.emit(data)
             }
         }

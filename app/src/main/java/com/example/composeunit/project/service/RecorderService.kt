@@ -1,24 +1,24 @@
 package com.example.composeunit.project.service
 
-import android.app.*
+import android.annotation.SuppressLint
+import android.app.Notification
 import android.app.Notification.MediaStyle
+import android.app.NotificationChannel
+import android.app.NotificationManager
+import android.app.PendingIntent
+import android.app.PendingIntent.FLAG_MUTABLE
+import android.app.Service
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
-import android.graphics.Bitmap
 import android.os.Binder
 import android.os.Build
 import android.os.CountDownTimer
 import android.os.IBinder
 import android.util.Log
-import androidx.annotation.RequiresApi
-import androidx.core.content.ContextCompat
 import com.example.composeunit.R
 import com.example.composeunit.project.widget.RecorderAppWidget
-import com.example.composeunit.project.widget.UpdateRecorderWidgetService
-import com.example.composeunit.project.widget.UpdateRecorderWidgetService.Companion.ACTION_RECORD
-import java.lang.Exception
 
 /**
  * Created by wangfei44 on 2021/11/16.
@@ -90,7 +90,11 @@ class RecorderService : Service() {
         // 或者使用Intent.ACTION_HEADSET_PLUG
         // 或者使用Intent.ACTION_HEADSET_PLUG
         try {
-            registerReceiver(widgetBroadcastReceiver, filter)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                registerReceiver(widgetBroadcastReceiver, filter,RECEIVER_EXPORTED)
+            }else{
+                registerReceiver(widgetBroadcastReceiver, filter)
+            }
         } catch (e: Exception) {
             Log.e(TAG, "registerWidgetReceiver error ::: $e")
         }
@@ -125,7 +129,6 @@ class RecorderService : Service() {
         return super.onStartCommand(intent, flags, startId)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun showRecordNotification(show: Boolean) {
         if (show) {
             val mNotificationManager =
@@ -146,7 +149,7 @@ class RecorderService : Service() {
                 "com.example.composeunit.project.SplashActivity"
             )
             launchIntent.putExtra(ACTION_NAME, NOTIFICATION_ENTER_RECORDER)
-            val contentIntent = PendingIntent.getActivity(this, 4, launchIntent, 0)
+            val contentIntent = PendingIntent.getActivity(this, 4, launchIntent, FLAG_MUTABLE)
 
             val mNotificationBuilder =
                 Notification.Builder(this, CHANNEL_ID)

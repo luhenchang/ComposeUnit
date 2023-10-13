@@ -38,7 +38,7 @@ fun HomeItemView(composeData: ComposeData, index: Int, viewModel: HomeViewModel)
             .clip(BoxBorderClipShape)
             .background(MaterialTheme.colors.primary)
             .shadow(elevation = 33.dp, spotColor = MaterialTheme.colors.primary, ambientColor = Color.Yellow)
-            .clickable(onClick = {}).alpha(1f)
+            .clickable(onClick = {})
     ) {
         Box(
             modifier = Modifier
@@ -85,7 +85,7 @@ fun HomeItemView(composeData: ComposeData, index: Int, viewModel: HomeViewModel)
                         .weight(1f)
                 ) {
                     Text(
-                        composeData.item_title.notNull() + index,
+                        composeData.item_title.notNull(),
                         fontSize = 18.sp,
                         color = Color.Black,
                         modifier = Modifier.padding(bottom = 3.dp),

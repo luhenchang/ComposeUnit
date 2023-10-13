@@ -116,7 +116,7 @@ fun LoadingOrLazyColumn(
                 Box(
                     modifier = Modifier
                         .padding(5.dp)
-                        .fillMaxWidth()
+                        .fillMaxWidth().alpha(0.5f)
                 ) {
                     HomeItemView(state[0], index, homeViewModel)
                 }
