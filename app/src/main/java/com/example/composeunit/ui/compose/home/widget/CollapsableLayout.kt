@@ -8,8 +8,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.constraintlayout.compose.ConstraintLayout
-import com.example.composeunit.project.view_model.home.HomeViewModel
-import com.example.composeunit.project.view_model.splash.SplashViewModel
+import com.example.composeunit.ui.compose.home.HomeViewModel
+import com.example.composeunit.ui.compose.SplashViewModel
 
 @Composable
 fun rememberHomeScrollState(scrollOffsetOfY: Float = 0f): HomeScrollState {

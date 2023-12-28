@@ -10,6 +10,7 @@ androidx-constraintlayout-constraintlayout = "2.1.4"
 androidx-compose-runtime-runtimeLivedata = "1.5.0"
 appcompat = "1.6.1"
 coilCompose = "2.4.0"
+com-belerweb-pinyin4j = "2.5.1"
 com-google-android-material-material = "1.9.0"
 androidx-compose-ui-uiTooling = "1.5.0"
 androidx-compose-ui-ui = "1.5.0"
@@ -76,6 +77,7 @@ androidx-lifecycle-viewmodel-ktx = { module = "androidx.lifecycle:lifecycle-view
 androidx-lifecycle-viewmodel-compose = { module = "androidx.lifecycle:lifecycle-viewmodel-compose", version.ref = "lifecycle-runtime-ktx" }
 build-gradle = { module = "com.android.tools.build:gradle", version.ref = "android-gradle" }
 coil-compose = { module = "io.coil-kt:coil-compose", version.ref = "coilCompose" }
+com-belerweb-pinyin4j = { module = "com.belerweb:pinyin4j", version.ref = "com-belerweb-pinyin4j" }
 com-google-android-material-material = { module = "com.google.android.material:material", version.ref = "com-google-android-material-material" }
 androidx-compose-ui-ui-tooling = { module = "androidx.compose.ui:ui-tooling", version.ref = "androidx-compose-ui-uiTooling" }
 androidx-compose-ui-ui = { module = "androidx.compose.ui:ui", version.ref = "androidx-compose-ui-ui" }

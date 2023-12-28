@@ -108,5 +108,6 @@ dependencies {
     //Retrofit
     api(libs.retrofit)
     api(libs.com.squareup.retrofit2.converter.gson)
+    api(libs.com.belerweb.pinyin4j)
 
 }

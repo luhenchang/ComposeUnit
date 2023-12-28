@@ -6,7 +6,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import com.example.composeunit.project.view_model.home.HomeViewModel
+import com.example.composeunit.ui.compose.home.HomeViewModel
 import com.example.composeunit.ui.compose.home.ComposeTabView
 
 @Composable

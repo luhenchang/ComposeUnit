@@ -13,7 +13,6 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.geometry.Offset
@@ -24,10 +23,9 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.composeunit.repository.dao.table.ComposeData
-import com.example.composeunit.ui.compose.canvas.BoxBorderClipShape
-import com.example.composeunit.ui.compose.canvas.BoxClipShapes
-import com.example.composeunit.project.view_model.home.HomeViewModel
+import com.example.composeunit.data.repository.dao.table.ComposeData
+import com.example.composeunit.ui.compose.other.canvas.BoxBorderClipShape
+import com.example.composeunit.ui.compose.other.canvas.BoxClipShapes
 import com.example.lib_common.utils.notNull
 import com.example.lib_common.utils.splitEndContent
 

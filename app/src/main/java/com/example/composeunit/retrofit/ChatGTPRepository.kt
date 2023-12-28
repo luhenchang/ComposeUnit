@@ -1,7 +1,10 @@
 package com.example.composeunit.retrofit
 
 import android.util.Log
-import com.example.composeunit.models.chatgtp.*
+import com.example.composeunit.data.models.chatgtp.ChatGTPModel
+import com.example.composeunit.data.models.chatgtp.ChatGTPResult
+import com.example.composeunit.data.models.chatgtp.ClientSendBody
+import com.example.composeunit.data.models.chatgtp.ImageBody
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import retrofit2.awaitResponse

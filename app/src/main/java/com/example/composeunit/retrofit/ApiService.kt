@@ -1,9 +1,9 @@
 package com.example.composeunit.retrofit
 
-import com.example.composeunit.models.chatgtp.ClientSendBody
-import com.example.composeunit.models.chatgtp.ImageBody
-import com.example.composeunit.models.chatgtp.ImageData
-import com.example.composeunit.models.chatgtp.ModelData
+import com.example.composeunit.data.models.chatgtp.ClientSendBody
+import com.example.composeunit.data.models.chatgtp.ImageBody
+import com.example.composeunit.data.models.chatgtp.ImageData
+import com.example.composeunit.data.models.chatgtp.ModelData
 import retrofit2.Call
 import retrofit2.http.*
 

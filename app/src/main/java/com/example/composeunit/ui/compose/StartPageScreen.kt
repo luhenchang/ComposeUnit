@@ -30,7 +30,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.composeunit.R
-import com.example.composeunit.ui.compose.confing.MainActions
+import com.example.composeunit.ui.compose.other.confing.MainActions
 
 //启动页面 StartPageScreen
 @Preview

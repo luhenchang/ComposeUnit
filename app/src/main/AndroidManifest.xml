@@ -3,8 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools">
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
-    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"
+        android:maxSdkVersion="32" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"
+        android:maxSdkVersion="28" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_MEDIA_PLAYBACK"/>
     <uses-permission
         android:name="android.permission.WRITE_SETTINGS"
@@ -21,7 +24,7 @@
         android:screenOrientation="portrait"
         android:theme="@style/Theme.MyFirstComposeApp">
         <activity
-            android:name=".project.MainActivity"
+            android:name=".MainActivity"
             android:exported="true"
             android:launchMode="standard"
             android:screenOrientation="portrait"
@@ -34,7 +37,7 @@
         </activity>
 
         <service
-            android:name=".project.service.RecorderService"
+            android:name=".ui.compose.other.service.RecorderService"
             android:foregroundServiceType="mediaPlayback"
             android:exported="false">
             <intent-filter>
@@ -43,15 +46,20 @@
         </service>
 
         <service
-            android:name=".project.widget.UpdateRecorderWidgetService"
+            android:name=".ui.compose.other.ai.widget.UpdateRecorderWidgetService"
             android:exported="true">
             <intent-filter>
                 <action android:name="com.example.composeunit.project.widget.UpdateRecorderWidgetService"/>
             </intent-filter>
         </service>
-
+        <receiver android:name=".MainActivity$PopBroadCastReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.example.composeunit.pop" />
+            </intent-filter>
+        </receiver>
         <receiver
-            android:name=".project.widget.RecorderAppWidget"
+            android:name=".ui.compose.other.ai.widget.RecorderAppWidget"
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />

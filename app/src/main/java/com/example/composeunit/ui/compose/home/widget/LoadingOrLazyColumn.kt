@@ -30,7 +30,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.composeunit.R
-import com.example.composeunit.project.view_model.home.HomeViewModel
+import com.example.composeunit.ui.compose.home.HomeViewModel
 import com.example.composeunit.ui.compose.home.HomeItemView
 import com.example.composeunit.ui.compose.home.LoadingPageUI
 

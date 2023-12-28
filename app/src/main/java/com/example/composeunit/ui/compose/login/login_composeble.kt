@@ -30,10 +30,10 @@ import androidx.compose.ui.graphics.*
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextStyle
 import com.example.composeunit.R
-import com.example.composeunit.ui.compose.confing.AnimalRoundedCornerShape
-import com.example.composeunit.ui.compose.confing.CicleImageShape
-import com.example.composeunit.ui.compose.confing.MainActions
-import com.example.composeunit.ui.compose.canvas.QureytoImageShapes
+import com.example.composeunit.ui.compose.other.confing.AnimalRoundedCornerShape
+import com.example.composeunit.ui.compose.other.confing.CicleImageShape
+import com.example.composeunit.ui.compose.other.confing.MainActions
+import com.example.composeunit.ui.compose.other.canvas.QureytoImageShapes
 import com.example.composeunit.utils.BitmapBlur
 
 /**

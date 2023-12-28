@@ -34,7 +34,6 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
-import com.example.composeunit.project.view_model.home.HomeViewModel
 import com.example.composeunit.ui.compose.home.widget.HomeScrollState
 import com.example.composeunit.ui.theme.getPrimaryColorForIndex
 import com.example.lib_common.utils.pxToDp

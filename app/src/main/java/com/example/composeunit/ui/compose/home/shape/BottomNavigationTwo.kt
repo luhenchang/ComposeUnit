@@ -29,7 +29,7 @@ import androidx.compose.ui.graphics.Path
 import androidx.compose.ui.graphics.drawscope.drawIntoCanvas
 import androidx.compose.ui.unit.dp
 import com.example.composeunit.R
-import com.example.composeunit.project.view_model.home.HomeViewModel
+import com.example.composeunit.ui.compose.home.HomeViewModel
 import com.example.composeunit.ui.compose.home.modifiers
 import com.example.composeunit.utils.getBitmap
 import kotlinx.coroutines.launch

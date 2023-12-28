@@ -33,10 +33,8 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
-import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.compose.currentBackStackEntryAsState
-import com.example.composeunit.project.view_model.home.HomeViewModel
 import com.example.composeunit.ui.compose.home.shape.BottomBarAnimalBgView
 import com.example.composeunit.ui.navigation.BottomBarScreen
 import com.example.composeunit.ui.navigation.BottomBarScreens
