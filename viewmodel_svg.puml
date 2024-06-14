@@ -1,0 +1,97 @@
+@startuml
+interface androidx.lifecycle.ViewModelStoreOwner {
++  getViewModelStore():ViewModelStore
+}
+
+class androidx.activity.ComponentActivity{
++  override val viewModelStore: ViewModelStore
+-  ensureViewModelStore
+[调用了Activity的getLastNonConfigurationInstance]
+}
+class androidx.activity.ComponentActivity$NonConfigurationInstances{
++   var custom: Any? = null
++   var viewModelStore: ViewModelStore? = null
++ override fun onRetainNonConfigurationInstance()
+[这里配置改变之后被Activity中的onRetainNonConfigurationInstance调用](+重点+)
+[且这里将ComponentActivity中的ViewModel打包到NonConfigInstance中返回给Activity](+重点+)
+}
+
+
+class androidx.lifecycle.ViewModelStore{
+- val map = mutableMapOf<String, ViewModel>()
++ fun put(key: String, viewModel: ViewModel)
++ operator fun get(key: String): ViewModel
++ fun clear()
+}
+interface androidx.lifecycle.ViewModelProvider$Factory {
++ fun <T : ViewModel> create(modelClass: Class<T>): T
+}
+class androidx.lifecycle.ViewModelProvider{
+- val impl: ViewModelProviderImpl
+}
+class androidx.lifecycle.viewmodel.internal.DefaultViewModelProviderFactory{
++  override fun <T : ViewModel> create(modelClass: KClass<T>, extras: CreationExtras): T =
+          JvmViewModelProviders.createViewModel(modelClass.java)
+}
+
+class androidx.lifecycle.viewmodel.internal.JvmViewModelProviders{
++ fun <T : ViewModel> createViewModel(modelClass: Class<T>): T
+modelClass.getDeclaredConstructor().newInstance()
+[通过反射进行创建ViewModel](+重点+)
+}
+
+class androidx.lifecycle.viewmodel.ViewModelProviderImpl{
+- val store: ViewModelStore,
+- val factory: ViewModelProvider.Factory,
+- val extras: CreationExtras,
++ fun <T : ViewModel> getViewModel()
+[在getViewModel中，先通过store来获取ComponentActivity中的store是否存在实例](+重点+)
+[如果存在就返回，从而达到数据不丢失，否则创建一个ViewModel并储存到ComponentActivity的ViewModelStore中](+重点+)
+}
+
+interface androidx.lifecycle.HasDefaultViewModelProviderFactory{
++ val defaultViewModelProviderFactory: ViewModelProvider.Factory
+}
+
+class android.app.Activity{
++ NonConfigurationInstances mLastNonConfigurationInstances
++ getLastNonConfigurationInstance()
+[将mLastNonConfigurationInstances返回给ComponentActivity](+重点+)
++ onRetainNonConfigurationInstance();
+[从ComponentActivity获取包含ViewModelStore的NonConfigurationInstances](+重点+)
+[并转换未Activity自身内部类NonConfigurationInstances将ViewModelStore储存到里面](+重点+)
+}
+
+
+class android.app.Activity$NonConfigurationInstances{
++     Object activity;
+是ComponentActivity中的NonConfigurationInstances并非Activity里面的自己
++     HashMap<String, Object> children;
++     FragmentManagerNonConfig fragments;
++     ArrayMap<String, LoaderManager> loaders;
++     VoiceInteractor voiceInteractor;
+}
+
+class android.app.ActivityThread{
++ ArrayMap<IBinder, ActivityClientRecord> mActivities
++ handleRelaunchActivity(r:ActivityClientRecord)
++ handleRelaunchActivityInner(r:ActivityClientRecord)
++ handleDestroyActivity(r:ActivityClientRecord)
++ performDestroyActivity(r:ActivityClientRecord)
+{r.lastNonConfigurationInstances = r.activity.retainNonConfigurationInstances();}
+[配置改变，会走到 r.activity.retainNonConfigurationInstance();调用了Activity中的](+重点+)
+[retainNonConfigurationInstances最终实现了Activity含有viewModuleStore的](+重点+)
+[NonConfigurationInstance被保存到了ActivityClientRecord中。](+重点+)
+}
+
+
+
+
+androidx.activity.ComponentActivity +..androidx.activity.ComponentActivity$NonConfigurationInstances
+android.app.Activity +.. android.app.Activity$NonConfigurationInstances
+androidx.lifecycle.ViewModelProvider +.. androidx.lifecycle.ViewModelProvider$Factory
+androidx.lifecycle.ViewModelStoreOwner  <|.. androidx.activity.ComponentActivity
+androidx.lifecycle.HasDefaultViewModelProviderFactory  <|.. androidx.activity.ComponentActivity
+androidx.lifecycle.ViewModelProvider$Factory  <|.. androidx.lifecycle.viewmodel.internal.DefaultViewModelProviderFactory
+android.app.Activity <|-- androidx.activity.ComponentActivity
+@enduml

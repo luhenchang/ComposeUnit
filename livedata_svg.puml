@@ -1,0 +1,72 @@
+@startuml
+abstract class androidx.lifecycle.LiveData {
+~ Object mDataLock
+~ {static} int START_VERSION
+~ {static} Object NOT_SET
+- SafeIterableMap<Observer<? super T>,ObserverWrapper> mObservers
+~ int mActiveCount
+- boolean mChangingActiveState
+- Object mData
+~ Object mPendingData
+- int mVersion
+- boolean mDispatchingValue
+- boolean mDispatchInvalidated
+- Runnable mPostValueRunnable
++ <<Create>> LiveData(T)
++ <<Create>> LiveData()
+- void considerNotify(ObserverWrapper)
+~ void dispatchingValue(ObserverWrapper)
++ void observe(LifecycleOwner,Observer<? super T>)
++ void observeForever(Observer<? super T>)
++ void removeObserver(Observer<? super T>)
++ void removeObservers(LifecycleOwner)
+# void postValue(T)
+# void setValue(T)
++ T getValue()
++ boolean isInitialized()
+~ int getVersion()
+# void onActive()
+# void onInactive()
++ boolean hasObservers()
++ boolean hasActiveObservers()
+~ void changeActiveCounter(int)
+~ {static} void assertMainThread(String)
+}
+
+
+class androidx.lifecycle.LiveData$LifecycleBoundObserver {
+~ LifecycleOwner mOwner
+~ <<Create>> LifecycleBoundObserver(LifecycleOwner,Observer<? super T>)
+~ boolean shouldBeActive()
++ void onStateChanged(LifecycleOwner,Lifecycle.Event)
+~ boolean isAttachedTo(LifecycleOwner)
+~ void detachObserver()
+}
+
+
+abstract class androidx.lifecycle.LiveData$ObserverWrapper {
+~ Observer<? super T> mObserver
+~ boolean mActive
+~ int mLastVersion
+~ <<Create>> ObserverWrapper(Observer<? super T>)
+~ {abstract}boolean shouldBeActive()
+~ boolean isAttachedTo(LifecycleOwner)
+~ void detachObserver()
+~ void activeStateChanged(boolean)
+}
+
+
+class androidx.lifecycle.LiveData$AlwaysActiveObserver {
+~ <<Create>> AlwaysActiveObserver(Observer<? super T>)
+~ boolean shouldBeActive()
+}
+
+
+
+androidx.lifecycle.LiveData +.. androidx.lifecycle.LiveData$LifecycleBoundObserver
+androidx.lifecycle.LifecycleEventObserver <|.. androidx.lifecycle.LiveData$LifecycleBoundObserver
+androidx.lifecycle.ObserverWrapper <|-- androidx.lifecycle.LiveData$LifecycleBoundObserver
+androidx.lifecycle.LiveData +.. androidx.lifecycle.LiveData$ObserverWrapper
+androidx.lifecycle.LiveData +.. androidx.lifecycle.LiveData$AlwaysActiveObserver
+androidx.lifecycle.ObserverWrapper <|-- androidx.lifecycle.LiveData$AlwaysActiveObserver
+@enduml
